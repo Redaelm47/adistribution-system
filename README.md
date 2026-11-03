@@ -26,6 +26,20 @@ The line is written for every video. The motion comes from a library of moves, a
 
 Every model the product calls at runtime is a Meta model.
 
+## Run it
+
+Needs Python 3.11+, and ffmpeg on your PATH.
+
+```sh
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cp .env.example .env            # then put your Meta Model API key in it
+.venv/bin/python app/server.py  # open http://localhost:8000
+```
+
+Drop a video and an ad, press the arrow. The right column lists every Meta model call as it happens: what was sent, what came back, how long it took and what it cost. Each run is saved in `runs/<id>/trace.jsonl` and can be reopened from the home page. Without a key, the same steps run in simulation and every call is labelled `simulated`.
+
+From the command line: `cd pipeline && ../.venv/bin/python -m bridge.run video.mp4 ad.mp4`. Tests: `cd pipeline && ../.venv/bin/python -m pytest -q`.
+
 ## Repository layout
 
 ```
