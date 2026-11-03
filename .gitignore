@@ -18,3 +18,7 @@ render/public/ad/
 .venv-cb/
 render/public/demo/frames/
 render/public/spots/
+
+# Runs: uploaded videos, frames, masks and traces
+runs/
+.env.local

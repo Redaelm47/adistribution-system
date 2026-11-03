@@ -1,0 +1,9 @@
+# The interface and the pipeline (Python 3.11+). Also needs ffmpeg and ffprobe on PATH.
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
+meta-sam-parser
+numpy
+opencv-python-headless
+pytest
