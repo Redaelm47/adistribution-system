@@ -17,10 +17,11 @@ The line is written for every video. The motion comes from a library of moves, a
 
 | Step | Model | Status |
 |---|---|---|
-| Transcribe the video | Muse Voice Transcribe | in progress |
-| Pick the moment, read the ad | Muse Spark | in progress |
-| Cut out the subject | SAM 3.1 | in progress |
-| Write the line and the bridge | Muse Spark | in progress |
+| Transcribe the video and the ad | Muse Voice Transcribe | built, tested offline |
+| Pick the moment (transcript, frames, and the whole video when short), read the ad | Muse Spark | built, tested offline |
+| Cut out the subject | SAM 3.1 | built, tested offline |
+| Write the line and pick the move | Muse Spark | built, tested offline |
+| Animate the move | none: a library move rendered with Remotion | `wall` ported, others next |
 | Write a new move when none fits | Muse Code, headless | planned |
 | Watch the render, find what is wrong, fix it | Muse Spark | planned |
 
