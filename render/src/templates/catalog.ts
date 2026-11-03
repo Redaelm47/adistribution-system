@@ -84,6 +84,17 @@ export const TEMPLATES: Template[] = [
 		avoid: ['asmr'],
 		needs: {person: false, peak: false, surface: true},
 	},
+	{
+		id: 'dive',
+		comp: 'Dive',
+		name: 'Dive',
+		idea: 'The freeze is a photo being taken. Typed words start from what the person is doing, the last dot of the line lights up a surface of the scene, the camera dives into it and the ad finishes the sentence.',
+		energy: 0.65,
+		voice: 'narrator',
+		fits: ['sport', 'action', 'vlog', 'lifestyle', 'gaming'],
+		avoid: ['asmr', 'study', 'news'],
+		needs: {person: true, peak: true, surface: true},
+	},
 ];
 
 export type VideoProfile = {genre: Genre; energy: number; hasPerson: boolean; hasPeak: boolean; hasSurface?: boolean; quietAudio?: boolean};

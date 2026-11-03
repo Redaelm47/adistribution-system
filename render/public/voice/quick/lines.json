@@ -1,0 +1,2504 @@
+{
+ "voice": "elevenlabs liam v4",
+ "lines": [
+  {
+   "key": "wait_in",
+   "text": "Wait, wait, wait, wait! Look! Right there!",
+   "file": "voice/quick/wait_in.wav",
+   "duration": 2.586,
+   "words": [
+    {
+     "w": "Wait,",
+     "start": 0.05,
+     "end": 0.25
+    },
+    {
+     "w": "wait,",
+     "start": 0.25,
+     "end": 0.5
+    },
+    {
+     "w": "wait,",
+     "start": 0.5,
+     "end": 0.75
+    },
+    {
+     "w": "wait!",
+     "start": 0.75,
+     "end": 1.26
+    },
+    {
+     "w": "Look!",
+     "start": 1.26,
+     "end": 1.87
+    },
+    {
+     "w": "Right",
+     "start": 1.87,
+     "end": 2.09
+    },
+    {
+     "w": "there!",
+     "start": 2.09,
+     "end": 2.586
+    }
+   ]
+  },
+  {
+   "key": "wait_out",
+   "text": "Okay, okay! Go, go, go!",
+   "file": "voice/quick/wait_out.wav",
+   "duration": 1.94,
+   "words": [
+    {
+     "w": "Okay,",
+     "start": 0.05,
+     "end": 0.49
+    },
+    {
+     "w": "okay!",
+     "start": 0.49,
+     "end": 1.07
+    },
+    {
+     "w": "Go,",
+     "start": 1.07,
+     "end": 1.36
+    },
+    {
+     "w": "go,",
+     "start": 1.36,
+     "end": 1.62
+    },
+    {
+     "w": "go!",
+     "start": 1.62,
+     "end": 1.94
+    }
+   ]
+  },
+  {
+   "key": "replay_in",
+   "text": "Wait! Run that back! This jump is brought to you by...",
+   "file": "voice/quick/replay_in.wav",
+   "duration": 3.49,
+   "words": [
+    {
+     "w": "Wait!",
+     "start": 0.02,
+     "end": 0.58
+    },
+    {
+     "w": "Run",
+     "start": 0.58,
+     "end": 0.72
+    },
+    {
+     "w": "that",
+     "start": 0.72,
+     "end": 1.08
+    },
+    {
+     "w": "back!",
+     "start": 1.08,
+     "end": 1.68
+    },
+    {
+     "w": "This",
+     "start": 1.68,
+     "end": 2.0
+    },
+    {
+     "w": "jump",
+     "start": 2.0,
+     "end": 2.22
+    },
+    {
+     "w": "is",
+     "start": 2.22,
+     "end": 2.43
+    },
+    {
+     "w": "brought",
+     "start": 2.43,
+     "end": 2.85
+    },
+    {
+     "w": "to",
+     "start": 2.85,
+     "end": 2.99
+    },
+    {
+     "w": "you",
+     "start": 2.99,
+     "end": 3.18
+    },
+    {
+     "w": "by...",
+     "start": 3.18,
+     "end": 3.49
+    }
+   ]
+  },
+  {
+   "key": "replay_out",
+   "text": "His way now!",
+   "file": "voice/quick/replay_out.wav",
+   "duration": 0.65,
+   "words": [
+    {
+     "w": "His",
+     "start": 0.01,
+     "end": 0.12
+    },
+    {
+     "w": "way",
+     "start": 0.12,
+     "end": 0.32
+    },
+    {
+     "w": "now!",
+     "start": 0.32,
+     "end": 0.65
+    }
+   ]
+  },
+  {
+   "key": "thought_in",
+   "text": "Note to self: build a landing app.",
+   "file": "voice/quick/thought_in.wav",
+   "duration": 2.16,
+   "words": [
+    {
+     "w": "Note",
+     "start": 0.02,
+     "end": 0.26
+    },
+    {
+     "w": "to",
+     "start": 0.26,
+     "end": 0.43
+    },
+    {
+     "w": "self:",
+     "start": 0.43,
+     "end": 1.04
+    },
+    {
+     "w": "build",
+     "start": 1.04,
+     "end": 1.39
+    },
+    {
+     "w": "a",
+     "start": 1.39,
+     "end": 1.48
+    },
+    {
+     "w": "landing",
+     "start": 1.48,
+     "end": 1.88
+    },
+    {
+     "w": "app.",
+     "start": 1.88,
+     "end": 2.16
+    }
+   ]
+  },
+  {
+   "key": "thought_out",
+   "text": "Later. Landing first!",
+   "file": "voice/quick/thought_out.wav",
+   "duration": 1.47,
+   "words": [
+    {
+     "w": "Later.",
+     "start": 0.02,
+     "end": 0.66
+    },
+    {
+     "w": "Landing",
+     "start": 0.66,
+     "end": 1.13
+    },
+    {
+     "w": "first!",
+     "start": 1.13,
+     "end": 1.47
+    }
+   ]
+  },
+  {
+   "key": "bird_in",
+   "text": "A bird? A plane? No...",
+   "file": "voice/quick/bird_in.wav",
+   "duration": 2.31,
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.19
+    },
+    {
+     "w": "bird?",
+     "start": 0.19,
+     "end": 0.8
+    },
+    {
+     "w": "A",
+     "start": 0.8,
+     "end": 0.99
+    },
+    {
+     "w": "plane?",
+     "start": 0.99,
+     "end": 1.66
+    },
+    {
+     "w": "No...",
+     "start": 1.66,
+     "end": 2.31
+    }
+   ]
+  },
+  {
+   "key": "bird_out",
+   "text": "Okay. Back to the bird.",
+   "file": "voice/quick/bird_out.wav",
+   "duration": 1.12,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 0.02,
+     "end": 0.4
+    },
+    {
+     "w": "Back",
+     "start": 0.4,
+     "end": 0.59
+    },
+    {
+     "w": "to",
+     "start": 0.59,
+     "end": 0.72
+    },
+    {
+     "w": "the",
+     "start": 0.72,
+     "end": 0.84
+    },
+    {
+     "w": "bird.",
+     "start": 0.84,
+     "end": 1.12
+    }
+   ]
+  },
+  {
+   "key": "scratch_in",
+   "text": "Yep. That's him. Better question:",
+   "file": "voice/quick/scratch_in.wav",
+   "duration": 2.01,
+   "words": [
+    {
+     "w": "Yep.",
+     "start": 0.02,
+     "end": 0.35
+    },
+    {
+     "w": "That's",
+     "start": 0.35,
+     "end": 0.76
+    },
+    {
+     "w": "him.",
+     "start": 0.76,
+     "end": 1.34
+    },
+    {
+     "w": "Better",
+     "start": 1.34,
+     "end": 1.58
+    },
+    {
+     "w": "question:",
+     "start": 1.58,
+     "end": 2.01
+    }
+   ]
+  },
+  {
+   "key": "scratch_out",
+   "text": "Anyway. Go!",
+   "file": "voice/quick/scratch_out.wav",
+   "duration": 1.06,
+   "words": [
+    {
+     "w": "Anyway.",
+     "start": 0.02,
+     "end": 0.76
+    },
+    {
+     "w": "Go!",
+     "start": 0.76,
+     "end": 1.06
+    }
+   ]
+  },
+  {
+   "key": "photo_in",
+   "text": "Hold it! Got him. Your turn.",
+   "file": "voice/quick/photo_in.wav",
+   "duration": 2.05,
+   "words": [
+    {
+     "w": "Hold",
+     "start": 0.02,
+     "end": 0.21
+    },
+    {
+     "w": "it!",
+     "start": 0.21,
+     "end": 0.76
+    },
+    {
+     "w": "Got",
+     "start": 0.76,
+     "end": 0.94
+    },
+    {
+     "w": "him.",
+     "start": 0.94,
+     "end": 1.39
+    },
+    {
+     "w": "Your",
+     "start": 1.39,
+     "end": 1.63
+    },
+    {
+     "w": "turn.",
+     "start": 1.63,
+     "end": 2.05
+    }
+   ]
+  },
+  {
+   "key": "photo_out",
+   "text": "One more!",
+   "file": "voice/quick/photo_out.wav",
+   "duration": 0.66,
+   "words": [
+    {
+     "w": "One",
+     "start": 0.01,
+     "end": 0.42
+    },
+    {
+     "w": "more!",
+     "start": 0.42,
+     "end": 0.66
+    }
+   ]
+  },
+  {
+   "key": "forget_in",
+   "text": "Forget him. What about...",
+   "file": "voice/quick/forget_in.wav",
+   "duration": 1.58,
+   "words": [
+    {
+     "w": "Forget",
+     "start": 0.02,
+     "end": 0.43
+    },
+    {
+     "w": "him.",
+     "start": 0.43,
+     "end": 0.69
+    },
+    {
+     "w": "What",
+     "start": 0.69,
+     "end": 1.04
+    },
+    {
+     "w": "about...",
+     "start": 1.04,
+     "end": 1.58
+    }
+   ]
+  },
+  {
+   "key": "forget_out",
+   "text": "Okay, back to him!",
+   "file": "voice/quick/forget_out.wav",
+   "duration": 0.97,
+   "words": [
+    {
+     "w": "Okay,",
+     "start": 0.02,
+     "end": 0.31
+    },
+    {
+     "w": "back",
+     "start": 0.31,
+     "end": 0.51
+    },
+    {
+     "w": "to",
+     "start": 0.51,
+     "end": 0.71
+    },
+    {
+     "w": "him!",
+     "start": 0.71,
+     "end": 0.97
+    }
+   ]
+  },
+  {
+   "key": "nothim_in",
+   "text": "Not him.",
+   "file": "voice/quick/nothim_in.wav",
+   "duration": 0.55,
+   "words": [
+    {
+     "w": "Not",
+     "start": 0.02,
+     "end": 0.26
+    },
+    {
+     "w": "him.",
+     "start": 0.26,
+     "end": 0.55
+    }
+   ]
+  },
+  {
+   "key": "nothim_out",
+   "text": "Okay. Him.",
+   "file": "voice/quick/nothim_out.wav",
+   "duration": 0.92,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 0.02,
+     "end": 0.67
+    },
+    {
+     "w": "Him.",
+     "start": 0.67,
+     "end": 0.92
+    }
+   ]
+  },
+  {
+   "key": "behind_in",
+   "text": "Psst. Behind you.",
+   "file": "voice/quick/behind_in.wav",
+   "duration": 1.05,
+   "words": [
+    {
+     "w": "Psst.",
+     "start": 0.02,
+     "end": 0.43
+    },
+    {
+     "w": "Behind",
+     "start": 0.43,
+     "end": 0.83
+    },
+    {
+     "w": "you.",
+     "start": 0.83,
+     "end": 1.05
+    }
+   ]
+  },
+  {
+   "key": "behind_out",
+   "text": "Eyes front!",
+   "file": "voice/quick/behind_out.wav",
+   "duration": 0.63,
+   "words": [
+    {
+     "w": "Eyes",
+     "start": 0.02,
+     "end": 0.25
+    },
+    {
+     "w": "front!",
+     "start": 0.25,
+     "end": 0.63
+    }
+   ]
+  },
+  {
+   "key": "waitfor_in",
+   "text": "Wait for it... wait for it...",
+   "file": "voice/quick/waitfor_in.wav",
+   "duration": 2.37,
+   "words": [
+    {
+     "w": "Wait",
+     "start": 0.02,
+     "end": 0.3
+    },
+    {
+     "w": "for",
+     "start": 0.3,
+     "end": 0.52
+    },
+    {
+     "w": "it...",
+     "start": 0.52,
+     "end": 1.24
+    },
+    {
+     "w": "wait",
+     "start": 1.24,
+     "end": 1.49
+    },
+    {
+     "w": "for",
+     "start": 1.49,
+     "end": 1.74
+    },
+    {
+     "w": "it...",
+     "start": 1.74,
+     "end": 2.37
+    }
+   ]
+  },
+  {
+   "key": "waitfor_out",
+   "text": "There it is!",
+   "file": "voice/quick/waitfor_out.wav",
+   "duration": 0.67,
+   "words": [
+    {
+     "w": "There",
+     "start": 0.02,
+     "end": 0.18
+    },
+    {
+     "w": "it",
+     "start": 0.18,
+     "end": 0.36
+    },
+    {
+     "w": "is!",
+     "start": 0.36,
+     "end": 0.67
+    }
+   ]
+  },
+  {
+   "key": "thought2_in",
+   "text": "What if I just built an app instead?",
+   "file": "voice/quick/thought2_in.wav",
+   "duration": 2.05,
+   "words": [
+    {
+     "w": "What",
+     "start": 0.07,
+     "end": 0.34
+    },
+    {
+     "w": "if",
+     "start": 0.34,
+     "end": 0.49
+    },
+    {
+     "w": "I",
+     "start": 0.49,
+     "end": 0.56
+    },
+    {
+     "w": "just",
+     "start": 0.56,
+     "end": 0.82
+    },
+    {
+     "w": "built",
+     "start": 0.82,
+     "end": 1.2
+    },
+    {
+     "w": "an",
+     "start": 1.2,
+     "end": 1.35
+    },
+    {
+     "w": "app",
+     "start": 1.35,
+     "end": 1.58
+    },
+    {
+     "w": "instead?",
+     "start": 1.58,
+     "end": 2.05
+    }
+   ]
+  },
+  {
+   "key": "thought2_out",
+   "text": "Later. Jump first!",
+   "file": "voice/quick/thought2_out.wav",
+   "duration": 1.55,
+   "words": [
+    {
+     "w": "Later.",
+     "start": 0.02,
+     "end": 0.85
+    },
+    {
+     "w": "Jump",
+     "start": 0.85,
+     "end": 1.18
+    },
+    {
+     "w": "first!",
+     "start": 1.18,
+     "end": 1.55
+    }
+   ]
+  },
+  {
+   "key": "photo2_in",
+   "text": "Don't move... Smile! Your turn.",
+   "file": "voice/quick/photo2_in.wav",
+   "duration": 2.64,
+   "words": [
+    {
+     "w": "Don't",
+     "start": 0.03,
+     "end": 0.41
+    },
+    {
+     "w": "move...",
+     "start": 0.41,
+     "end": 1.23
+    },
+    {
+     "w": "Smile!",
+     "start": 1.23,
+     "end": 2.2
+    },
+    {
+     "w": "Your",
+     "start": 2.2,
+     "end": 2.43
+    },
+    {
+     "w": "turn.",
+     "start": 2.43,
+     "end": 2.64
+    }
+   ]
+  },
+  {
+   "key": "notad_in",
+   "text": "This might not be an ad.",
+   "file": "voice/quick/notad_in.wav",
+   "duration": 1.35,
+   "words": [
+    {
+     "w": "This",
+     "start": 0.03,
+     "end": 0.28
+    },
+    {
+     "w": "might",
+     "start": 0.28,
+     "end": 0.62
+    },
+    {
+     "w": "not",
+     "start": 0.62,
+     "end": 0.84
+    },
+    {
+     "w": "be",
+     "start": 0.84,
+     "end": 0.98
+    },
+    {
+     "w": "an",
+     "start": 0.98,
+     "end": 1.12
+    },
+    {
+     "w": "ad.",
+     "start": 1.12,
+     "end": 1.35
+    }
+   ]
+  },
+  {
+   "key": "notad_out",
+   "text": "Okay. It was.",
+   "file": "voice/quick/notad_out.wav",
+   "duration": 1.34,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 0.02,
+     "end": 0.83
+    },
+    {
+     "w": "It",
+     "start": 0.83,
+     "end": 0.99
+    },
+    {
+     "w": "was.",
+     "start": 0.99,
+     "end": 1.34
+    }
+   ]
+  },
+  {
+   "key": "hold_in",
+   "text": "Hold still. This won't hurt.",
+   "file": "voice/quick/hold_in.wav",
+   "duration": 1.49,
+   "words": [
+    {
+     "w": "Hold",
+     "start": 0.05,
+     "end": 0.22
+    },
+    {
+     "w": "still.",
+     "start": 0.22,
+     "end": 0.81
+    },
+    {
+     "w": "This",
+     "start": 0.81,
+     "end": 0.98
+    },
+    {
+     "w": "won't",
+     "start": 0.98,
+     "end": 1.14
+    },
+    {
+     "w": "hurt.",
+     "start": 1.14,
+     "end": 1.49
+    }
+   ]
+  },
+  {
+   "key": "hold_out",
+   "text": "See? All done.",
+   "file": "voice/quick/hold_out.wav",
+   "duration": 1.02,
+   "words": [
+    {
+     "w": "See?",
+     "start": 0.02,
+     "end": 0.59
+    },
+    {
+     "w": "All",
+     "start": 0.59,
+     "end": 0.76
+    },
+    {
+     "w": "done.",
+     "start": 0.76,
+     "end": 1.02
+    }
+   ]
+  },
+  {
+   "key": "psst2_in",
+   "text": "Psst. He can't hear us.",
+   "file": "voice/quick/psst2_in.wav",
+   "duration": 1.58,
+   "words": [
+    {
+     "w": "Psst.",
+     "start": 0.04,
+     "end": 0.62
+    },
+    {
+     "w": "He",
+     "start": 0.62,
+     "end": 0.76
+    },
+    {
+     "w": "can't",
+     "start": 0.76,
+     "end": 1.14
+    },
+    {
+     "w": "hear",
+     "start": 1.14,
+     "end": 1.44
+    },
+    {
+     "w": "us.",
+     "start": 1.44,
+     "end": 1.58
+    }
+   ]
+  },
+  {
+   "key": "psst2_out",
+   "text": "Act natural.",
+   "file": "voice/quick/psst2_out.wav",
+   "duration": 0.72,
+   "words": [
+    {
+     "w": "Act",
+     "start": 0.02,
+     "end": 0.24
+    },
+    {
+     "w": "natural.",
+     "start": 0.24,
+     "end": 0.72
+    }
+   ]
+  },
+  {
+   "key": "notagain_in",
+   "text": "Oh no. Not again.",
+   "file": "voice/quick/notagain_in.wav",
+   "duration": 2.04,
+   "words": [
+    {
+     "w": "Oh",
+     "start": 0.41,
+     "end": 0.72
+    },
+    {
+     "w": "no.",
+     "start": 0.72,
+     "end": 1.28
+    },
+    {
+     "w": "Not",
+     "start": 1.28,
+     "end": 1.62
+    },
+    {
+     "w": "again.",
+     "start": 1.62,
+     "end": 2.04
+    }
+   ]
+  },
+  {
+   "key": "notagain_out",
+   "text": "Finally.",
+   "file": "voice/quick/notagain_out.wav",
+   "duration": 0.76,
+   "words": [
+    {
+     "w": "Finally.",
+     "start": 0.19,
+     "end": 0.76
+    }
+   ]
+  },
+  {
+   "key": "dontlook_in",
+   "text": "Don't look behind him.",
+   "file": "voice/quick/dontlook_in.wav",
+   "duration": 0.83,
+   "words": [
+    {
+     "w": "Don't",
+     "start": 0.02,
+     "end": 0.2
+    },
+    {
+     "w": "look",
+     "start": 0.2,
+     "end": 0.35
+    },
+    {
+     "w": "behind",
+     "start": 0.35,
+     "end": 0.56
+    },
+    {
+     "w": "him.",
+     "start": 0.56,
+     "end": 0.83
+    }
+   ]
+  },
+  {
+   "key": "dontlook_out",
+   "text": "You looked.",
+   "file": "voice/quick/dontlook_out.wav",
+   "duration": 0.76,
+   "words": [
+    {
+     "w": "You",
+     "start": 0.03,
+     "end": 0.22
+    },
+    {
+     "w": "looked.",
+     "start": 0.22,
+     "end": 0.76
+    }
+   ]
+  },
+  {
+   "key": "wait1",
+   "text": "Wait for it...",
+   "file": "voice/quick/wait1.wav",
+   "duration": 0.91,
+   "words": [
+    {
+     "w": "Wait",
+     "start": 0.02,
+     "end": 0.3
+    },
+    {
+     "w": "for",
+     "start": 0.3,
+     "end": 0.52
+    },
+    {
+     "w": "it...",
+     "start": 0.52,
+     "end": 0.91
+    }
+   ]
+  },
+  {
+   "key": "please_in",
+   "text": "Please don't look there.",
+   "file": "voice/quick/please_in.wav",
+   "duration": 1.16,
+   "words": [
+    {
+     "w": "Please",
+     "start": 0.04,
+     "end": 0.33
+    },
+    {
+     "w": "don't",
+     "start": 0.33,
+     "end": 0.69
+    },
+    {
+     "w": "look",
+     "start": 0.69,
+     "end": 0.93
+    },
+    {
+     "w": "there.",
+     "start": 0.93,
+     "end": 1.16
+    }
+   ]
+  },
+  {
+   "key": "please_out",
+   "text": "I said please.",
+   "file": "voice/quick/please_out.wav",
+   "duration": 1.26,
+   "words": [
+    {
+     "w": "I",
+     "start": 0.02,
+     "end": 0.19
+    },
+    {
+     "w": "said",
+     "start": 0.19,
+     "end": 0.5
+    },
+    {
+     "w": "please.",
+     "start": 0.5,
+     "end": 1.26
+    }
+   ]
+  },
+  {
+   "key": "please1_in",
+   "text": "Please... do not... look there.",
+   "file": "voice/quick/please1_in.wav",
+   "duration": 2.97,
+   "words": [
+    {
+     "w": "Please...",
+     "start": 0.06,
+     "end": 1.04
+    },
+    {
+     "w": "do",
+     "start": 1.04,
+     "end": 1.41
+    },
+    {
+     "w": "not...",
+     "start": 1.41,
+     "end": 1.62
+    },
+    {
+     "w": "look",
+     "start": 1.62,
+     "end": 2.41
+    },
+    {
+     "w": "there.",
+     "start": 2.41,
+     "end": 2.97
+    }
+   ]
+  },
+  {
+   "key": "please2_in",
+   "text": "Please... oh no... I can't even talk... Please... do not look there.",
+   "file": "voice/quick/please2_in.wav",
+   "duration": 5.04,
+   "words": [
+    {
+     "w": "Please...",
+     "start": 0.02,
+     "end": 0.62
+    },
+    {
+     "w": "oh",
+     "start": 0.62,
+     "end": 0.87
+    },
+    {
+     "w": "no...",
+     "start": 0.87,
+     "end": 1.21
+    },
+    {
+     "w": "I",
+     "start": 1.21,
+     "end": 1.31
+    },
+    {
+     "w": "can't",
+     "start": 1.31,
+     "end": 1.74
+    },
+    {
+     "w": "even",
+     "start": 1.74,
+     "end": 2.2
+    },
+    {
+     "w": "talk...",
+     "start": 2.2,
+     "end": 3.09
+    },
+    {
+     "w": "Please...",
+     "start": 3.09,
+     "end": 3.75
+    },
+    {
+     "w": "do",
+     "start": 3.75,
+     "end": 3.94
+    },
+    {
+     "w": "not",
+     "start": 3.94,
+     "end": 4.14
+    },
+    {
+     "w": "look",
+     "start": 4.14,
+     "end": 4.74
+    },
+    {
+     "w": "there.",
+     "start": 4.74,
+     "end": 5.04
+    }
+   ]
+  },
+  {
+   "key": "notad2_in",
+   "text": "This might not be an ad. Oh wait. Actually, it is.",
+   "file": "voice/quick/notad2_in.wav",
+   "duration": 3.85,
+   "words": [
+    {
+     "w": "This",
+     "start": 0.03,
+     "end": 0.28
+    },
+    {
+     "w": "might",
+     "start": 0.28,
+     "end": 0.7
+    },
+    {
+     "w": "not",
+     "start": 0.7,
+     "end": 1.09
+    },
+    {
+     "w": "be",
+     "start": 1.09,
+     "end": 1.21
+    },
+    {
+     "w": "an",
+     "start": 1.21,
+     "end": 1.33
+    },
+    {
+     "w": "ad.",
+     "start": 1.33,
+     "end": 2.08
+    },
+    {
+     "w": "Oh",
+     "start": 2.08,
+     "end": 2.28
+    },
+    {
+     "w": "wait.",
+     "start": 2.28,
+     "end": 2.77
+    },
+    {
+     "w": "Actually,",
+     "start": 2.77,
+     "end": 3.33
+    },
+    {
+     "w": "it",
+     "start": 3.33,
+     "end": 3.48
+    },
+    {
+     "w": "is.",
+     "start": 3.48,
+     "end": 3.85
+    }
+   ]
+  },
+  {
+   "key": "notad2_out",
+   "text": "Sorry about that.",
+   "file": "voice/quick/notad2_out.wav",
+   "duration": 0.73,
+   "words": [
+    {
+     "w": "Sorry",
+     "start": 0.02,
+     "end": 0.17
+    },
+    {
+     "w": "about",
+     "start": 0.17,
+     "end": 0.42
+    },
+    {
+     "w": "that.",
+     "start": 0.42,
+     "end": 0.73
+    }
+   ]
+  },
+  {
+   "key": "mk_thought_in",
+   "text": "What if I just built it myself?",
+   "file": "voice/quick/mk_thought_in.wav",
+   "duration": 1.85,
+   "words": [
+    {
+     "w": "What",
+     "start": 0.03,
+     "end": 0.35
+    },
+    {
+     "w": "if",
+     "start": 0.35,
+     "end": 0.5
+    },
+    {
+     "w": "I",
+     "start": 0.5,
+     "end": 0.58
+    },
+    {
+     "w": "just",
+     "start": 0.58,
+     "end": 0.94
+    },
+    {
+     "w": "built",
+     "start": 0.94,
+     "end": 1.39
+    },
+    {
+     "w": "it",
+     "start": 1.39,
+     "end": 1.57
+    },
+    {
+     "w": "myself?",
+     "start": 1.57,
+     "end": 1.85
+    }
+   ]
+  },
+  {
+   "key": "mk_build_in",
+   "text": "Somebody should build him one.",
+   "file": "voice/quick/mk_build_in.wav",
+   "duration": 1.5,
+   "words": [
+    {
+     "w": "Somebody",
+     "start": 0.04,
+     "end": 0.52
+    },
+    {
+     "w": "should",
+     "start": 0.52,
+     "end": 0.77
+    },
+    {
+     "w": "build",
+     "start": 0.77,
+     "end": 1.02
+    },
+    {
+     "w": "him",
+     "start": 1.02,
+     "end": 1.19
+    },
+    {
+     "w": "one.",
+     "start": 1.19,
+     "end": 1.5
+    }
+   ]
+  },
+  {
+   "key": "mk_anyway",
+   "text": "Anyway.",
+   "file": "voice/quick/mk_anyway.wav",
+   "duration": 0.55,
+   "words": [
+    {
+     "w": "Anyway.",
+     "start": 0.02,
+     "end": 0.55
+    }
+   ]
+  },
+  {
+   "key": "whatif_in",
+   "text": "And what if... he just built his own?",
+   "file": "voice/quick/whatif_in.wav",
+   "duration": 2.62,
+   "words": [
+    {
+     "w": "And",
+     "start": 0.11,
+     "end": 0.3
+    },
+    {
+     "w": "what",
+     "start": 0.3,
+     "end": 0.75
+    },
+    {
+     "w": "if...",
+     "start": 0.75,
+     "end": 1.25
+    },
+    {
+     "w": "he",
+     "start": 1.25,
+     "end": 1.38
+    },
+    {
+     "w": "just",
+     "start": 1.38,
+     "end": 1.55
+    },
+    {
+     "w": "built",
+     "start": 1.55,
+     "end": 2.02
+    },
+    {
+     "w": "his",
+     "start": 2.02,
+     "end": 2.25
+    },
+    {
+     "w": "own?",
+     "start": 2.25,
+     "end": 2.62
+    }
+   ]
+  },
+  {
+   "key": "whatif_out",
+   "text": "Anyway. Apps.",
+   "file": "voice/quick/whatif_out.wav",
+   "duration": 1.38,
+   "words": [
+    {
+     "w": "Anyway.",
+     "start": 0.1,
+     "end": 0.87
+    },
+    {
+     "w": "Apps.",
+     "start": 0.87,
+     "end": 1.38
+    }
+   ]
+  },
+  {
+   "key": "whatif2_in",
+   "text": "And what if he could make the app himself?",
+   "file": "voice/quick/whatif2_in.wav",
+   "duration": 2.06,
+   "words": [
+    {
+     "w": "And",
+     "start": 0.12,
+     "end": 0.24
+    },
+    {
+     "w": "what",
+     "start": 0.24,
+     "end": 0.42
+    },
+    {
+     "w": "if",
+     "start": 0.42,
+     "end": 0.54
+    },
+    {
+     "w": "he",
+     "start": 0.54,
+     "end": 0.65
+    },
+    {
+     "w": "could",
+     "start": 0.65,
+     "end": 0.86
+    },
+    {
+     "w": "make",
+     "start": 0.86,
+     "end": 1.13
+    },
+    {
+     "w": "the",
+     "start": 1.13,
+     "end": 1.26
+    },
+    {
+     "w": "app",
+     "start": 1.26,
+     "end": 1.5
+    },
+    {
+     "w": "himself?",
+     "start": 1.5,
+     "end": 2.06
+    }
+   ]
+  },
+  {
+   "key": "someone_in",
+   "text": "Sorry... did someone say apps?",
+   "file": "voice/quick/someone_in.wav",
+   "duration": 2.12,
+   "words": [
+    {
+     "w": "Sorry...",
+     "start": 0.1,
+     "end": 0.75
+    },
+    {
+     "w": "did",
+     "start": 0.75,
+     "end": 1.01
+    },
+    {
+     "w": "someone",
+     "start": 1.01,
+     "end": 1.39
+    },
+    {
+     "w": "say",
+     "start": 1.39,
+     "end": 1.69
+    },
+    {
+     "w": "apps?",
+     "start": 1.69,
+     "end": 2.12
+    }
+   ]
+  },
+  {
+   "key": "someone_out",
+   "text": "My bad. Carry on.",
+   "file": "voice/quick/someone_out.wav",
+   "duration": 1.54,
+   "words": [
+    {
+     "w": "My",
+     "start": 0.1,
+     "end": 0.31
+    },
+    {
+     "w": "bad.",
+     "start": 0.31,
+     "end": 1.0
+    },
+    {
+     "w": "Carry",
+     "start": 1.0,
+     "end": 1.24
+    },
+    {
+     "w": "on.",
+     "start": 1.24,
+     "end": 1.54
+    }
+   ]
+  },
+  {
+   "key": "own_in",
+   "text": "Or... you could just make your own.",
+   "file": "voice/quick/own_in.wav",
+   "duration": 1.82,
+   "words": [
+    {
+     "w": "Or...",
+     "start": 0.1,
+     "end": 0.3
+    },
+    {
+     "w": "you",
+     "start": 0.3,
+     "end": 0.45
+    },
+    {
+     "w": "could",
+     "start": 0.45,
+     "end": 0.66
+    },
+    {
+     "w": "just",
+     "start": 0.66,
+     "end": 0.94
+    },
+    {
+     "w": "make",
+     "start": 0.94,
+     "end": 1.25
+    },
+    {
+     "w": "your",
+     "start": 1.25,
+     "end": 1.45
+    },
+    {
+     "w": "own.",
+     "start": 1.45,
+     "end": 1.82
+    }
+   ]
+  },
+  {
+   "key": "own_out",
+   "text": "Okay. Back to his.",
+   "file": "voice/quick/own_out.wav",
+   "duration": 1.26,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 0.1,
+     "end": 0.63
+    },
+    {
+     "w": "Back",
+     "start": 0.63,
+     "end": 0.82
+    },
+    {
+     "w": "to",
+     "start": 0.82,
+     "end": 0.95
+    },
+    {
+     "w": "his.",
+     "start": 0.95,
+     "end": 1.26
+    }
+   ]
+  },
+  {
+   "key": "hi_in",
+   "text": "Hi. You can't skip this one.",
+   "file": "voice/quick/hi_in.wav",
+   "duration": 2.0,
+   "words": [
+    {
+     "w": "Hi.",
+     "start": 0.1,
+     "end": 0.81
+    },
+    {
+     "w": "You",
+     "start": 0.81,
+     "end": 0.97
+    },
+    {
+     "w": "can't",
+     "start": 0.97,
+     "end": 1.22
+    },
+    {
+     "w": "skip",
+     "start": 1.22,
+     "end": 1.42
+    },
+    {
+     "w": "this",
+     "start": 1.42,
+     "end": 1.62
+    },
+    {
+     "w": "one.",
+     "start": 1.62,
+     "end": 2.0
+    }
+   ]
+  },
+  {
+   "key": "tell_in",
+   "text": "He's about to tell you. Right after this.",
+   "file": "voice/quick/tell_in.wav",
+   "duration": 2.23,
+   "words": [
+    {
+     "w": "He's",
+     "start": 0.1,
+     "end": 0.26
+    },
+    {
+     "w": "about",
+     "start": 0.26,
+     "end": 0.55
+    },
+    {
+     "w": "to",
+     "start": 0.55,
+     "end": 0.66
+    },
+    {
+     "w": "tell",
+     "start": 0.66,
+     "end": 0.86
+    },
+    {
+     "w": "you.",
+     "start": 0.86,
+     "end": 1.37
+    },
+    {
+     "w": "Right",
+     "start": 1.37,
+     "end": 1.61
+    },
+    {
+     "w": "after",
+     "start": 1.61,
+     "end": 1.86
+    },
+    {
+     "w": "this.",
+     "start": 1.86,
+     "end": 2.23
+    }
+   ]
+  },
+  {
+   "key": "will_in",
+   "text": "He will. Right after this.",
+   "file": "voice/quick/will_in.wav",
+   "duration": 1.8,
+   "words": [
+    {
+     "w": "He",
+     "start": 0.1,
+     "end": 0.23
+    },
+    {
+     "w": "will.",
+     "start": 0.23,
+     "end": 0.89
+    },
+    {
+     "w": "Right",
+     "start": 0.89,
+     "end": 1.16
+    },
+    {
+     "w": "after",
+     "start": 1.16,
+     "end": 1.43
+    },
+    {
+     "w": "this.",
+     "start": 1.43,
+     "end": 1.8
+    }
+   ]
+  },
+  {
+   "key": "could_in",
+   "text": "It could.",
+   "file": "voice/quick/could_in.wav",
+   "duration": 0.71,
+   "words": [
+    {
+     "w": "It",
+     "start": 0.1,
+     "end": 0.25
+    },
+    {
+     "w": "could.",
+     "start": 0.25,
+     "end": 0.71
+    }
+   ]
+  },
+  {
+   "key": "knock_in",
+   "text": "Sorry... is this a bad time?",
+   "file": "voice/quick/knock_in.wav",
+   "duration": 2.52,
+   "words": [
+    {
+     "w": "Sorry...",
+     "start": 0.19,
+     "end": 1.28
+    },
+    {
+     "w": "is",
+     "start": 1.28,
+     "end": 1.45
+    },
+    {
+     "w": "this",
+     "start": 1.45,
+     "end": 1.6
+    },
+    {
+     "w": "a",
+     "start": 1.6,
+     "end": 1.75
+    },
+    {
+     "w": "bad",
+     "start": 1.75,
+     "end": 2.0
+    },
+    {
+     "w": "time?",
+     "start": 2.0,
+     "end": 2.52
+    }
+   ]
+  },
+  {
+   "key": "knock_out",
+   "text": "Thanks. I'll see myself out.",
+   "file": "voice/quick/knock_out.wav",
+   "duration": 1.88,
+   "words": [
+    {
+     "w": "Thanks.",
+     "start": 0.1,
+     "end": 0.73
+    },
+    {
+     "w": "I'll",
+     "start": 0.73,
+     "end": 0.97
+    },
+    {
+     "w": "see",
+     "start": 0.97,
+     "end": 1.19
+    },
+    {
+     "w": "myself",
+     "start": 1.19,
+     "end": 1.55
+    },
+    {
+     "w": "out.",
+     "start": 1.55,
+     "end": 1.88
+    }
+   ]
+  },
+  {
+   "key": "oops_in",
+   "text": "Oops. Wrong video.",
+   "file": "voice/quick/oops_in.wav",
+   "duration": 1.58,
+   "words": [
+    {
+     "w": "Oops.",
+     "start": 0.1,
+     "end": 0.81
+    },
+    {
+     "w": "Wrong",
+     "start": 0.81,
+     "end": 1.1
+    },
+    {
+     "w": "video.",
+     "start": 1.1,
+     "end": 1.58
+    }
+   ]
+  },
+  {
+   "key": "oops_out",
+   "text": "Found it.",
+   "file": "voice/quick/oops_out.wav",
+   "duration": 0.65,
+   "words": [
+    {
+     "w": "Found",
+     "start": 0.1,
+     "end": 0.33
+    },
+    {
+     "w": "it.",
+     "start": 0.33,
+     "end": 0.65
+    }
+   ]
+  },
+  {
+   "key": "up_in",
+   "text": "Up here?",
+   "file": "voice/quick/up_in.wav",
+   "duration": 0.61,
+   "words": [
+    {
+     "w": "Up",
+     "start": 0.09,
+     "end": 0.24
+    },
+    {
+     "w": "here?",
+     "start": 0.24,
+     "end": 0.61
+    }
+   ]
+  },
+  {
+   "key": "like_in",
+   "text": "Like this?",
+   "file": "voice/quick/like_in.wav",
+   "duration": 0.64,
+   "words": [
+    {
+     "w": "Like",
+     "start": 0.03,
+     "end": 0.31
+    },
+    {
+     "w": "this?",
+     "start": 0.31,
+     "end": 0.64
+    }
+   ]
+  },
+  {
+   "key": "scoot_in",
+   "text": "Scoot over.",
+   "file": "voice/quick/scoot_in.wav",
+   "duration": 0.56,
+   "words": [
+    {
+     "w": "Scoot",
+     "start": 0.02,
+     "end": 0.29
+    },
+    {
+     "w": "over.",
+     "start": 0.29,
+     "end": 0.56
+    }
+   ]
+  },
+  {
+   "key": "blink_in",
+   "text": "Don't blink.",
+   "file": "voice/quick/blink_in.wav",
+   "duration": 0.83,
+   "words": [
+    {
+     "w": "Don't",
+     "start": 0.02,
+     "end": 0.35
+    },
+    {
+     "w": "blink.",
+     "start": 0.35,
+     "end": 0.83
+    }
+   ]
+  },
+  {
+   "key": "blink_out",
+   "text": "You blinked.",
+   "file": "voice/quick/blink_out.wav",
+   "duration": 0.65,
+   "words": [
+    {
+     "w": "You",
+     "start": 0.02,
+     "end": 0.13
+    },
+    {
+     "w": "blinked.",
+     "start": 0.13,
+     "end": 0.65
+    }
+   ]
+  },
+  {
+   "key": "drop_in",
+   "text": "Oops.",
+   "file": "voice/quick/drop_in.wav",
+   "duration": 0.72,
+   "words": [
+    {
+     "w": "Oops.",
+     "start": 0.04,
+     "end": 0.72
+    }
+   ]
+  },
+  {
+   "key": "drop_out",
+   "text": "Sorry. Got it.",
+   "file": "voice/quick/drop_out.wav",
+   "duration": 1.36,
+   "words": [
+    {
+     "w": "Sorry.",
+     "start": 0.02,
+     "end": 1.07
+    },
+    {
+     "w": "Got",
+     "start": 1.07,
+     "end": 1.21
+    },
+    {
+     "w": "it.",
+     "start": 1.21,
+     "end": 1.36
+    }
+   ]
+  },
+  {
+   "key": "nice_in",
+   "text": "You know what else feels nice?",
+   "file": "voice/quick/nice_in.wav",
+   "duration": 1.37,
+   "words": [
+    {
+     "w": "You",
+     "start": 0.02,
+     "end": 0.19
+    },
+    {
+     "w": "know",
+     "start": 0.19,
+     "end": 0.31
+    },
+    {
+     "w": "what",
+     "start": 0.31,
+     "end": 0.54
+    },
+    {
+     "w": "else",
+     "start": 0.54,
+     "end": 0.91
+    },
+    {
+     "w": "feels",
+     "start": 0.91,
+     "end": 1.15
+    },
+    {
+     "w": "nice?",
+     "start": 1.15,
+     "end": 1.37
+    }
+   ]
+  },
+  {
+   "key": "want_in",
+   "text": "You know you want to.",
+   "file": "voice/quick/want_in.wav",
+   "duration": 1.2,
+   "words": [
+    {
+     "w": "You",
+     "start": 0.04,
+     "end": 0.21
+    },
+    {
+     "w": "know",
+     "start": 0.21,
+     "end": 0.42
+    },
+    {
+     "w": "you",
+     "start": 0.42,
+     "end": 0.66
+    },
+    {
+     "w": "want",
+     "start": 0.66,
+     "end": 0.89
+    },
+    {
+     "w": "to.",
+     "start": 0.89,
+     "end": 1.2
+    }
+   ]
+  },
+  {
+   "key": "new_out",
+   "text": "Good as new.",
+   "file": "voice/quick/new_out.wav",
+   "duration": 0.77,
+   "words": [
+    {
+     "w": "Good",
+     "start": 0.02,
+     "end": 0.22
+    },
+    {
+     "w": "as",
+     "start": 0.22,
+     "end": 0.34
+    },
+    {
+     "w": "new.",
+     "start": 0.34,
+     "end": 0.77
+    }
+   ]
+  },
+  {
+   "key": "closer_in",
+   "text": "Closer. Closer. Closer.",
+   "file": "voice/quick/closer_in.wav",
+   "duration": 2.77,
+   "words": [
+    {
+     "w": "Closer.",
+     "start": 0.02,
+     "end": 0.98
+    },
+    {
+     "w": "Closer.",
+     "start": 0.98,
+     "end": 2.08
+    },
+    {
+     "w": "Closer.",
+     "start": 2.08,
+     "end": 2.77
+    }
+   ]
+  },
+  {
+   "key": "closer_out",
+   "text": "Okay. Too close.",
+   "file": "voice/quick/closer_out.wav",
+   "duration": 1.42,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 0.02,
+     "end": 0.55
+    },
+    {
+     "w": "Too",
+     "start": 0.55,
+     "end": 0.84
+    },
+    {
+     "w": "close.",
+     "start": 0.84,
+     "end": 1.42
+    }
+   ]
+  },
+  {
+   "key": "flip_out",
+   "text": "Okay, flip it back.",
+   "file": "voice/quick/flip_out.wav",
+   "duration": 1.05,
+   "words": [
+    {
+     "w": "Okay,",
+     "start": 0.02,
+     "end": 0.42
+    },
+    {
+     "w": "flip",
+     "start": 0.42,
+     "end": 0.63
+    },
+    {
+     "w": "it",
+     "start": 0.63,
+     "end": 0.76
+    },
+    {
+     "w": "back.",
+     "start": 0.76,
+     "end": 1.05
+    }
+   ]
+  },
+  {
+   "key": "help_in",
+   "text": "Did I just hear someone ask for help?",
+   "file": "voice/quick/help_in.wav",
+   "duration": 1.57,
+   "words": [
+    {
+     "w": "Did",
+     "start": 0.02,
+     "end": 0.14
+    },
+    {
+     "w": "I",
+     "start": 0.14,
+     "end": 0.22
+    },
+    {
+     "w": "just",
+     "start": 0.22,
+     "end": 0.38
+    },
+    {
+     "w": "hear",
+     "start": 0.38,
+     "end": 0.62
+    },
+    {
+     "w": "someone",
+     "start": 0.62,
+     "end": 0.97
+    },
+    {
+     "w": "ask",
+     "start": 0.97,
+     "end": 1.12
+    },
+    {
+     "w": "for",
+     "start": 1.12,
+     "end": 1.27
+    },
+    {
+     "w": "help?",
+     "start": 1.27,
+     "end": 1.57
+    }
+   ]
+  },
+  {
+   "key": "funny_in",
+   "text": "Funny you should say that.",
+   "file": "voice/quick/funny_in.wav",
+   "duration": 1.06,
+   "words": [
+    {
+     "w": "Funny",
+     "start": 0.02,
+     "end": 0.23
+    },
+    {
+     "w": "you",
+     "start": 0.23,
+     "end": 0.38
+    },
+    {
+     "w": "should",
+     "start": 0.38,
+     "end": 0.49
+    },
+    {
+     "w": "say",
+     "start": 0.49,
+     "end": 0.72
+    },
+    {
+     "w": "that.",
+     "start": 0.72,
+     "end": 1.06
+    }
+   ]
+  },
+  {
+   "key": "lookup_in",
+   "text": "Psst. Look up.",
+   "file": "voice/quick/lookup_in.wav",
+   "duration": 0.94,
+   "words": [
+    {
+     "w": "Psst.",
+     "start": 0.02,
+     "end": 0.49
+    },
+    {
+     "w": "Look",
+     "start": 0.49,
+     "end": 0.7
+    },
+    {
+     "w": "up.",
+     "start": 0.7,
+     "end": 0.94
+    }
+   ]
+  },
+  {
+   "key": "lookup_out",
+   "text": "Okay, back down.",
+   "file": "voice/quick/lookup_out.wav",
+   "duration": 0.93,
+   "words": [
+    {
+     "w": "Okay,",
+     "start": 0.03,
+     "end": 0.37
+    },
+    {
+     "w": "back",
+     "start": 0.37,
+     "end": 0.66
+    },
+    {
+     "w": "down.",
+     "start": 0.66,
+     "end": 0.93
+    }
+   ]
+  },
+  {
+   "key": "asked_in",
+   "text": "And what if... he just asked?",
+   "file": "voice/quick/asked_in.wav",
+   "duration": 2.16,
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.2
+    },
+    {
+     "w": "what",
+     "start": 0.2,
+     "end": 0.52
+    },
+    {
+     "w": "if...",
+     "start": 0.52,
+     "end": 1.16
+    },
+    {
+     "w": "he",
+     "start": 1.16,
+     "end": 1.3
+    },
+    {
+     "w": "just",
+     "start": 1.3,
+     "end": 1.54
+    },
+    {
+     "w": "asked?",
+     "start": 1.54,
+     "end": 2.16
+    }
+   ]
+  },
+  {
+   "key": "soft_behind_in",
+   "text": "Psst. Behind you.",
+   "file": "voice/quick/soft_behind_in.wav",
+   "duration": 1.44,
+   "words": [
+    {
+     "w": "Psst.",
+     "start": 0.03,
+     "end": 0.71
+    },
+    {
+     "w": "Behind",
+     "start": 0.71,
+     "end": 1.06
+    },
+    {
+     "w": "you.",
+     "start": 1.06,
+     "end": 1.44
+    }
+   ]
+  },
+  {
+   "key": "soft_behind_out",
+   "text": "Eyes front.",
+   "file": "voice/quick/soft_behind_out.wav",
+   "duration": 0.84,
+   "words": [
+    {
+     "w": "Eyes",
+     "start": 0.02,
+     "end": 0.41
+    },
+    {
+     "w": "front.",
+     "start": 0.41,
+     "end": 0.84
+    }
+   ]
+  },
+  {
+   "key": "soft_nothim_in",
+   "text": "Not him.",
+   "file": "voice/quick/soft_nothim_in.wav",
+   "duration": 0.76,
+   "words": [
+    {
+     "w": "Not",
+     "start": 0.02,
+     "end": 0.33
+    },
+    {
+     "w": "him.",
+     "start": 0.33,
+     "end": 0.76
+    }
+   ]
+  },
+  {
+   "key": "soft_nothim_out",
+   "text": "Okay. Him.",
+   "file": "voice/quick/soft_nothim_out.wav",
+   "duration": 0.91,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 0.02,
+     "end": 0.69
+    },
+    {
+     "w": "Him.",
+     "start": 0.69,
+     "end": 0.91
+    }
+   ]
+  },
+  {
+   "key": "waitbehind_in",
+   "text": "Wait for it... wait for it... Psst. Behind you.",
+   "file": "voice/quick/waitbehind_in.wav",
+   "duration": 3.64,
+   "words": [
+    {
+     "w": "Wait",
+     "start": 0.02,
+     "end": 0.3
+    },
+    {
+     "w": "for",
+     "start": 0.3,
+     "end": 0.52
+    },
+    {
+     "w": "it...",
+     "start": 0.52,
+     "end": 1.24
+    },
+    {
+     "w": "wait",
+     "start": 1.24,
+     "end": 1.49
+    },
+    {
+     "w": "for",
+     "start": 1.49,
+     "end": 1.74
+    },
+    {
+     "w": "it...",
+     "start": 1.74,
+     "end": 2.37
+    },
+    {
+     "w": "Psst.",
+     "start": 2.61,
+     "end": 3.02
+    },
+    {
+     "w": "Behind",
+     "start": 3.02,
+     "end": 3.42
+    },
+    {
+     "w": "you.",
+     "start": 3.42,
+     "end": 3.64
+    }
+   ]
+  },
+  {
+   "key": "waitnotad_in",
+   "text": "Wait for it... This might not be an ad. Oh wait. Actually, it is.",
+   "file": "voice/quick/waitnotad_in.wav",
+   "duration": 5.06,
+   "words": [
+    {
+     "w": "Wait",
+     "start": 0.02,
+     "end": 0.3
+    },
+    {
+     "w": "for",
+     "start": 0.3,
+     "end": 0.52
+    },
+    {
+     "w": "it...",
+     "start": 0.52,
+     "end": 0.91
+    },
+    {
+     "w": "This",
+     "start": 1.24,
+     "end": 1.49
+    },
+    {
+     "w": "might",
+     "start": 1.49,
+     "end": 1.91
+    },
+    {
+     "w": "not",
+     "start": 1.91,
+     "end": 2.3
+    },
+    {
+     "w": "be",
+     "start": 2.3,
+     "end": 2.42
+    },
+    {
+     "w": "an",
+     "start": 2.42,
+     "end": 2.54
+    },
+    {
+     "w": "ad.",
+     "start": 2.54,
+     "end": 3.29
+    },
+    {
+     "w": "Oh",
+     "start": 3.29,
+     "end": 3.49
+    },
+    {
+     "w": "wait.",
+     "start": 3.49,
+     "end": 3.98
+    },
+    {
+     "w": "Actually,",
+     "start": 3.98,
+     "end": 4.54
+    },
+    {
+     "w": "it",
+     "start": 4.54,
+     "end": 4.69
+    },
+    {
+     "w": "is.",
+     "start": 4.69,
+     "end": 5.06
+    }
+   ]
+  },
+  {
+   "key": "likescoot_in",
+   "text": "Like this? Scoot over.",
+   "file": "voice/quick/likescoot_in.wav",
+   "duration": 2.0,
+   "words": [
+    {
+     "w": "Like",
+     "start": 0.03,
+     "end": 0.31
+    },
+    {
+     "w": "this?",
+     "start": 0.31,
+     "end": 0.64
+    },
+    {
+     "w": "Scoot",
+     "start": 1.46,
+     "end": 1.73
+    },
+    {
+     "w": "over.",
+     "start": 1.73,
+     "end": 2.0
+    }
+   ]
+  }
+ ]
+}

@@ -67,7 +67,8 @@ def make(a):
     d = PUBLIC / "spots" / a.name
     d.mkdir(parents=True, exist_ok=True)
     video, ad = resolve(a.video), resolve(a.ad)
-    start = max(0.0, a.freeze - BEFORE)
+    before, after = a.before or BEFORE, a.after or AFTER
+    start = max(0.0, a.freeze - before)
     # Optional crop (w:h:x:y in the source's 1920x1080 frame), e.g. to keep someone out of the picture.
     crop, k, (ox, oy) = "", 1.0, (0, 0)
     if a.crop:
@@ -76,7 +77,7 @@ def make(a):
     freeze_at = a.freeze - start
 
     # The clip, 1920x1080 at 30 fps, and the frozen frame.
-    ff("-ss", start, "-t", BEFORE + AFTER, "-i", video, "-vf", f"{crop}{FIT},fps=30", "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", "-an", d / "clip.mp4")
+    ff("-ss", start, "-t", before + after, "-i", video, "-vf", f"{crop}{FIT},fps=30", "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", *(["-c:a", "aac", "-b:a", "192k"] if a.talk else ["-an"]), d / "clip.mp4")
     end = float(probe(d / "clip.mp4", "format=duration"))
     ff("-ss", freeze_at, "-i", d / "clip.mp4", "-frames:v", "1", d / "freeze.png")
 
@@ -119,9 +120,11 @@ def make(a):
     steady_from = round(max(cuts) + 0.05, 3) if cuts else 0.0
 
     # Slow-motion lead-in (0.75x, motion-interpolated to 50 fps) and 60 fps source frames.
-    lead_in = max(freeze_at - LEAD, steady_from)
-    ff("-ss", lead_in, "-t", freeze_at - lead_in + 0.05, "-i", d / "clip.mp4", "-vf", "setpts=PTS/0.75,minterpolate=fps=50:mi_mode=mci:mc_mode=aobmc:vsbmc=1",
-       "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", d / "leadin.mp4")
+    # A talking video keeps its speed and its sound: the lead-in is the clip itself, from its start.
+    lead_in = 0.0 if a.talk else max(freeze_at - LEAD, steady_from)
+    if not a.talk:
+        ff("-ss", lead_in, "-t", freeze_at - lead_in + 0.05, "-i", d / "clip.mp4", "-vf", "setpts=PTS/0.75,minterpolate=fps=50:mi_mode=mci:mc_mode=aobmc:vsbmc=1",
+           "-c:v", "libx264", "-crf", "16", "-pix_fmt", "yuv420p", d / "leadin.mp4")
     frames = d / "frames"
     frames.mkdir(exist_ok=True)
     for f in frames.glob("*.jpg"):
@@ -144,8 +147,8 @@ def make(a):
     spot = {
         "name": a.name,
         "video": {
-            "clip": rel(d / "clip.mp4"), "leadInClip": rel(d / "leadin.mp4"), "freeze": rel(d / "freeze.png"), "person": rel(d / "person.png"),
-            "leadIn": round(lead_in, 4), "freezeAt": round(freeze_at, 4), "end": round(end, 3), "leadInRate": 0.75, "steadyFrom": steady_from,
+            "clip": rel(d / "clip.mp4"), "leadInClip": rel(d / ("clip.mp4" if a.talk else "leadin.mp4")), "freeze": rel(d / "freeze.png"), "person": rel(d / "person.png"),
+            "leadIn": round(lead_in, 4), "freezeAt": round(freeze_at, 4), "end": round(end, 3), "leadInRate": 1 if a.talk else 0.75, "steadyFrom": steady_from, "talk": bool(a.talk),
             "subject": subject, "anchor": anchor, "zoom": round(zoom, 3),
             "box": {"x0": x0, "y0": y0, "x1": x1, "y1": y1}, "head": head,
             "frames": {"dir": rel(frames), "freezeIndex": int(round((freeze_at - f0) * 60)), "count": count},
@@ -193,6 +196,9 @@ def main():
     m.add_argument("--brand")
     m.add_argument("--zoom", type=float)
     m.add_argument("--cutout-box", help="w:h:x:y in the output frame: run the cutout inside this box only")
+    m.add_argument("--before", type=float, help="seconds of video kept before the freeze")
+    m.add_argument("--after", type=float, help="seconds kept after it")
+    m.add_argument("--talk", action="store_true", help="someone is talking: no slow motion, keep the sound")
     m.add_argument("--crop", help="w:h:x:y in the source frame (scaled to 1920x1080)")
     s = sub.add_parser("script")
     s.add_argument("--name", required=True)

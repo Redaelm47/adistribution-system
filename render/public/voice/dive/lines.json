@@ -1,0 +1,90 @@
+{
+ "lines": [
+  {
+   "key": "in",
+   "text": "Wait, wait, wait, wait! Look! Look, right there!",
+   "file": "voice/dive/in.wav",
+   "duration": 2.279,
+   "words": [
+    {
+     "w": "Wait,",
+     "start": 0.05,
+     "end": 0.35
+    },
+    {
+     "w": "wait,",
+     "start": 0.35,
+     "end": 0.58
+    },
+    {
+     "w": "wait,",
+     "start": 0.58,
+     "end": 0.87
+    },
+    {
+     "w": "wait!",
+     "start": 0.87,
+     "end": 1.17
+    },
+    {
+     "w": "Look!",
+     "start": 1.17,
+     "end": 1.56
+    },
+    {
+     "w": "Look,",
+     "start": 1.56,
+     "end": 1.82
+    },
+    {
+     "w": "right",
+     "start": 1.82,
+     "end": 2.01
+    },
+    {
+     "w": "there!",
+     "start": 2.01,
+     "end": 2.279
+    }
+   ]
+  },
+  {
+   "key": "out",
+   "text": "Okay, okay, okay! Go, go, go!",
+   "file": "voice/dive/out.wav",
+   "duration": 1.399,
+   "words": [
+    {
+     "w": "Okay,",
+     "start": 0.05,
+     "end": 0.3
+    },
+    {
+     "w": "okay,",
+     "start": 0.3,
+     "end": 0.52
+    },
+    {
+     "w": "okay!",
+     "start": 0.52,
+     "end": 0.79
+    },
+    {
+     "w": "Go,",
+     "start": 0.79,
+     "end": 1.0
+    },
+    {
+     "w": "go,",
+     "start": 1.0,
+     "end": 1.18
+    },
+    {
+     "w": "go!",
+     "start": 1.18,
+     "end": 1.399
+    }
+   ]
+  }
+ ]
+}
