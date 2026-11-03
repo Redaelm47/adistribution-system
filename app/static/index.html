@@ -7,84 +7,134 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/style.css?v=4">
+	<link rel="stylesheet" href="/style.css?v=7">
 </head>
 <body>
-	<header class="bar">
-		<a class="mark" href="#/" aria-label="AdistributionSystem, home"><span class="mark-ad">Ad</span>istribution<em>System</em></a>
-		<div class="crumb" id="crumb"></div>
-		<div class="mode" id="mode" title="Whether model calls go to the Meta Model API"><span class="dot"></span><span id="mode-text">…</span></div>
-	</header>
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+		<symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+		<symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+		<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+		<symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+		<symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></symbol>
+		<symbol id="i-replay" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+		<symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5 12 15.5l5-5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+		<symbol id="i-calls" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+		<symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+	</svg>
 
-	<main id="home" class="home">
-		<h1>Put your ad <em>in</em> the <em>moment</em></h1>
-		<p class="lede">Drop a video and an ad. We find the moment and write the way in.</p>
+	<!-- ============================================================ home: the composer -->
+	<div id="home" class="home">
+		<aside class="side">
+			<a class="mark" href="#/" aria-label="AdistributionSystem, new ad"><span class="mark-ad">Ad</span>istribution<em>System</em></a>
+			<a class="new" href="#/"><svg><use href="#i-plus"/></svg>New ad</a>
+			<div class="recents-h">Recents</div>
+			<nav class="recents" id="recents" aria-label="Recent runs"></nav>
+			<div class="mode" id="mode" title="Whether model calls go to the Meta Model API"><span class="dot"></span><span id="mode-text">Checking…</span></div>
+		</aside>
 
-		<form class="composer" id="composer" autocomplete="off">
-			<div class="slots">
-				<label class="slot" data-kind="video">
-					<input type="file" accept="video/*" hidden>
-					<span class="slot-empty"><span class="slot-plus">+</span><span><b>Video</b><small>Drop or choose</small></span></span>
-					<span class="slot-full"><img alt=""><span><b class="slot-name"></b><small class="slot-dur"></small></span><button type="button" class="slot-x" aria-label="Remove">×</button></span>
-				</label>
-				<label class="slot" data-kind="ad">
-					<input type="file" accept="video/*" hidden>
-					<span class="slot-empty"><span class="slot-plus">+</span><span><b>Ad</b><small>Drop or choose</small></span></span>
-					<span class="slot-full"><img alt=""><span><b class="slot-name"></b><small class="slot-dur"></small></span><button type="button" class="slot-x" aria-label="Remove">×</button></span>
-				</label>
+		<main class="home-main" id="drop-zone">
+			<header class="home-top"><span class="model-name">Muse Spark</span><span class="model-more">with SAM 3.1 and Muse Voice Transcribe</span></header>
+			<div class="hero">
+				<h1>Put your ad <em>in</em> the <em>moment</em></h1>
+				<p class="lede">Drop a video and an ad. We find the moment and write the way in.</p>
+
+				<form class="composer" id="composer" autocomplete="off">
+					<div class="files" id="files"></div>
+					<textarea class="ask" id="ask" rows="1" placeholder="Ask anything about your ad" aria-label="Your request"></textarea>
+					<div class="row">
+						<label class="round" title="Add a video or an ad"><input type="file" id="pick" accept="video/*" multiple hidden><svg><use href="#i-plus"/></svg></label>
+						<label class="tone-pill" title="Tone of the line"><span id="tone-label">Funny</span><svg><use href="#i-down"/></svg>
+							<select id="tone-select" aria-label="Tone">
+								<option value="funny">Funny</option><option value="cute">Cute</option><option value="inner voice">Inner voice</option><option value="sports replay">Sports replay</option><option value="calm">Calm</option>
+							</select>
+						</label>
+						<span class="hint" id="hint">Drop your video, then your ad</span>
+						<button class="send" id="send" type="submit" aria-label="Put my ad in this video" disabled><svg><use href="#i-up"/></svg></button>
+					</div>
+				</form>
+				<div class="tones" id="tones" role="radiogroup" aria-label="Tone">
+					<button type="button" role="radio" data-tone="funny" aria-checked="true">Funny</button>
+					<button type="button" role="radio" data-tone="cute" aria-checked="false">Cute</button>
+					<button type="button" role="radio" data-tone="inner voice" aria-checked="false">Inner voice</button>
+					<button type="button" role="radio" data-tone="sports replay" aria-checked="false">Sports replay</button>
+					<button type="button" role="radio" data-tone="calm" aria-checked="false">Calm</button>
+				</div>
+				<ol class="how" aria-label="What happens">
+					<li><b>Muse Voice Transcribe</b> listens</li>
+					<li><b>Muse Spark</b> watches and finds the moment</li>
+					<li><b>SAM 3.1</b> cuts out the subject</li>
+					<li><b>Muse Spark</b> writes the way in</li>
+				</ol>
 			</div>
-			<input class="ask" id="ask" type="text" placeholder="Ask anything about your ad" aria-label="Your request">
-			<div class="composer-foot">
-				<span class="hint" id="hint">Add a video and an ad</span>
-				<button class="send" id="send" type="submit" aria-label="Put my ad in this video" disabled>
-					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-				</button>
-			</div>
-		</form>
-		<div class="tones" id="tones" role="radiogroup" aria-label="Tone">
-			<button type="button" role="radio" data-tone="funny" aria-checked="true">Funny</button>
-			<button type="button" role="radio" data-tone="cute" aria-checked="false">Cute</button>
-			<button type="button" role="radio" data-tone="inner voice" aria-checked="false">Inner voice</button>
-			<button type="button" role="radio" data-tone="sports replay" aria-checked="false">Sports replay</button>
-			<button type="button" role="radio" data-tone="calm" aria-checked="false">Calm</button>
+			<div class="drop-veil" aria-hidden="true"><div>Drop your video, then your ad</div></div>
+		</main>
+	</div>
+
+	<!-- ============================================================ studio: one run -->
+	<div id="studio" class="studio" hidden>
+		<header class="top">
+			<a class="back" href="#/" aria-label="New ad"><svg><use href="#i-back"/></svg></a>
+			<a class="mark small" href="#/"><span class="mark-ad">Ad</span>istribution<em>System</em></a>
+			<span class="sep"></span>
+			<div class="title" id="title"></div>
+			<span class="badge" id="badge" hidden></span>
+			<div class="grow"></div>
+			<button class="pill" id="replay" type="button" title="Play the run again at its own pace"><svg><use href="#i-replay"/></svg>Replay</button>
+			<button class="pill" id="calls-btn" type="button" aria-expanded="false" aria-controls="calls"><svg><use href="#i-calls"/></svg>Meta calls <b id="calls-count">0</b><span class="pill-cost" id="calls-cost">$0.0000</span></button>
+			<a class="pill solid" id="export" aria-disabled="true"><svg><use href="#i-dl"/></svg>Export</a>
+		</header>
+
+		<div class="body">
+			<section class="chat" aria-label="Conversation">
+				<div class="thread" id="thread"></div>
+				<form class="follow" id="follow" autocomplete="off">
+					<input id="follow-text" type="text" placeholder="Ask for another way in" aria-label="Ask for another way in">
+					<button class="send small" type="submit" aria-label="Send" disabled><svg><use href="#i-up"/></svg></button>
+				</form>
+			</section>
+
+			<section class="stage" aria-label="The video">
+				<div class="stage-in">
+				<div class="seg" id="seg" hidden>
+					<button type="button" data-view="bridge" aria-pressed="true">With the ad</button>
+					<button type="button" data-view="video" aria-pressed="false">Original</button>
+				</div>
+				<div class="player" id="player-box">
+					<video id="player" playsinline preload="metadata"></video>
+					<button class="big-play" id="big-play" type="button" aria-label="Play"><svg><use href="#i-play"/></svg></button>
+					<div class="p-shade"></div>
+					<div class="p-bar" id="p-bar">
+						<div class="p-fill" id="p-fill"></div>
+						<div class="p-dot" id="p-dot" hidden></div>
+						<div class="p-tag" id="p-tag" hidden>Best moment</div>
+					</div>
+					<div class="p-time" id="p-time">0:00 / 0:00</div>
+				</div>
+				<div class="strip" id="strip">
+					<div class="frames" id="frames"></div>
+					<div class="ad-block" id="ad-block" hidden>Ad</div>
+					<div class="head" id="head"></div>
+				</div>
+				<div class="wayin-row" id="wayin-row" hidden><span>Way in</span><div id="wayin-pills"></div></div>
+				<div class="cards" id="cards"></div>
+				</div>
+			</section>
+
+			<aside class="calls" id="calls" aria-label="Meta model calls" hidden>
+				<div class="calls-head">
+					<div><h2>Meta model calls</h2><p id="calls-sub">Every call, as it happens</p></div>
+					<button class="x" id="calls-close" type="button" aria-label="Close"><svg><use href="#i-x"/></svg></button>
+				</div>
+				<ol class="log" id="log"></ol>
+				<div class="receipt">
+					<div class="r-row"><span>Total</span><b id="total-cost">$0.0000</b></div>
+					<div class="r-sub" id="total-sub">No call yet</div>
+				</div>
+			</aside>
 		</div>
+	</div>
 
-		<section class="history" id="history" hidden>
-			<h2>Recorded runs</h2>
-			<ul id="history-list"></ul>
-		</section>
-	</main>
-
-	<main id="studio" class="studio" hidden>
-		<aside class="talk">
-			<div class="bubble" id="you"></div>
-			<div class="chips" id="chips"></div>
-			<div class="says" id="says"></div>
-			<ol class="plan" id="plan"></ol>
-		</aside>
-
-		<section class="stage">
-			<div class="player">
-				<video id="player" controls playsinline preload="metadata"></video>
-				<div class="marker" id="marker" hidden><span id="marker-label"></span></div>
-			</div>
-			<div class="strip" id="strip"></div>
-			<div class="cards" id="cards"></div>
-		</section>
-
-		<aside class="calls">
-			<div class="calls-head">
-				<h2>Meta model calls</h2>
-				<span class="count" id="count">0</span>
-			</div>
-			<ol class="log" id="log"></ol>
-			<div class="receipt" id="receipt">
-				<div><span>Total</span><b id="total-cost">$0.0000</b></div>
-				<div class="receipt-sub" id="total-sub">No call yet</div>
-			</div>
-		</aside>
-	</main>
-
-	<script src="/app.js?v=4"></script>
+	<script src="/app.js?v=7"></script>
 </body>
 </html>

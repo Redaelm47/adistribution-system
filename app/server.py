@@ -32,22 +32,45 @@ def status():
 
 
 @app.post("/api/runs")
-async def create(video: UploadFile = File(...), ad: UploadFile = File(...), prompt: str = Form(""), tone: str = Form("")):
+async def create(
+    video: UploadFile | None = File(None),
+    ad: UploadFile | None = File(None),
+    prompt: str = Form(""),
+    tone: str = Form(""),
+    from_run: str = Form(""),
+):
+    """A new run from two uploads, or a follow-up that reuses the files of an earlier run (`from_run`)."""
+    import os
     import time
     import uuid
 
+    if from_run:
+        src = (RUNS / from_run).resolve()
+        if RUNS.resolve() not in src.parents or not (src / "inputs.json").exists():
+            raise HTTPException(404, "run not found")
+        old = json.loads((src / "inputs.json").read_text())
+    elif video is None or ad is None:
+        raise HTTPException(400, "a video and an ad are needed")
     rid = time.strftime("%m%d-%H%M%S-") + uuid.uuid4().hex[:4]
     folder = RUNS / rid
     folder.mkdir(parents=True)
     paths = {}
-    for key, up in (("video", video), ("ad", ad)):
-        suffix = Path(up.filename or "x.mp4").suffix.lower() or ".mp4"
-        dest = folder / f"{key}{suffix}"
-        with open(dest, "wb") as f:
-            while chunk := await up.read(1 << 20):
-                f.write(chunk)
-        paths[key] = dest
-    names = {"video": video.filename, "ad": ad.filename}
+    if from_run:
+        for key in ("video", "ad"):
+            dest = folder / old["files"][key]
+            os.link(src / old["files"][key], dest)  # a hard link: no copy, the disk is short
+            paths[key] = dest
+        names = old["names"]
+        tone = tone or old.get("tone", "")
+    else:
+        for key, up in (("video", video), ("ad", ad)):
+            suffix = Path(up.filename or "x.mp4").suffix.lower() or ".mp4"
+            dest = folder / f"{key}{suffix}"
+            with open(dest, "wb") as f:
+                while chunk := await up.read(1 << 20):
+                    f.write(chunk)
+            paths[key] = dest
+        names = {"video": video.filename, "ad": ad.filename}
     files = {k: p.name for k, p in paths.items()}
     (folder / "inputs.json").write_text(json.dumps({"names": names, "files": files, "prompt": prompt, "tone": tone}))
     ctx = Context(id=rid, folder=folder, video=paths["video"], ad=paths["ad"], prompt=prompt, tone=tone)
@@ -61,10 +84,12 @@ def runs():
     out = []
     for folder in sorted(RUNS.glob("*"), reverse=True)[:30]:
         res = folder / "result.json"
+        inp = json.loads((folder / "inputs.json").read_text()) if (folder / "inputs.json").exists() else {}
         if res.exists():
             r = json.loads(res.read_text())
-            names = json.loads((folder / "inputs.json").read_text())["names"] if (folder / "inputs.json").exists() else {}
-            out.append({"id": folder.name, "status": r["status"], "mode": r["mode"], "total": r["total"], "names": names, "lines": (r.get("bridge") or {}).get("lines")})
+            out.append({"id": folder.name, "status": r["status"], "mode": r["mode"], "total": r["total"], "names": inp.get("names", {}), "prompt": inp.get("prompt", ""), "lines": (r.get("bridge") or {}).get("lines")})
+        elif folder.name in LIVE:
+            out.append({"id": folder.name, "status": "running", "names": inp.get("names", {}), "prompt": inp.get("prompt", "")})
     return out
 
 
