@@ -29,6 +29,7 @@ PLAN = [
     ("ad", "Read the ad", "Muse Spark", steps.read_ad),
     ("cutout", "Cut out", "SAM 3.1", steps.cutout),
     ("write", "Write the way in", "Muse Spark", steps.write),
+    ("animate", "Animate", None, steps.animate),
 ]
 
 

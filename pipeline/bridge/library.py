@@ -12,6 +12,7 @@ MOVES = [
         "id": "wall",
         "level": 1,
         "needs_subject": False,
+        "rendered": True,  # ported to render/src/product/Bridge.tsx
         "what": "The frame falls back onto a white gallery wall and swings on its nail; the ad is the next picture along the wall.",
         "line_shape": "Two beats. A teasing denial, then the admission. 4 to 8 words each.",
         "example": ["This might not be an ad.", "Oh wait. Actually, it is."],
@@ -89,7 +90,8 @@ RULES = [
 
 
 def moves_for(has_subject: bool) -> list[dict]:
-    return [m for m in MOVES if has_subject or not m["needs_subject"]]
+    """Moves the video allows, among those the renderer already knows (the others are written but not ported yet)."""
+    return [m for m in MOVES if m.get("rendered") and (has_subject or not m["needs_subject"])]
 
 
 def get(move_id: str) -> dict:

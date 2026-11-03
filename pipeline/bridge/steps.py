@@ -6,10 +6,17 @@ so it is read first; only a dozen small frames go to Muse Spark to judge the pic
 
 from __future__ import annotations
 
+import json
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
 from . import library, media
 from .context import Context, StopRun
 
 SPARK = "muse-spark-1.3"
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def _clock(t: float) -> str:
@@ -184,3 +191,40 @@ def write(ctx: Context) -> None:
     ctx.emit("bridge", move=w["move"], lines=w["lines"], why=w["why"], level=library.get(w["move"])["level"])
     ctx.say("The way in: " + " ".join(f"“{l}”" for l in w["lines"]))
     ctx.step_done(f"{w['move']}: " + " / ".join(w["lines"]))
+
+
+# ---------------------------------------------------------------- 7. animate (library move, rendered locally, no model call)
+
+RENDER = ROOT / "render"
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+
+def animate(ctx: Context) -> None:
+    busy = subprocess.run(["pgrep", "-f", "remotion render"], capture_output=True, text=True).stdout.strip()
+    if busy:
+        ctx.step_skip("Another render is running on this machine: the bridge spec is saved, render it later")
+        return
+    pub = ctx.folder / "public"
+    pub.mkdir(exist_ok=True)
+    full_still = ctx.folder / "moment_full.jpg"
+    if not full_still.exists():
+        media.frame(ctx.video, ctx.data["moment"]["freeze_at"], full_still, width=1920)
+    media.frame(ctx.ad, 0.05, ctx.folder / "ad_first.jpg", width=1920)
+    for src, name in ((ctx.video, "video.mp4"), (ctx.ad, "ad.mp4"), (full_still, "still.jpg"), (ctx.folder / "ad_first.jpg", "ad_first.jpg"), (RENDER / "public/sfx/kenney-click_002.ogg", "click.ogg")):
+        dest = pub / name
+        dest.unlink(missing_ok=True)
+        try:
+            os.link(src, dest)  # no copy: the disk is tight
+        except OSError:
+            shutil.copyfile(src, dest)
+    spec = {"move": ctx.data["bridge"]["move"], "video": "video.mp4", "still": "still.jpg", "ad": "ad.mp4", "adFirst": "ad_first.jpg", "freezeAt": ctx.data["moment"]["freeze_at"], "lines": ctx.data["bridge"]["lines"], "adSeconds": min(5.0, ctx.data["ad"]["duration"])}
+    (ctx.folder / "spec.json").write_text(json.dumps(spec, indent=2))
+    out = ctx.folder / "bridge.mp4"
+    cmd = ["npx", "remotion", "render", "src/product/index.ts", "Bridge", str(out), f"--props={ctx.folder / 'spec.json'}", f"--public-dir={pub}", "--log=error"]
+    if Path(CHROME).exists():
+        cmd.append(f"--browser-executable={CHROME}")
+    done = subprocess.run(cmd, cwd=RENDER, capture_output=True, text=True, timeout=900)
+    if done.returncode != 0 or not out.exists():
+        raise RuntimeError(f"render failed: {(done.stderr or done.stdout).strip()[-300:]}")
+    ctx.emit("result", url=ctx.url(out), spec=spec)
+    ctx.step_done(f"Library move “{spec['move']}”, rendered on this machine (no model call)")

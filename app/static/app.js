@@ -254,6 +254,12 @@ const ON = {
 			));
 		el.classList.add('big');
 	},
+	result(ev) {
+		const el = card('result', 'The bridge', null, h('video', {class: 'still', src: ev.url, controls: true, playsinline: true, preload: 'auto'}));
+		el.classList.add('big');
+		$('#cards').prepend(el);
+		el.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+	},
 	end(ev) {
 		totals(ev.total);
 		if (ev.status === 'no-bridge') card('none', 'No bridge here', null, h('p', {text: 'No moment was good enough. The ad plays as usual, and nothing is cut off.'}));
