@@ -170,8 +170,30 @@ WRITE = {
 }
 
 
+def _used_moves(ctx: Context) -> dict[str, int]:
+    """Moves this same ad already got on other videos (finished live runs on this machine), so a brand's videos do not all look alike."""
+    import hashlib
+
+    def sha(path: Path) -> str:
+        return hashlib.sha1(Path(path).read_bytes()).hexdigest()
+
+    mine, used = sha(ctx.ad), {}
+    for res in ctx.folder.parent.glob("*/result.json"):
+        if res.parent == ctx.folder or not (res.parent / "ad.mp4").exists():
+            continue
+        try:
+            r = json.loads(res.read_text())
+        except ValueError:
+            continue
+        mv = (r.get("bridge") or {}).get("move")
+        if r.get("mode") == "live" and r.get("status") == "done" and mv and sha(res.parent / "ad.mp4") == mine:
+            used[mv] = used.get(mv, 0) + 1
+    return used
+
+
 def write(ctx: Context, feedback: str | None = None, avoid: str | None = None) -> None:
     has_subject = bool(ctx.data.get("cut"))
+    used = _used_moves(ctx)
     moves = [mv for mv in library.moves_for(has_subject) if mv["id"] != avoid] or library.moves_for(has_subject)
     m, a = ctx.data["moment"], ctx.data["adread"]
     before = " ".join(l["text"] for l in ctx.data["said"]["video"] if l["end"] <= m["freeze_at"] + 0.3)[-400:]
@@ -181,6 +203,8 @@ def write(ctx: Context, feedback: str | None = None, avoid: str | None = None) -
         f"Said just before: {before or '(nothing)'}",
         f"The ad: {a['brand']}, sells {a['product']}. It says: {a['promise']} Possible last word: {a['hook']}.",
         f"Tone asked: {ctx.tone or 'funny'}.",
+        *([f"This same ad already went out on other videos with these moves: {', '.join(f'{k} ({n})' for k, n in sorted(used.items(), key=lambda kv: -kv[1]))}. "
+           "A brand wants each of its videos to feel different: prefer a move it has not had yet, as long as it truly fits this picture."] if used else []),
         "",
         "Pick one move (its id) and write the line(s) for it:",
         *[f"- {mv['id']}: {mv['what']} Line shape: {mv['line_shape']} Example: {' / '.join(mv['example'])}" for mv in moves],
