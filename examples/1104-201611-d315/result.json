@@ -1,0 +1,72 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 7,
+    "cost": 0.216295,
+    "input_tokens": 274180,
+    "output_tokens": 16834,
+    "seconds": 267.6
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 8.8,
+    "subject": "kitten",
+    "why": "The kitten stops sniffing and stares straight at the camera in a sharp still pause."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "wants it",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "The frozen frame crunches like a dry treat with cracks spreading out as the kitten keeps staring, then crumbs fall away to reveal the ad underneath.",
+    "lines": [
+      "He stopped sniffing to stare at you.",
+      "He wants something crunchy."
+    ],
+    "move": "gen-m11042017b1f",
+    "why": "The hard stare holds the viewer while the crunching frame and the sniff-to-crunchy lines turn his pause into the treat itself."
+  },
+  "spec": {
+    "move": "gen-m11042017b1f",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 8.8,
+    "lines": [
+      "He stopped sniffing to stare at you.",
+      "He wants something crunchy."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      389,
+      155,
+      1322,
+      855
+    ],
+    "center": [
+      971,
+      464
+    ],
+    "face": [
+      1025,
+      234
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "seconds": 1.77
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "seconds": 1.26
+      }
+    ]
+  }
+}

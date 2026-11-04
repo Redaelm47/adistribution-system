@@ -1,0 +1,30 @@
+[
+  {
+    "id": "gen-m11042011208",
+    "level": 3,
+    "needs_subject": true,
+    "rendered": true,
+    "file": "render/src/product/moves/gen/M11042011208.tsx",
+    "what": "A dotted pink scent trail curls in from off-screen to the kitten's nose, the cutout kitten leans after it as both lines land on white pills, then the frozen frame is pulled into the ad through a circle wipe centered on the nose.",
+    "line_shape": "As written for the video it was made for.",
+    "example": [
+      "He stopped sniffing for a reason.",
+      "He smelled something crunchy."
+    ],
+    "made_for": "1104-201002-e622"
+  },
+  {
+    "id": "gen-m11042017b1f",
+    "level": 3,
+    "needs_subject": true,
+    "rendered": true,
+    "file": "render/src/product/moves/gen/M11042017b1f.tsx",
+    "what": "The frozen frame winces, cracks jag outward from the staring kitten (kept crisp on its cutout layer), then twelve wedges plus loose crumbs fall away under gravity to reveal the ad.",
+    "line_shape": "As written for the video it was made for.",
+    "example": [
+      "He stopped sniffing to stare at you.",
+      "He wants something crunchy."
+    ],
+    "made_for": "1104-201611-d315"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "move": "gen-m11042017b1f",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 8.8,
+  "lines": [
+    "He stopped sniffing to stare at you.",
+    "He wants something crunchy."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    389,
+    155,
+    1322,
+    855
+  ],
+  "center": [
+    971,
+    464
+  ],
+  "face": [
+    1025,
+    234
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.77
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.26
+    }
+  ]
+}
