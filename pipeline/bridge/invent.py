@@ -68,7 +68,7 @@ def _muse_exec(ctx, prompt: str, label: str) -> dict:
     cid = uuid.uuid4().hex[:8]
     ctx.emit("call", step=ctx.step, id=cid, model=CODE_MODEL, label=label, status="run", request={"model": CODE_MODEL, "mode": "muse exec --json (headless)", "task": prompt[:1500]}, simulated=False)
     t = time.time()
-    cmd = [MUSE, "exec", "--json", "--disable-approval", "--max-model-steps", "60", "--prompt-file", str(task)]
+    cmd = [MUSE, "exec", "--json", "--disable-approval", "--max-model-steps", "40", "--prompt-file", str(task)]
     done = subprocess.run(cmd, cwd=RENDER, capture_output=True, text=True, timeout=1500, env={**os.environ})
     log.write_text(done.stdout)
     usage = {"input": 0, "output": 0, "cached": 0}
@@ -237,12 +237,10 @@ def review(ctx) -> None:
 
 def _watch(ctx, video: Path, round_: int) -> dict:
     d = media.probe(video)["duration"]
-    frames = media.frames(video, media.spread(d, 8, 0.2), ctx.folder / f"review{round_}", width=640, prefix="r")
-    small = media.clip(video, 0, d, ctx.folder / f"review{round_}.mp4", width=480, fps=6)
+    frames = media.frames(video, media.spread(d, 8, 0.2), ctx.folder / f"review{round_}", width=448, prefix="r")  # eight stills with their times: enough to see text, cut-out and the ad
     a = ctx.data.get("adread") or {}
     parts = [{"text": CHECKS.format(lines=" / ".join(ctx.data["bridge"]["lines"]), ad=f"{a.get('brand', '')}, {a.get('product', '')}")}]
     parts += [p for s in frames for p in ({"text": f"at {s['t']:.1f}s"}, {"image": s["path"]})]
-    parts += [{"text": "The whole bridge, small:"}, {"video": small, "fps": 3}]
     v = ctx.meta.respond(SPARK, parts, REVIEW, label="watch the bridge" if round_ == 1 else "watch it again", simulate=lambda: {"ok": True, "problems": [], "fix": "none", "advice": "simulated: no real review without a key."})
     ctx.emit("review", round=round_, ok=v["ok"], problems=v["problems"], fix=v["fix"], advice=v["advice"], frames=[{"t": s["t"], "url": ctx.url(s["path"])} for s in frames])
     return v

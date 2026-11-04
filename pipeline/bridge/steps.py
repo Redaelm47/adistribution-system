@@ -32,8 +32,8 @@ def look(ctx: Context) -> None:
     v = media.probe(ctx.video)
     a = media.probe(ctx.ad)
     ctx.data.update(video=v, ad=a)
-    shots = media.frames(ctx.video, media.spread(v["duration"], 12), ctx.folder / "frames")
-    ad_shots = media.frames(ctx.ad, [0.2] + media.spread(min(a["duration"], 20), 4, 1.0), ctx.folder / "ad", prefix="a")
+    shots = media.frames(ctx.video, media.spread(v["duration"], 12), ctx.folder / "frames", width=384)  # one image tile each: what a model needs to judge a moment
+    ad_shots = media.frames(ctx.ad, [0.2] + media.spread(min(a["duration"], 20), 3, 1.0), ctx.folder / "ad", prefix="a", width=384)
     ctx.data.update(shots=shots, ad_shots=ad_shots)
     ctx.emit("media", video=v, ad=a, frames=[{"t": s["t"], "url": ctx.url(s["path"])} for s in shots])
     ctx.step_done(f"{_clock(v['duration'])} of video, {_clock(a['duration'])} of ad, 12 frames kept")
@@ -80,8 +80,8 @@ def find_moment(ctx: Context) -> None:
     )
     parts = [{"text": prompt}] + [p for s in ctx.data["shots"] for p in ({"text": f"frame at {s['t']:.1f}s"}, {"image": s["path"]})]
     if ctx.data["video"]["duration"] <= WATCH_UP_TO:
-        small = media.clip(ctx.video, 0, ctx.data["video"]["duration"], ctx.folder / "watch.mp4", width=480, fps=4)
-        parts += [{"text": "And the whole video, small and silent:"}, {"video": small, "fps": 2}]
+        small = media.clip(ctx.video, 0, ctx.data["video"]["duration"], ctx.folder / "watch.mp4", width=320, fps=2)
+        parts += [{"text": "And the whole video, small and silent:"}, {"video": small, "fps": 1}]  # one frame a second: the frames above carry the detail
     if ctx.prompt:
         parts.append({"text": f"The advertiser asked: {ctx.prompt}"})
     m = ctx.meta.respond(SPARK, parts, MOMENT, label="find the moment", simulate=lambda: _sim_moment(ctx))
@@ -89,7 +89,7 @@ def find_moment(ctx: Context) -> None:
     if m["subject"].strip().lower() in ("", "none", "null", "nothing"):
         m["subject"] = None
     ctx.data["moment"] = m
-    still = media.frame(ctx.video, m["freeze_at"], ctx.folder / "moment.jpg")
+    still = media.frame(ctx.video, m["freeze_at"], ctx.folder / "moment.jpg", width=768)
     ctx.data["still"] = still
     ctx.emit("moment", at=m["freeze_at"], why=m["why"], subject=m["subject"], found=m["found"], url=ctx.url(still))
     if not m["found"]:
