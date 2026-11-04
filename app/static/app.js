@@ -202,6 +202,9 @@ function newState(id) {
 }
 
 function clearStudio() {
+	SCAN.stop();
+	$('#radar').hidden = true;
+	$('#player-box').classList.remove('scanning');
 	$('#thread').replaceChildren();
 	$('#log').replaceChildren(h('li', {class: 'log-empty', text: 'Calls appear here as they leave'}));
 	$('#cards').replaceChildren();
@@ -308,6 +311,7 @@ const ON = {
 		S.msg = h('p', {class: 'msg'});
 		$('#thread').append(S.msg);
 		S.voiceOf = ev.voice_of;
+		radar(true, ev.voice_of ? 'Taking your voice' : 'Watching the video');
 		if (ev.voice_of) typeInto(S.msg, 'Same script, new voice: the bridge is rendered again.', animate);
 		else {
 			typeInto(S.msg, 'Watching your video and your ad…', animate);
@@ -337,6 +341,7 @@ const ON = {
 		li.classList.add(ev.status);
 		if (ev.summary) $('.st-sum', li).textContent = ev.summary;
 		if (ev.status === 'run' && ev.step === 'animate') $('.st-sum', li).textContent = 'Rendering the move on this machine';
+		if (ev.status === 'run') $('#radar-label').textContent = STEP_TEXT[ev.step] || ev.title || '';
 		if (ev.status === 'error') li.classList.add('open');
 	},
 	say(ev, {animate}) {
@@ -379,12 +384,14 @@ const ON = {
 		S.still = ev.url;
 		markMoment();
 		if (S.view === 'video') seek(ev.at);
+		$('#player').addEventListener('seeked', () => SCAN.sample(), {once: true});
 	},
 	ad(ev) {
 		S.ad = ev;
 		fillWrite();
 	},
 	cutout(ev) {
+		SCAN.subject(ev.url);
 		const fg = h('img', {class: 'fg', src: S.still, alt: 'The subject, cut out'});
 		fg.style.webkitMaskImage = fg.style.maskImage = `url(${ev.url})`;
 		fillCard('cut', h('div', {class: 'cut'}, h('img', {class: 'bg', src: S.still, alt: ''}), fg), h('p', {class: 'c-note', text: S.mode === 'simulation' ? 'Simulated mask: with a key, SAM 3.1 returns the real outline of the subject.' : `${ev.prompt ? `“${ev.prompt}”, ` : ''}cut out of the frozen frame by SAM 3.1. The move uses it to step out of its own picture.`}));
@@ -426,6 +433,7 @@ const ON = {
 		if (animate) scrollThread();
 	},
 	result(ev) {
+		radar(false);
 		S.result = ev;
 		S.player.bridge = ev.url;
 		$('#seg').hidden = false;
@@ -437,6 +445,7 @@ const ON = {
 		fillAnimate(ev);
 	},
 	end(ev, {animate}) {
+		radar(false);
 		S.done = true;
 		totals(ev.total);
 		$('#follow button').disabled = !$('#follow-text').value.trim();
@@ -454,6 +463,258 @@ const ON = {
 		loadRecents();
 	},
 };
+
+// ------------------------------------------------------------ the analysis drawn over the player while the run works
+// The frame on screen is really analysed: its edges (a Sobel filter) light up as a scan line passes and stay found,
+// the frame becomes a 3D mesh whose depth is its brightness and lifts in a wave under the scan, and once SAM 3.1
+// has cut the subject out, its outline is traced. All drawn here, in white, on a canvas.
+
+const SCAN = (() => {
+	const SW = 192, SH = 108, GW = 64, GH = 36, BAND = 0.075, PERIOD = 2.8;
+	const off = document.createElement('canvas');
+	off.width = SW;
+	off.height = SH;
+	const octx = off.getContext('2d', {willReadFrequently: true});
+	let cvs = null, ctx = null, raf = 0, t0 = 0, lum = null, edges = [], mem = null, outline = [], outlineAt = 0, box = null, mean = 0;
+
+	function analyse(img) {
+		let px;
+		try {
+			octx.clearRect(0, 0, SW, SH);
+			octx.drawImage(img, 0, 0, SW, SH);
+			px = octx.getImageData(0, 0, SW, SH).data;
+		} catch {
+			return;
+		}
+		const L = new Float32Array(SW * SH);
+		let lo = 1, hi = 0;
+		for (let i = 0; i < SW * SH; i++) {
+			const v = (px[i * 4] * 0.299 + px[i * 4 + 1] * 0.587 + px[i * 4 + 2] * 0.114) / 255;
+			L[i] = v;
+			if (v < lo) lo = v;
+			if (v > hi) hi = v;
+		}
+		const k = hi > lo ? 1 / (hi - lo) : 1; // the night video is dark: stretch it before looking for edges
+		mean = 0;
+		for (let i = 0; i < L.length; i++) (L[i] = (L[i] - lo) * k), (mean += L[i]);
+		mean /= L.length;
+		const pts = [];
+		for (let y = 1; y < SH - 1; y++)
+			for (let x = 1; x < SW - 1; x++) {
+				const a = (dx, dy) => L[(y + dy) * SW + x + dx];
+				const gx = -a(-1, -1) - 2 * a(-1, 0) - a(-1, 1) + a(1, -1) + 2 * a(1, 0) + a(1, 1);
+				const gy = -a(-1, -1) - 2 * a(0, -1) - a(1, -1) + a(-1, 1) + 2 * a(0, 1) + a(1, 1);
+				const m = Math.hypot(gx, gy);
+				if (m > 0.5) pts.push([x / SW, y / SH, Math.min(1, m / 1.5)]);
+			}
+		const step = Math.ceil(pts.length / 2600) || 1;
+		edges = pts.filter((_, i) => i % step === 0);
+		mem = new Float32Array(edges.length);
+		lum = L;
+	}
+
+	function sample() {
+		const v = $('#player');
+		if (v && v.readyState >= 2 && v.videoWidth) return analyse(v);
+		if (v?.poster) {
+			const im = new Image();
+			im.onload = () => analyse(im);
+			im.src = v.poster;
+		}
+	}
+
+	function subject(url) {
+		const im = new Image();
+		im.onload = () => {
+			let d;
+			try {
+				octx.clearRect(0, 0, SW, SH);
+				octx.drawImage(im, 0, 0, SW, SH);
+				d = octx.getImageData(0, 0, SW, SH).data;
+			} catch {
+				return;
+			}
+			const on = (x, y) => x >= 0 && y >= 0 && x < SW && y < SH && d[(y * SW + x) * 4] > 127;
+			const pts = [];
+			let cx = 0, cy = 0, n = 0, x0 = 1, y0 = 1, x1 = 0, y1 = 0;
+			for (let y = 0; y < SH; y++)
+				for (let x = 0; x < SW; x++) {
+					if (!on(x, y)) continue;
+					cx += x, cy += y, n++;
+					x0 = Math.min(x0, x / SW), y0 = Math.min(y0, y / SH), x1 = Math.max(x1, x / SW), y1 = Math.max(y1, y / SH);
+					if (!on(x - 1, y) || !on(x + 1, y) || !on(x, y - 1) || !on(x, y + 1)) pts.push([x / SW, y / SH]);
+				}
+			if (!n) return;
+			cx /= n * SW, cy /= n * SH;
+			outline = pts.map(([x, y]) => [x, y, Math.atan2(y - cy, x - cx)]).sort((a, b) => a[2] - b[2]);
+			box = [x0, y0, x1, y1];
+			outlineAt = performance.now();
+		};
+		im.src = url;
+	}
+
+	function draw(now) {
+		raf = requestAnimationFrame(draw);
+		const el = $('#player-box');
+		const dpr = Math.min(2, window.devicePixelRatio || 1);
+		const W = Math.round(el.clientWidth * dpr), H = Math.round(el.clientHeight * dpr);
+		if (cvs.width !== W || cvs.height !== H) (cvs.width = W), (cvs.height = H);
+		const t = (now - t0) / 1000;
+		const sx = ((t % PERIOD) / PERIOD) * 1.3 - 0.15; // the scan line, from just off the left edge to just off the right
+		ctx.clearRect(0, 0, W, H);
+		ctx.fillStyle = 'rgba(6, 6, 10, 0.3)';
+		ctx.fillRect(0, 0, W, H);
+		const ar = W / H, f = 2.4;
+		const lift = (u) => Math.exp(-(((u - sx) / BAND) ** 2));
+		const at = (u, v) => (lum ? lum[Math.min(SH - 1, Math.round(v * (SH - 1))) * SW + Math.min(SW - 1, Math.round(u * (SW - 1)))] : 0.5);
+		// a gentle camera sway, so the mesh reads as 3D even between two passes
+		const yaw = Math.sin(t * 0.6) * 0.05, pitch = 0.08 + Math.sin(t * 0.45) * 0.03;
+		const proj = (u, v, z) => {
+			let X = (u - 0.5) * 2 * ar, Y = (v - 0.5) * 2, Z = z;
+			const x2 = X * Math.cos(yaw) + Z * Math.sin(yaw), z2 = -X * Math.sin(yaw) + Z * Math.cos(yaw);
+			const y3 = Y * Math.cos(pitch) - z2 * Math.sin(pitch), z3 = Y * Math.sin(pitch) + z2 * Math.cos(pitch);
+			const s = f / (f - z3);
+			return [W / 2 + (x2 * s * H) / 2, H / 2 + (y3 * s * H) / 2];
+		};
+		const depth = (u, v) => lift(u) * (0.12 + 0.42 * at(u, v)) + 0.025 * at(u, v);
+		// the mesh: rows lit by a gradient that follows the scan, columns lit one by one
+		const grad = ctx.createLinearGradient(0, 0, W, 0);
+		const clamp01 = (x) => Math.max(0, Math.min(1, x));
+		[-0.25, -0.1, 0, 0.1, 0.25].forEach((o, i) => grad.addColorStop(clamp01((sx + o * 1.0 + 0.0 - 0) * 1), `rgba(255,255,255,${[0.05, 0.16, 0.5, 0.16, 0.05][i]})`));
+		ctx.lineWidth = 1 * dpr;
+		ctx.strokeStyle = grad;
+		for (let jy = 0; jy <= GH; jy++) {
+			ctx.beginPath();
+			for (let ix = 0; ix <= GW; ix++) {
+				const u = ix / GW, v = jy / GH;
+				const [x, y] = proj(u, v, depth(u, v));
+				ix ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+			}
+			ctx.stroke();
+		}
+		for (let ix = 0; ix <= GW; ix++) {
+			const u = ix / GW;
+			ctx.strokeStyle = `rgba(255,255,255,${(0.045 + 0.4 * lift(u)).toFixed(3)})`;
+			ctx.beginPath();
+			for (let jy = 0; jy <= GH; jy++) {
+				const v = jy / GH;
+				const [x, y] = proj(u, v, depth(u, v));
+				jy ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+			}
+			ctx.stroke();
+		}
+		// the edges: lit as the scan passes, then they stay found
+		ctx.globalCompositeOperation = 'lighter';
+		ctx.fillStyle = '#fff';
+		const r = 1.6 * dpr;
+		for (let i = 0; i < edges.length; i++) {
+			const [u, v, m] = edges[i];
+			const g = lift(u);
+			mem[i] = Math.max(mem[i] * 0.994, g);
+			const a = (0.06 + 0.9 * Math.max(g, mem[i] * 0.45)) * (0.35 + 0.65 * m);
+			if (a < 0.03) continue;
+			const [x, y] = proj(u, v, depth(u, v));
+			ctx.globalAlpha = a;
+			ctx.fillRect(x - r / 2, y - r / 2, r, r);
+		}
+		ctx.globalAlpha = 1;
+		// the scan line itself: a soft band and a bright core
+		const xs = proj(clamp01(sx), 0.5, 0)[0];
+		const band = ctx.createLinearGradient(xs - 90 * dpr, 0, xs + 90 * dpr, 0);
+		band.addColorStop(0, 'rgba(255,255,255,0)');
+		band.addColorStop(0.5, 'rgba(255,255,255,0.16)');
+		band.addColorStop(1, 'rgba(255,255,255,0)');
+		ctx.fillStyle = band;
+		ctx.fillRect(xs - 90 * dpr, 0, 180 * dpr, H);
+		ctx.fillStyle = 'rgba(255,255,255,0.95)';
+		ctx.shadowColor = '#fff';
+		ctx.shadowBlur = 18 * dpr;
+		ctx.fillRect(xs - 1 * dpr, 0, 2 * dpr, H);
+		ctx.shadowBlur = 0;
+		// the subject SAM 3.1 found: its outline traced around it, then its box
+		if (outline.length) {
+			const k = Math.min(1, (now - outlineAt) / 1400);
+			const shown = Math.floor(outline.length * k);
+			ctx.fillStyle = '#fff';
+			for (let i = 0; i < shown; i++) {
+				const [u, v] = outline[i];
+				const [x, y] = proj(u, v, depth(u, v));
+				ctx.globalAlpha = 0.55 + 0.45 * Math.sin(t * 4 + i * 0.05);
+				ctx.fillRect(x - 1.5 * dpr, y - 1.5 * dpr, 3 * dpr, 3 * dpr);
+			}
+			ctx.globalAlpha = 1;
+			if (k >= 1 && box) {
+				const [a0, b0] = proj(box[0], box[1], 0), [a1, b1] = proj(box[2], box[3], 0);
+				ctx.strokeStyle = '#fff';
+				ctx.lineWidth = 2 * dpr;
+				const c = 22 * dpr;
+				ctx.beginPath();
+				[[a0, b0, 1, 1], [a1, b0, -1, 1], [a0, b1, 1, -1], [a1, b1, -1, -1]].forEach(([x, y, dx, dy]) => {
+					ctx.moveTo(x + dx * c, y);
+					ctx.lineTo(x, y);
+					ctx.lineTo(x, y + dy * c);
+				});
+				ctx.stroke();
+			}
+		}
+		ctx.globalCompositeOperation = 'source-over';
+		// a viewfinder and the numbers being read
+		const m = 22 * dpr, c = 26 * dpr;
+		ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+		ctx.lineWidth = 2 * dpr;
+		ctx.beginPath();
+		[[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m - 46 * dpr, 1, -1], [W - m, H - m - 46 * dpr, -1, -1]].forEach(([x, y, dx, dy]) => {
+			ctx.moveTo(x + dx * c, y);
+			ctx.lineTo(x, y);
+			ctx.lineTo(x, y + dy * c);
+		});
+		ctx.stroke();
+		ctx.font = `500 ${11 * dpr}px "Geist Mono", ui-monospace, monospace`;
+		ctx.fillStyle = 'rgba(255,255,255,0.85)';
+		const found = mem ? mem.reduce((s, x) => s + (x > 0.3 ? 1 : 0), 0) : 0;
+		const lines = [`EDGES   ${String(found).padStart(4, ' ')} / ${edges.length}`, `MESH    ${GW} x ${GH}  DEPTH ${mean.toFixed(2)}`, outline.length ? `SUBJECT ${outline.length} PX OUTLINE` : `SCAN    ${Math.round(clamp01(sx) * 100)}%`];
+		lines.forEach((s, i) => ctx.fillText(s, m + 10 * dpr, m + 34 * dpr + i * 16 * dpr));
+	}
+
+	return {
+		start() {
+			if (!cvs) {
+				cvs = $('#scan');
+				ctx = cvs.getContext('2d');
+			}
+			cancelAnimationFrame(raf);
+			outline = [];
+			box = null;
+			t0 = performance.now();
+			sample();
+			raf = requestAnimationFrame(draw);
+		},
+		stop() {
+			cancelAnimationFrame(raf);
+			raf = 0;
+		},
+		sample,
+		subject,
+	};
+})();
+
+// ------------------------------------------------------------ the radar over the player while the run works
+
+function radar(on, label) {
+	const r = $('#radar');
+	if (!r) return;
+	if (label) $('#radar-label').textContent = label;
+	if (on) {
+		r.classList.remove('out');
+		r.hidden = false;
+		$('#player-box').classList.add('scanning');
+		SCAN.start();
+	} else if (!r.hidden) {
+		r.classList.add('out');
+		$('#player-box').classList.remove('scanning');
+		setTimeout(() => r.classList.contains('out') && ((r.hidden = true), SCAN.stop()), 500);
+	}
+}
 
 // ------------------------------------------------------------ who says the script: asked once the bridge is there
 

@@ -1,0 +1,74 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 7,
+    "cost": 0.037499,
+    "input_tokens": 5463,
+    "output_tokens": 6414,
+    "seconds": 117.7
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 4.7,
+    "subject": "kitten",
+    "why": "Kitten is sharp and looking straight at the camera with a clear view."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "wants it",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "That sweet stare is not an ad.",
+      "Okay, it is. He wants crunchy treats."
+    ],
+    "move": "wall",
+    "why": "The gallery wall keeps the staring kitten untouched in its own frame while the denial-then-admission turns his direct look into a setup for crunchy treats."
+  },
+  "spec": {
+    "move": "wall",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 4.7,
+    "lines": [
+      "That sweet stare is not an ad.",
+      "Okay, it is. He wants crunchy treats."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      265,
+      186,
+      1149,
+      1076
+    ],
+    "center": [
+      754,
+      622
+    ],
+    "face": [
+      858,
+      420
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "That sweet stare is not an ad.",
+        "seconds": 1.6
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "Okay, it is. He wants crunchy treats.",
+        "seconds": 2.74
+      }
+    ]
+  }
+}

@@ -7,7 +7,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="/style.css?v=8">
+	<link rel="stylesheet" href="/style.css?v=13">
 </head>
 <body>
 	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -103,6 +103,7 @@
 				<div class="player" id="player-box">
 					<video id="player" playsinline preload="metadata"></video>
 					<button class="big-play" id="big-play" type="button" aria-label="Play"><svg><use href="#i-play"/></svg></button>
+					<div class="radar" id="radar" hidden><canvas id="scan"></canvas><span class="r-label" id="radar-label">Watching the video</span></div>
 					<div class="p-shade"></div>
 					<div class="p-bar" id="p-bar">
 						<div class="p-fill" id="p-fill"></div>
@@ -135,6 +136,6 @@
 		</div>
 	</div>
 
-	<script src="/app.js?v=8"></script>
+	<script src="/app.js?v=13"></script>
 </body>
 </html>

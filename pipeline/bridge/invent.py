@@ -202,6 +202,7 @@ REVIEW = {
 
 CHECKS = """You are the last check before this bridge goes into a real video. It is a short motion-design transition: a video freezes, a line appears, and the picture is carried into an ad.
 Watch it and list only real problems, with the second they happen:
+- text written over the subject (its face or its body): a line must always sit beside the subject, never on it
 - text cut off by the frame edge, overlapping other text, or hard to read on its background
 - the cut-out subject broken: holes, a halo, missing limbs, a piece of background stuck to it
 - blank, black or frozen frames where something should move; elements that jump instead of moving

@@ -96,6 +96,7 @@ RULES = [
     "Never insult the video or its creator; tease gently.",
     "Never claim it is not an ad unless the next line admits it is.",
     "English only.",
+    "Pick a move whose text never lands on the subject (its face or body): the line always sits beside it.",
 ]
 
 

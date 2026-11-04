@@ -57,5 +57,6 @@ Free-licence media used in the demo film, with their authors and licences. The a
 
 ## Voice and fonts
 
-- Narration: an AI voice made with ElevenLabs ("Zach - Clear, Natural, Calming"), allowed for the film's narration by the organizers. The product itself calls no voice model outside Meta.
+- Narration: an AI voice made with ElevenLabs ("Zach - Clear, Natural, Calming"), allowed for the film's narration by the organizers.
+- Transitions: our own AI recordings (ElevenLabs, "Nubee"), given to the product as the advertiser's recording of the lines Muse Spark wrote. The product itself calls no voice model.
 - Fonts: Geist, Geist Mono, Instrument Serif, Figtree, Bricolage Grotesque, Anton, VT323 (SIL Open Font License, Google Fonts).

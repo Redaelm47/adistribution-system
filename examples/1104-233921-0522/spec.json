@@ -1,0 +1,42 @@
+{
+  "move": "wall",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 4.7,
+  "lines": [
+    "That sweet stare is not an ad.",
+    "Okay, it is. He wants crunchy treats."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    265,
+    186,
+    1149,
+    1076
+  ],
+  "center": [
+    754,
+    622
+  ],
+  "face": [
+    858,
+    420
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "That sweet stare is not an ad.",
+      "seconds": 1.6
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "Okay, it is. He wants crunchy treats.",
+      "seconds": 2.74
+    }
+  ]
+}

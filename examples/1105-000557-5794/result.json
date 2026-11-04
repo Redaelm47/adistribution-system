@@ -1,0 +1,74 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 7,
+    "cost": 0.037746,
+    "input_tokens": 5444,
+    "output_tokens": 6478,
+    "seconds": 108.0
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 4.7,
+    "subject": "kitten",
+    "why": "The kitten looks straight at the camera with both eyes open during a pause in petting."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "Shakerz",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "He stopped blinking for a reason.",
+      "He smelled something crunchy."
+    ],
+    "move": "gen-m11042011208",
+    "why": "The wide-eyed stare justifies the no-blink joke and the nose-centered scent trail pulls that stare straight into the crunchy treats."
+  },
+  "spec": {
+    "move": "gen-m11042011208",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 4.7,
+    "lines": [
+      "He stopped blinking for a reason.",
+      "He smelled something crunchy."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      265,
+      186,
+      1149,
+      1076
+    ],
+    "center": [
+      754,
+      622
+    ],
+    "face": [
+      858,
+      420
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "He stopped blinking for a reason.",
+        "seconds": 1.54
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "He smelled something crunchy.",
+        "seconds": 1.39
+      }
+    ]
+  }
+}
