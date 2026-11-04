@@ -27,6 +27,8 @@ You drop a video and an ad. Then, with every model call shown live in the interf
 
 Every model the product calls at runtime is a Meta model. Nothing else is called: no other AI service, no voice service.
 
+**Operating-system features, not model calls:** the voice that says the line is a system voice of the Mac (macOS `say`); without one, the bridge shows its line as text only. In simulation mode (no API key), Apple Vision's built-in foreground cut-out stands in for SAM 3.1 so the moves can be previewed, and every simulated call is marked as such. Everything else in the table above is a Meta model call.
+
 **Cost per video:** about **$0.05** for a 14-second video, estimated from Meta's published prices: 6 model calls, about 39,000 input tokens (12 frames and the whole video at one frame a second for Muse Spark, one image for SAM 3.1, a few seconds of audio for Muse Voice Transcribe). The bridge is made once per video and serves every view of it: on a video seen 10,000 times, that is half a thousandth of a cent per view, against the several dollars per thousand views an advertiser already pays for the mid-roll itself. Each run prints its exact bill (calls, tokens, dollars) in the interface and in `result.json`; the measured figures of the live runs are in `examples/`.
 
 **Time per video:** about a minute on a laptop. Most of it is rendering the animation on your machine; the interface shows each step live while it runs.
