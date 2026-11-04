@@ -345,3 +345,12 @@ h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: 
 @media (prefers-reduced-motion: reduce) {
 	*, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* the review loop: what Muse Spark looked at, and what it found */
+.way.review .rv-frames { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin: 8px 0; }
+.way.review .rv-frames img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 4px; display: block; }
+.way.review .rv-ok { margin: 4px 0 0; color: var(--green, #12a150); font-weight: 500; }
+.way.review .rv-problems { margin: 4px 0 0; padding-left: 18px; }
+.way.review .rv-problems li { margin: 2px 0; }
+.way.review.bad { box-shadow: inset 3px 0 0 var(--red, #ff2a3c); }
+.way.invented { box-shadow: inset 3px 0 0 var(--cyan, #06b6d4); }

@@ -46,7 +46,9 @@ const STEP_TEXT = {
 	ad: 'Reading the ad',
 	cutout: 'Cutting out the subject',
 	write: 'Writing the way in',
+	invent: 'Writing a new move',
 	animate: 'Animating the way in',
+	review: 'Watching the result',
 };
 
 // ============================================================ mode and recents
@@ -395,6 +397,28 @@ const ON = {
 		fillWrite();
 		if (animate) scrollThread();
 	},
+	invented(ev, {animate}) {
+		const card = h('div', {class: 'way invented'},
+			h('small', {text: 'New move, written by Muse Code'}),
+			h('div', {class: 'lines'}, h('div', {text: ev.said || ev.move})),
+			h('div', {class: 'chips'}, h('span', {text: `Move: ${ev.move}`}), h('span', {text: 'Level 3'}), h('span', {text: 'Type-checked, added to the library'})),
+		);
+		$('#thread').append(card);
+		if (animate) scrollThread();
+	},
+	review(ev, {animate}) {
+		const strip = h('div', {class: 'rv-frames'}, ...(ev.frames || []).map((f) => h('img', {src: f.url, alt: `at ${f.t}s`})));
+		const verdict = ev.ok || !ev.problems?.length
+			? h('p', {class: 'rv-ok', text: ev.round > 1 ? 'Watched again after the fix: nothing left to fix.' : 'Watched frame by frame: nothing to fix.'})
+			: h('ul', {class: 'rv-problems'}, ...ev.problems.map((p) => h('li', {}, h('b', {text: `${Number(p.at).toFixed(1)} s `}), p.what)));
+		const card = h('div', {class: `way review ${ev.ok ? 'ok' : 'bad'}`},
+			h('small', {text: ev.round > 1 ? 'Muse Spark watched it again' : 'Muse Spark watched the bridge'}),
+			strip, verdict,
+			!ev.ok && ev.advice ? h('p', {class: 'why', text: `Fix: ${ev.advice}`}) : '',
+		);
+		$('#thread').append(card);
+		if (animate) scrollThread();
+	},
 	result(ev) {
 		S.result = ev;
 		S.player.bridge = ev.url;
@@ -524,7 +548,7 @@ function fillAnimate(ev) {
 		.replace(/^(\s+)"([^"]*)"(,?)$/gm, '$1<span class="s">"$2"</span>$3')
 		.replace(/: (-?[\d.]+)/g, ': <span class="n">$1</span>');
 	const mini = h('div', {class: 'mini'}, h('video', {src: ev.url, muted: true, loop: true, playsinline: true, autoplay: true, preload: 'auto'}));
-	fillCard('animate', code, mini, h('p', {class: 'c-note', text: `Library move “${spec.move}”, rendered on this machine with Remotion. No model call here.`}));
+	fillCard('animate', code, mini, h('p', {class: 'c-note', text: String(spec.move || '').startsWith('gen-') ? `Move “${spec.move}”, written by Muse Code for this video, rendered on this machine with Remotion.` : `Library move “${spec.move}”, rendered on this machine with Remotion. No model call here.`}));
 }
 
 // ------------------------------------------------------------ the player, the strip and the moment
