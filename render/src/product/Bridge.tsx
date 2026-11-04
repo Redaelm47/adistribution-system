@@ -8,6 +8,7 @@ import {Behind, behindSeconds} from './moves/Behind';
 import {Camera, cameraSeconds} from './moves/Camera';
 import {GEN} from './moves/gen';
 import {Iris, irisSeconds} from './moves/Iris';
+import {Thought, thoughtSeconds} from './moves/Thought';
 import {Throw, throwSeconds} from './moves/Throw';
 import {Wall, wallSeconds} from './moves/Wall';
 
@@ -22,6 +23,7 @@ export const MOVES: Partial<Record<MoveId, Move>> = {
 	iris: {Component: Iris, seconds: irisSeconds},
 	behind: {Component: Behind, seconds: behindSeconds},
 	throw: {Component: Throw, seconds: throwSeconds},
+	thought: {Component: Thought, seconds: thoughtSeconds},
 	...GEN, // moves Muse Code wrote for earlier videos
 };
 

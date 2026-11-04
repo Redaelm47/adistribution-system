@@ -62,6 +62,7 @@ MOVES = [
         "id": "thought",
         "level": 2,
         "needs_subject": True,
+        "rendered": True,
         "what": "A thought bubble rises from the subject and grows, blob by blob, until it swallows the screen and becomes the ad.",
         "line_shape": "The subject's own inner voice, first person, landing on the ad's product.",
         "example": ["What if I got a treat instead?"],
