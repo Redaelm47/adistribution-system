@@ -68,7 +68,8 @@ def _muse_exec(ctx, prompt: str, label: str) -> dict:
     cid = uuid.uuid4().hex[:8]
     ctx.emit("call", step=ctx.step, id=cid, model=CODE_MODEL, label=label, status="run", request={"model": CODE_MODEL, "mode": "muse exec --json (headless)", "task": prompt[:1500]}, simulated=False)
     t = time.time()
-    cmd = [MUSE, "exec", "--json", "--disable-approval", "--max-model-steps", "40", "--prompt-file", str(task)]
+    # Bounded: 30 steps at medium reasoning effort (the spending caps are checked before each turn, not inside one).
+    cmd = [MUSE, "exec", "--json", "--disable-approval", "--max-model-steps", "30", "--reasoning-effort", "medium", "--prompt-file", str(task)]
     done = subprocess.run(cmd, cwd=RENDER, capture_output=True, text=True, timeout=1500, env={**os.environ})
     log.write_text(done.stdout)
     usage = {"input": 0, "output": 0, "cached": 0}
