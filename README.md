@@ -98,6 +98,6 @@ docs/                 notes from the hackathon: tests on real videos, verdicts o
 
 ## Rights and third-party media
 
-This repository holds our own code and media, media we generated with AI models, and third-party media whose licence allows this use, each listed here with its source.
+The code is open source under the MIT licence (see [LICENSE](LICENSE)). This repository holds our own code and media, media we generated with AI models, and third-party media whose licence allows this use, each listed here with its source.
 
 The only sound the product adds to a bridge is a click from Kenney's UI Audio pack (CC0). The repository also holds frames of the Pexels test clips used by the first week's templates (Pexels License, listed in `clips/SOURCES.md`). The demo film uses cat photos from Wikimedia Commons (public domain, CC0 and CC BY), cat videos from Pexels (Pexels License), sounds from Freesound (CC0 and CC BY) and AI voices (the narration, and the recordings given to the product for the transitions' lines); their authors, licences and sources are in [docs/film-credits.md](docs/film-credits.md). The ad in the film, for Shakerz, a fictional brand, was made by us with AI and is labelled as AI-generated on screen.
