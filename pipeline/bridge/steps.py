@@ -12,7 +12,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from . import library, media
+from . import library, media, voice
 from .context import Context, StopRun
 
 SPARK = "muse-spark-1.3"
@@ -241,7 +241,8 @@ def animate(ctx: Context) -> None:
     spec.update({k: v for k, v in framed.items() if k != "still"})
     ctx.data["spec"] = spec
     render_bridge(ctx)
-    ctx.step_done(f"Move “{spec['move']}”" + (", written by Muse Code," if spec["move"].startswith("gen-") else " from the library,") + " rendered on this machine (no model call)")
+    said = f", said by the system voice {spec['voices'][0]['voice'].split(' (')[0]}" if spec.get("voices") else ", text only (no system voice on this machine)"
+    ctx.step_done(f"Move “{spec['move']}”" + (", written by Muse Code," if spec["move"].startswith("gen-") else " from the library,") + f" rendered on this machine{said} (no model call)")
 
 
 def render_bridge(ctx: Context) -> Path:
@@ -249,6 +250,7 @@ def render_bridge(ctx: Context) -> Path:
     spec = ctx.data["spec"]
     spec.update(move=ctx.data["bridge"]["move"], lines=ctx.data["bridge"]["lines"])
     pub = ctx.folder / "public"
+    spec["voices"] = voice.voice_lines(spec["move"], spec["lines"], pub)  # the system voice says the line (no AI call); [] = text only
     (ctx.folder / "spec.json").write_text(json.dumps(spec, indent=2))
     out = ctx.folder / "bridge.mp4"
     cmd = ["npx", "remotion", "render", "src/product/index.ts", "Bridge", str(out), f"--props={ctx.folder / 'spec.json'}", f"--public-dir={pub}", "--log=error"]

@@ -39,6 +39,8 @@ export const throwTimes = (s: Spec) => {
 };
 
 export const throwSeconds = (s: Spec) => throwTimes(s).end;
+/** When each line starts, for the voice. */
+export const throwLineAt = (s: Spec) => [FA, throwTimes(s).L2];
 
 // ---------------------------------------------------------------- the cards
 

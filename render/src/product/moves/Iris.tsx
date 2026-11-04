@@ -40,6 +40,11 @@ export const irisTimes = (s: Spec) => {
 };
 
 export const irisSeconds = (s: Spec) => irisTimes(s).end;
+/** When each line starts, for the voice. */
+export const irisLineAt = (s: Spec) => {
+	const c = irisTimes(s);
+	return [c.WA, c.WB];
+};
 
 // ---------------------------------------------------------------- primitives copied from film7/moves.tsx
 

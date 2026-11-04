@@ -28,6 +28,8 @@ export const behindTimes = (s: Spec) => {
 	return {BB, BG, end: BG + BGL + (s.adSeconds ?? 4)};
 };
 export const behindSeconds = (s: Spec) => behindTimes(s).end;
+/** When each line starts, for the voice. */
+export const behindLineAt = (s: Spec) => [BA, behindTimes(s).BB];
 
 // ---------------------------------------------------------------- primitives copied from the film (film7/moves.tsx)
 

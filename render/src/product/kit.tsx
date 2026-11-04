@@ -32,6 +32,7 @@ export type Spec = {
 	box?: [number, number, number, number]; // x0, y0, x1, y1 of the subject
 	center?: [number, number]; // centre of mass of the mask
 	face?: [number, number]; // a point near the top of the subject (head), for moves that aim at the face
+	voices?: {file: string; voice?: string}[]; // the lines said by a system voice (macOS `say`, no AI call), one file per line; absent: text only
 };
 
 export type MoveProps = {t: number; s: Spec};

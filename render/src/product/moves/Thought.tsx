@@ -43,6 +43,8 @@ export const thoughtTimes = (s: Spec) => {
 	return {R, TG, end: TG + TGL + (s.adSeconds ?? 4)};
 };
 export const thoughtSeconds = (s: Spec) => thoughtTimes(s).end;
+/** When the line starts, for the voice (the thought types every line as one). */
+export const thoughtLineAt = (_s: Spec) => [TA];
 
 // ---------------------------------------------------------------- where the bubble goes: beside the head, toward the side with more room, always inside the frame
 

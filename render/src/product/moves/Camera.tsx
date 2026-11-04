@@ -47,6 +47,11 @@ export const cameraTimes = (s: Spec) => {
 };
 
 export const cameraSeconds = (s: Spec) => cameraTimes(s).end;
+/** When each line starts, for the voice. */
+export const cameraLineAt = (s: Spec) => {
+	const c = cameraTimes(s);
+	return [c.click + SAY, c.bt];
+};
 
 // ---------------------------------------------------------------- what the focus aims at: the face, else the subject, else the middle
 

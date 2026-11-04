@@ -90,3 +90,6 @@ export const Wall: React.FC<MoveProps> = ({t, s}) => {
 };
 
 export const wallSeconds = (s: Spec) => wallTimes(s).end;
+/** When each line starts, for the voice. */
+export const wallLineAt = (s: Spec) => [LA, wallTimes(s).LB];
+
