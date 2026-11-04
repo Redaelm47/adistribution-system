@@ -25,7 +25,9 @@ You drop a video and an ad. Then, with every model call shown live in the interf
 
 Every model the product calls at runtime is a Meta model. Nothing else is called: no other AI service, no voice service.
 
-**Cost:** each run prints its bill (calls, tokens, dollars) in the interface and in `result.json`. Measured figures from the live runs are in `examples/`.
+**Cost per video:** about **$0.05** for a 14-second video, estimated from Meta's published prices: 6 model calls, about 39,000 input tokens (12 frames and the whole video at one frame a second for Muse Spark, one image for SAM 3.1, a few seconds of audio for Muse Voice Transcribe). For comparison, an advertiser pays several dollars per thousand views for a mid-roll, so a bridge costs less than one view. Each run prints its exact bill (calls, tokens, dollars) in the interface and in `result.json`; the measured figures of the live runs are in `examples/`.
+
+**Time per video:** about a minute on a laptop. Most of it is rendering the animation on your machine; the interface shows each step live while it runs.
 
 ## How it decides
 
