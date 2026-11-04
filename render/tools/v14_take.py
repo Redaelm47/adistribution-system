@@ -24,12 +24,15 @@ p.add_argument("--title", default="")
 a = p.parse_args()
 run = ROOT / "runs" / a.run
 result = json.loads((run / "result.json").read_text())
-ex = ROOT / "examples" / a.run
-ex.mkdir(parents=True, exist_ok=True)
-for f in ("trace.jsonl", "result.json", "spec.json", "inputs.json"):
-    if (run / f).exists():
-        shutil.copyfile(run / f, ex / f)
-print(f"record kept in {ex.relative_to(ROOT)}")
+if result.get("mode") == "live":  # only real runs go on record in the repository; simulations are previews
+    ex = ROOT / "examples" / a.run
+    ex.mkdir(parents=True, exist_ok=True)
+    for f in ("trace.jsonl", "result.json", "spec.json", "inputs.json"):
+        if (run / f).exists():
+            shutil.copyfile(run / f, ex / f)
+    print(f"record kept in {ex.relative_to(ROOT)}")
+else:
+    print("simulation: not copied to examples/")
 if a.slot.startswith(("main", "car")):
     name = "bridge_main" if a.slot == "main" else a.slot  # the film reads the main bridge as bridge_main.mp4
     shutil.copyfile(run / "bridge.mp4", V14 / f"{name}.mp4")
