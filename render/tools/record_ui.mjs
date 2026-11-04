@@ -22,6 +22,43 @@ mkdirSync(dirname(out), {recursive: true});
 const webm = out.replace(/\.mp4$/, '') + '.webm';
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
+/** Films the page in real time: each frame Chrome sends is kept with its timestamp and held until the next one,
+ * so quiet moments (nothing changes on screen) keep their real length. Returns stop(), which writes the mp4. */
+const record = async (page, out) => {
+	const dir = out.replace(/\.mp4$/, '') + '.frames';
+	rmSync(dir, {recursive: true, force: true});
+	mkdirSync(dir, {recursive: true});
+	const client = await page.createCDPSession();
+	const frames = [];
+	const t0 = Date.now() / 1000;
+	client.on('Page.screencastFrame', (f) => {
+		const file = `${dir}/f${String(frames.length).padStart(5, '0')}.jpg`;
+		writeFileSync(file, Buffer.from(f.data, 'base64'));
+		frames.push({file, ts: f.metadata.timestamp ?? Date.now() / 1000});
+		client.send('Page.screencastFrameAck', {sessionId: f.sessionId}).catch(() => {});
+	});
+	await client.send('Page.startScreencast', {format: 'jpeg', quality: 92, maxWidth: 1920, maxHeight: 1080, everyNthFrame: 1});
+	return {
+		t0,
+		stop: async () => {
+			const tEnd = Date.now() / 1000;
+			await client.send('Page.stopScreencast').catch(() => {});
+			if (!frames.length) throw new Error('no frame recorded');
+			const lines = [];
+			frames.forEach((f, i) => {
+				const next = i + 1 < frames.length ? frames[i + 1].ts : tEnd;
+				const start = i === 0 ? t0 : f.ts;
+				lines.push(`file '${f.file}'`, `duration ${Math.max(1 / 60, next - start).toFixed(4)}`);
+			});
+			lines.push(`file '${frames[frames.length - 1].file}'`);
+			writeFileSync(`${dir}/list.txt`, lines.join('\n') + '\n');
+			execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', `${dir}/list.txt`, '-vf', 'scale=1920:1080:flags=lanczos,fps=30', '-c:v', 'libx264', '-crf', '16', '-pix_fmt', 'yuv420p', out]);
+			rmSync(dir, {recursive: true, force: true});
+		},
+	};
+};
+
+
 const browser = await puppeteer.launch({
 	executablePath: CHROME,
 	headless: true,
@@ -33,8 +70,7 @@ const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 if (id === 'home') {
 	await page.goto('http://localhost:8000/', {waitUntil: 'networkidle2'});
 	await pause(600);
-	if (existsSync(webm)) rmSync(webm);
-	const rec = await page.screencast({path: webm});
+	const rec = await record(page, out);
 	await pause(900);
 	const pick = await page.$('#pick');
 	await pick.uploadFile(resolve(String(opt.video)));
@@ -53,8 +89,6 @@ if (id === 'home') {
 	await pause(hold * 1000);
 	await rec.stop();
 	await browser.close();
-	execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', webm, '-vf', 'scale=1920:1080:flags=lanczos,fps=30', '-c:v', 'libx264', '-crf', '16', '-pix_fmt', 'yuv420p', out]);
-	rmSync(webm);
 	console.log(out);
 	process.exit(0);
 }
@@ -62,9 +96,8 @@ await page.goto(`http://localhost:8000/#/run/${id}`, {waitUntil: 'networkidle2'}
 // wait for the saved run to be fully drawn, then start from a clean replay
 await page.waitForFunction(() => !!document.querySelector('.done-line'), {timeout: 30000});
 await new Promise((r) => setTimeout(r, 800));
-if (existsSync(webm)) rmSync(webm);
-const rec = await page.screencast({path: webm});
-const t0 = Date.now();
+const rec = await record(page, out);
+const t0 = rec.t0 * 1000;
 await new Promise((r) => setTimeout(r, 400));
 await page.click('#replay');
 const marks = {};
@@ -96,8 +129,6 @@ const rects = await page.evaluate(() => Object.fromEntries(['#thread', '.steps',
 })));
 await rec.stop();
 await browser.close();
-execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', webm, '-vf', 'scale=1920:1080:flags=lanczos,fps=30', '-c:v', 'libx264', '-crf', '16', '-pix_fmt', 'yuv420p', out]);
-rmSync(webm);
 const len = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', out]).toString());
 const scaled = Object.fromEntries(Object.entries(rects).map(([q, r]) => [q, r && r.map((v) => Math.round(v * k))]));
 writeFileSync(out.replace(/\.mp4$/, '.marks.json'), JSON.stringify({run: id, len, marks, rects: scaled}, null, 1));

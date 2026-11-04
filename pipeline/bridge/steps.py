@@ -101,11 +101,11 @@ def find_moment(ctx: Context) -> None:
 
 
 def _pick(ctx: Context, n: int) -> int:
-    """A stable choice per video, for the simulation (no model): the same file always gets the same move."""
+    """A stable choice per video, for the simulation (no model): the same video name always gets the same move."""
     import zlib
 
-    with open(ctx.video, "rb") as f:
-        return zlib.crc32(f.read(1 << 16)) % max(1, n)
+    name = json.loads((ctx.folder / "inputs.json").read_text())["names"]["video"]
+    return zlib.crc32(name.encode()) % max(1, n)
 
 
 def _sim_moment(ctx: Context) -> dict:
@@ -197,7 +197,8 @@ def write(ctx: Context, feedback: str | None = None, avoid: str | None = None) -
     if feedback:
         prompt += f"\n\n{feedback}"
     parts = [{"text": prompt}, {"text": "The frozen frame:"}, {"image": ctx.data["still"]}]
-    sim = moves[_pick(ctx, len(moves))]  # simulation only: a different library move per video, with its example line
+    # simulation only: a different library move per video, with its example line; SIM_MOVE forces one (previews of the demo film)
+    sim = next((mv for mv in moves if mv["id"] == os.environ.get("SIM_MOVE")), None) or moves[_pick(ctx, len(moves))]
     w = ctx.meta.respond(SPARK, parts, WRITE, label="write the way in" if not feedback else "rewrite after the review", simulate=lambda: {"move": sim["id"], "lines": sim["example"], "why": "simulated: the library example for this move.", "idea": ""})
     if w["move"] != "new" and w["move"] not in {mv["id"] for mv in moves}:
         w["move"] = moves[0]["id"]
