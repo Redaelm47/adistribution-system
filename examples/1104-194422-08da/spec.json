@@ -1,0 +1,35 @@
+{
+  "move": "thought",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 8.8,
+  "lines": [
+    "I stopped sniffing. Now I'm staring.",
+    "I want my crunchy treats."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    389,
+    155,
+    1322,
+    855
+  ],
+  "center": [
+    971,
+    464
+  ],
+  "face": [
+    1025,
+    234
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 3.42
+    }
+  ]
+}
