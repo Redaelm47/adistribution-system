@@ -31,6 +31,8 @@ Every model the product calls at runtime is a Meta model. Nothing else is called
 
 **Cost per video:** **$0.037 to $0.061, $0.044 on average**, measured on the five live runs in `examples/` (14-second videos and a 10-second ad): 6 to 8 Meta calls, about 5,000 input tokens and 6,000 to 12,000 output tokens, most of them Muse Spark's reasoning. The bridge is made once per video and serves every view of it: on a video seen 10,000 times, that is less than half a thousandth of a cent per view, against the several dollars per thousand views an advertiser already pays for the mid-roll itself. Each run prints its exact bill (calls, tokens, dollars) in the interface and in `result.json`.
 
+**When Muse Code writes a new move (level 3):** $0.216 on our live run, $0.177 of it Muse Code (30 steps at most, medium reasoning effort). It happens only when no move in the library fits, and the new move then serves every later video at the usual cost.
+
 **Time per video:** two to four minutes in our live runs, on a laptop that was rendering the demo film at the same time. Most of it is Muse Spark thinking and the animation rendering on your machine; the interface shows each step live while it runs.
 
 ## How it decides
