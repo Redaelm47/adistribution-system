@@ -415,3 +415,4 @@ h1 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: 
 .recents a { flex: none; }
 .p-bar, .p-time { z-index: 3; }
 .radar canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.way.voice .vchoices.two { grid-template-columns: repeat(2, 1fr); }

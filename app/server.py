@@ -29,7 +29,11 @@ LIVE: dict[str, Context] = {}  # runs started by this server, with their events 
 
 @app.get("/api/status")
 def status():
-    return {"mode": Meta().mode}
+    from bridge.voice import pick
+
+    # the system voice this machine can lend the bridge (a Premium or Enhanced Mac voice), or None: then the chat offers
+    # only the advertiser's own recording or text only
+    return {"mode": Meta().mode, "voice": pick("")}
 
 
 @app.post("/api/runs")

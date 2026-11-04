@@ -56,11 +56,14 @@ const STEP_TEXT = {
 // ============================================================ mode and recents
 
 let MODE = 'simulation';
+let SYSVOICE = null; // the system voice of this machine, if it has a good one (a Premium Mac voice)
 
 async function loadMode() {
 	const el = $('#mode');
 	try {
-		MODE = (await (await fetch('/api/status')).json()).mode;
+		const st = await (await fetch('/api/status')).json();
+		MODE = st.mode;
+		SYSVOICE = st.voice || null;
 		el.className = `mode ${MODE}`;
 		$('#mode-text').textContent = MODE === 'live' ? 'Live · Meta Model API' : 'Simulation · no API key';
 	} catch {
@@ -763,9 +766,9 @@ function voiceCard() {
 	const card = h('div', {class: 'way voice'},
 		h('small', {text: 'Who says it?'}),
 		h('div', {class: 'lines'}, ...texts.map((t) => h('div', {text: t}))),
-		h('p', {class: 'why', text: `This is what the bridge says. Right now: ${now}.`}),
-		h('div', {class: 'vchoices'},
-			h('button', {type: 'button', 'data-choice': 'system', text: "Mac's voice", onclick: (e) => (pick(e.currentTarget), send('system'))}),
+		h('p', {class: 'why', text: `This is what the bridge says. Right now: ${now}.` + (SYSVOICE ? '' : ' This machine has no system voice good enough: give your own recording, or keep it as text.')}),
+		h('div', {class: `vchoices${SYSVOICE ? '' : ' two'}`},
+			SYSVOICE ? h('button', {type: 'button', 'data-choice': 'system', text: "Mac's voice", onclick: (e) => (pick(e.currentTarget), send('system'))}) : null,
 			h('button', {type: 'button', 'data-choice': 'own', text: 'My voice', onclick: (e) => (pick(e.currentTarget), (own.hidden = false), scrollThread())}),
 			h('button', {type: 'button', 'data-choice': 'none', text: 'No voice', onclick: (e) => (pick(e.currentTarget), send('none'))}),
 		),
