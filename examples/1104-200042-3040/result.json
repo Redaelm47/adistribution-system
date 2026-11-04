@@ -1,0 +1,72 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 6,
+    "cost": 0.036791,
+    "input_tokens": 5287,
+    "output_tokens": 6424,
+    "seconds": 125.2
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 8.5,
+    "subject": "kitten",
+    "why": "The kitten holds still and looks straight at the camera."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "wants it",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "Okay, hold that stare.",
+      "Here's crunchy treats as payment."
+    ],
+    "move": "camera",
+    "why": "The kitten staring straight into the lens is already posing like for a photo, so the viewfinder move feels natural and the treat-payment joke leads straight to Shakerz."
+  },
+  "spec": {
+    "move": "camera",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 8.5,
+    "lines": [
+      "Okay, hold that stare.",
+      "Here's crunchy treats as payment."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      0,
+      126,
+      1551,
+      964
+    ],
+    "center": [
+      749,
+      586
+    ],
+    "face": [
+      826,
+      236
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "seconds": 1.55
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "seconds": 1.7
+      }
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 8,
+    "cost": 0.06099,
+    "input_tokens": 8206,
+    "output_tokens": 11756,
+    "seconds": 215.8
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 8.8,
+    "subject": "kitten",
+    "why": "Kitten pauses looking straight at the camera with eyes open and sharp."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "wants it",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "Psst. He's staring right at us.",
+      "Behind him: crunchy treats."
+    ],
+    "move": "behind",
+    "why": "The kitten stares straight at us so whispering behind his back is funny, and the short second line lands on crunchy treats while staying inside the frame."
+  },
+  "spec": {
+    "move": "behind",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 8.8,
+    "lines": [
+      "Psst. He's staring right at us.",
+      "Behind him: crunchy treats."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      387,
+      228,
+      1261,
+      726
+    ],
+    "center": [
+      815,
+      458
+    ],
+    "face": [
+      845,
+      286
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "seconds": 1.81
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "seconds": 1.69
+      }
+    ]
+  }
+}

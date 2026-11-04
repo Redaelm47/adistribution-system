@@ -1,0 +1,40 @@
+{
+  "move": "behind",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 8.8,
+  "lines": [
+    "Psst. He's staring right at us.",
+    "Behind him: crunchy treats."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    387,
+    228,
+    1261,
+    726
+  ],
+  "center": [
+    815,
+    458
+  ],
+  "face": [
+    845,
+    286
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.81
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.69
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "move": "iris",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 2.1,
+  "lines": [
+    "Sorry for staring, kitten...",
+    "Who wants crunchy treats?"
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    431,
+    257,
+    931,
+    856
+  ],
+  "center": [
+    668,
+    550
+  ],
+  "face": [
+    750,
+    313
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.66
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.37
+    }
+  ]
+}

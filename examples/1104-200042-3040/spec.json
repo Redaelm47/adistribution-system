@@ -1,0 +1,40 @@
+{
+  "move": "camera",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 8.5,
+  "lines": [
+    "Okay, hold that stare.",
+    "Here's crunchy treats as payment."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    0,
+    126,
+    1551,
+    964
+  ],
+  "center": [
+    749,
+    586
+  ],
+  "face": [
+    826,
+    236
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.55
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.7
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "move": "throw",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 3.7,
+  "lines": [
+    "They're staring because they want..."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    889,
+    121,
+    1639,
+    802
+  ],
+  "center": [
+    1306,
+    500
+  ],
+  "face": [
+    1304,
+    200
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "seconds": 1.49
+    }
+  ]
+}
