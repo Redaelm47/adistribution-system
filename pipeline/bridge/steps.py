@@ -100,6 +100,14 @@ def find_moment(ctx: Context) -> None:
     ctx.step_done(f"Freeze at {_clock(m['freeze_at'])}")
 
 
+def _pick(ctx: Context, n: int) -> int:
+    """A stable choice per video, for the simulation (no model): the same file always gets the same move."""
+    import zlib
+
+    with open(ctx.video, "rb") as f:
+        return zlib.crc32(f.read(1 << 16)) % max(1, n)
+
+
 def _sim_moment(ctx: Context) -> dict:
     d = ctx.data["video"]["duration"]
     return {"freeze_at": round(d * 0.55, 2), "why": "the subject looks straight at the camera, right after the action ends.", "subject": "subject", "found": True}
@@ -189,7 +197,8 @@ def write(ctx: Context, feedback: str | None = None, avoid: str | None = None) -
     if feedback:
         prompt += f"\n\n{feedback}"
     parts = [{"text": prompt}, {"text": "The frozen frame:"}, {"image": ctx.data["still"]}]
-    w = ctx.meta.respond(SPARK, parts, WRITE, label="write the way in" if not feedback else "rewrite after the review", simulate=lambda: {"move": moves[0]["id"], "lines": moves[0]["example"], "why": "simulated: the library example for this move.", "idea": ""})
+    sim = moves[_pick(ctx, len(moves))]  # simulation only: a different library move per video, with its example line
+    w = ctx.meta.respond(SPARK, parts, WRITE, label="write the way in" if not feedback else "rewrite after the review", simulate=lambda: {"move": sim["id"], "lines": sim["example"], "why": "simulated: the library example for this move.", "idea": ""})
     if w["move"] != "new" and w["move"] not in {mv["id"] for mv in moves}:
         w["move"] = moves[0]["id"]
     if feedback and w["move"] == "new":  # no second invention inside the loop

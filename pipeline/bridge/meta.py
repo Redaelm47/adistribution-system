@@ -323,12 +323,24 @@ def _b64(path: Path) -> str:
 
 
 def _fake_mask(image: Path, out: Path) -> dict:
-    """Simulation only: an ellipse in the middle of the frame, so the interface has something to show."""
+    """Simulation only. On a Mac, Apple Vision's foreground cut-out stands in for SAM 3.1 (pipeline/tools/cutout.swift), so the moves
+    can be checked on a real outline; elsewhere, an ellipse in the middle of the frame. Either way the call is marked simulated."""
+    import shutil
+    import subprocess
+
     import cv2
     import numpy as np
 
     img = cv2.imread(str(image))
     h, w = img.shape[:2]
+    swift = Path(__file__).resolve().parents[1] / "tools/cutout.swift"
+    if shutil.which("swift") and swift.exists():
+        rgba = out.with_name(out.stem + "_vision.png")
+        done = subprocess.run(["swift", str(swift), str(image), str(w // 2), str(h // 2), str(rgba), str(out)], capture_output=True, text=True, timeout=120)
+        m = cv2.imread(str(out), cv2.IMREAD_GRAYSCALE) if done.returncode == 0 and out.exists() else None
+        if m is not None and m.shape[:2] == (h, w) and (m > 127).sum() > 500:
+            ys, xs = np.nonzero(m > 127)
+            return {"box": [int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())], "score": None, "center": [int(xs.mean()), int(ys.mean())], "stand_in": "Apple Vision (simulation)"}
     mask = np.zeros((h, w), np.uint8)
     cv2.ellipse(mask, (w // 2, h // 2), (w // 6, h // 3), 0, 0, 360, 255, -1)
     cv2.imwrite(str(out), mask)

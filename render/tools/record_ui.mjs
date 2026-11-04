@@ -6,7 +6,7 @@
 // filming the run live until it ends (real Meta calls: it costs a run). Needs the interface (../app/server.py on :8000) and Google Chrome.
 
 import {execFileSync} from 'node:child_process';
-import {existsSync, mkdirSync, rmSync} from 'node:fs';
+import {existsSync, mkdirSync, rmSync, writeFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import puppeteer from 'puppeteer-core';
 
@@ -64,8 +64,23 @@ await page.waitForFunction(() => !!document.querySelector('.done-line'), {timeou
 await new Promise((r) => setTimeout(r, 800));
 if (existsSync(webm)) rmSync(webm);
 const rec = await page.screencast({path: webm});
+const t0 = Date.now();
 await new Promise((r) => setTimeout(r, 400));
 await page.click('#replay');
+const marks = {};
+const watch = setInterval(async () => {
+	try {
+		const now = (Date.now() - t0) / 1000;
+		const seen = await page.evaluate(() => [...document.querySelectorAll('#thread .st')].filter((li) => /\b(done|skip|error)\b/.test(li.className)).map((li) => li.dataset.step).concat([...document.querySelectorAll('#thread .way')].map((w) => 'card:' + (w.querySelector('small')?.textContent || ''))));
+		for (const k of seen) {
+			if (k in marks) continue;
+			marks[k] = Math.round(now * 100) / 100;
+			// the stage scrolls by itself, as a person would: down to the cards once SAM has cut the subject out, back up to the player for the result
+			if (k === 'cutout') page.evaluate(() => document.querySelector('.stage')?.scrollTo({top: (document.querySelector('#cards')?.offsetTop ?? 0) - 120, behavior: 'smooth'})).catch(() => {});
+			if (k === 'animate') page.evaluate(() => document.querySelector('.stage')?.scrollTo({top: 0, behavior: 'smooth'})).catch(() => {});
+		}
+	} catch {}
+}, 100);
 await page.waitForFunction(() => document.querySelector('#replay')?.disabled === true, {timeout: 5000});
 await page.waitForFunction(() => document.querySelector('#replay')?.disabled === false, {timeout: 180000, polling: 200});
 if (opt.calls) {
@@ -73,8 +88,17 @@ if (opt.calls) {
 	await page.click('#calls-btn').catch(() => {});
 }
 await new Promise((r) => setTimeout(r, hold * 1000));
+clearInterval(watch);
+const k = 1920 / 1440;
+const rects = await page.evaluate(() => Object.fromEntries(['#thread', '.steps', '#player', '#strip', '#cards', '#log', '.done-line'].map((q) => {
+	const r = document.querySelector(q)?.getBoundingClientRect();
+	return [q, r ? [r.x, r.y, r.width, r.height] : null];
+})));
 await rec.stop();
 await browser.close();
 execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', webm, '-vf', 'scale=1920:1080:flags=lanczos,fps=30', '-c:v', 'libx264', '-crf', '16', '-pix_fmt', 'yuv420p', out]);
 rmSync(webm);
-console.log(out);
+const len = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', out]).toString());
+const scaled = Object.fromEntries(Object.entries(rects).map(([q, r]) => [q, r && r.map((v) => Math.round(v * k))]));
+writeFileSync(out.replace(/\.mp4$/, '.marks.json'), JSON.stringify({run: id, len, marks, rects: scaled}, null, 1));
+console.log(out, JSON.stringify(marks));

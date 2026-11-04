@@ -20,11 +20,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bridge.meta import PRICES, Meta, check_budget  # noqa: E402
 
 MODEL = "muse-image-1.0"
-LOOK = "bright commercial advertising photography, hot pink and sunny yellow studio backdrop, glossy, sharp, high key light, 16:9 wide shot, no text, no letters, no logos"
+LOOK = "clean commercial product photography on a seamless pure white background, soft diffused studio light, gentle shadow, sharp, premium, 16:9 wide shot, lots of white space, no text, no letters, no logos"
 
 SHOTS = {
-    "pack": "a plump resealable pouch of crunchy cat treats with a big cartoon cat face printed on it, standing alone in the centre, " + LOOK,
-    "shake": "a hand shaking a pouch of cat treats in mid air, motion blur on the pouch, a few treats flying out, " + LOOK,
+    "pack": "a matte resealable pouch of cat treats, minimal modern packaging in off-white with one soft coral stripe and a small line drawing of a cat, standing alone in the centre, " + LOOK,
+    "shake": "a pouch of cat treats tilted in mid air as if just shaken, slight motion blur, a few treats flying out of it, " + LOOK,
     "stare": "a fluffy kitten sitting upright, eyes huge and fixed on something just off camera, ears forward, " + LOOK,
     "pounce": "a kitten leaping toward a pile of small brown fish-shaped cat treats, paws stretched out, frozen mid-jump, " + LOOK,
     "pile": "a heap of small brown fish-shaped crunchy cat treats spilling out of a tipped pouch, macro close-up, " + LOOK,
