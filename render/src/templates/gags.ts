@@ -1,5 +1,5 @@
 // Gag scripts for the Gag template, from docs/references-humour.md. Each line is a voice chunk
-// (voice/chatterbox_voice.py --set <name>) with the silence after it; a pill holds one or two lines.
+// (a draft voice clip, not in the repository) with the silence after it; a pill holds one or two lines.
 // `you`: the sentence is left hanging and the ad's own first word ("You") finishes it.
 
 import buffering from '../../public/voice/buffering/lines.json';

@@ -1,4 +1,4 @@
-// A template's voice lines (voice/chatterbox_voice.py --set <name>): durations drive the timeline,
+// A template's voice lines (first-week draft voices, not in the repository): durations drive the timeline,
 // word timings drive the captions.
 
 import type {Word} from '../ui';

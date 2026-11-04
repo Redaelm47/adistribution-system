@@ -22,3 +22,16 @@ render/public/spots/
 # Runs: uploaded videos, frames, masks and traces
 runs/
 .env.local
+
+# Third-party reference videos and the demo film's media folder (rebuilt by render/tools/v14_public.py)
+references/
+render/public-film/
+render/public-film8/
+render/public-film-old/
+# First-week draft voices and the scripts that made them (open-source speech models, used for our own
+# previews before the organizers' Nov 3 ruling). The product's bridges speak with the computer's system voice: see the README.
+voice/*.py
+render/public/voice/**/*.wav
+render/public/voice/*.wav
+render/public/bridge/*.wav
+pipeline/tools/make_spot.py
