@@ -132,7 +132,7 @@ def read_ad(ctx: Context) -> None:
     said = " ".join(l["text"] for l in ctx.data["said"]["ad"]) or "(no speech)"
     parts = [{"text": f"This is an ad. What it says out loud: {said}\nIts frames, the first one is what the viewer sees first:"}]
     parts += [{"image": s["path"]} for s in ctx.data["ad_shots"]]
-    a = ctx.meta.respond(SPARK, parts, AD, label="read the ad", simulate=lambda: {"brand": "the brand", "product": "the product", "promise": "what the ad promises.", "hook": "treats"})
+    a = ctx.meta.respond(SPARK, parts, AD, label="read the ad", simulate=lambda: {"brand": "the brand", "product": "the product", "promise": "what the ad promises.", "hook": "treats"}, effort="low")
     ctx.data["adread"] = a
     ctx.emit("ad", url=ctx.url(ctx.data["ad_shots"][0]["path"]), **a)
     ctx.step_done(f"{a['brand']}: {a['product']}")

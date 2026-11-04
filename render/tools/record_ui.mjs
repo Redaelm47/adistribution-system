@@ -9,6 +9,7 @@ import {execFileSync} from 'node:child_process';
 import {existsSync, mkdirSync, rmSync, writeFileSync} from 'node:fs';
 import {dirname, resolve} from 'node:path';
 import puppeteer from 'puppeteer-core';
+const UI = process.env.UI_URL || 'http://localhost:8000'; // the interface (UI_URL to film another port)
 
 const [id, outArg, ...rest] = process.argv.slice(2);
 if (!id || !outArg) {
@@ -68,7 +69,7 @@ const browser = await puppeteer.launch({
 const page = await browser.newPage();
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 if (id === 'home') {
-	await page.goto('http://localhost:8000/', {waitUntil: 'networkidle2'});
+	await page.goto(`${UI}/`, {waitUntil: 'networkidle2'});
 	await pause(600);
 	const rec = await record(page, out);
 	await pause(900);
@@ -92,7 +93,7 @@ if (id === 'home') {
 	console.log(out);
 	process.exit(0);
 }
-await page.goto(`http://localhost:8000/#/run/${id}`, {waitUntil: 'networkidle2'});
+await page.goto(`${UI}/#/run/${id}`, {waitUntil: 'networkidle2'});
 // wait for the saved run to be fully drawn, then start from a clean replay
 await page.waitForFunction(() => !!document.querySelector('.done-line'), {timeout: 30000});
 await new Promise((r) => setTimeout(r, 800));

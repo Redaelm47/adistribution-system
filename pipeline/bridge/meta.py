@@ -79,13 +79,21 @@ def spent_so_far() -> float:
                 ev = json.loads(line)
             except ValueError:
                 continue
-            if ev.get("type") == "call" and ev.get("status") == "done" and not ev.get("simulated"):
+            if ev.get("type") == "call" and ev.get("status") in ("done", "error") and ev.get("cost") and not ev.get("simulated"):
                 total += float(ev.get("cost") or 0)
     return total
 
 
 class OverBudget(RuntimeError):
     pass
+
+
+class Billed(RuntimeError):
+    """A call that failed after the API had already billed it (an incomplete answer): its cost still counts toward the caps."""
+
+    def __init__(self, msg: str, usage: dict, cost: float):
+        super().__init__(msg)
+        self.usage, self.cost = usage, cost
 
 
 def check_budget(run_spent: float) -> None:
@@ -116,7 +124,11 @@ class Meta:
             if self.mode == "live":
                 self.spent += cost
         except Exception as e:
-            self.on_call(id=cid, model=model, label=label, status="error", error=str(e)[:500], ms=int((time.time() - t) * 1000), simulated=self.mode != "live")
+            billed = {}
+            if self.mode == "live" and isinstance(e, Billed):
+                self.spent += e.cost
+                billed = {"usage": e.usage, "cost": round(e.cost, 6)}
+            self.on_call(id=cid, model=model, label=label, status="error", error=str(e)[:500], ms=int((time.time() - t) * 1000), simulated=self.mode != "live", **billed)
             raise
         shown = result if not isinstance(result, (bytes, bytearray)) else f"<{len(result)} bytes>"
         text = json.dumps(shown, default=str)
@@ -129,9 +141,11 @@ class Meta:
 
     # -------------------------------------------------------------- Muse Spark: understand and write, strict JSON out
 
-    def respond(self, model: str, parts: list[dict], schema: dict, label: str, simulate: Callable[[], dict]) -> dict:
+    def respond(self, model: str, parts: list[dict], schema: dict, label: str, simulate: Callable[[], dict], effort: str | None = None) -> dict:
+        """`effort`: Muse Spark's reasoning effort (low for plain reading; None keeps the API default)."""
+
         def live():
-            return self._respond_live(model, parts, schema)
+            return self._respond_live(model, parts, schema, effort)
 
         def sim():
             self._pause()
@@ -195,15 +209,17 @@ class Meta:
             return r
         raise RuntimeError(f"gave up on {path} after retries")
 
-    def _respond_live(self, model: str, parts: list[dict], schema: dict) -> tuple[dict, dict, float]:
+    def _respond_live(self, model: str, parts: list[dict], schema: dict, effort: str | None = None) -> tuple[dict, dict, float]:
         body = {
             "model": model,
             "input": [{"type": "message", "role": "user", "content": [_content(p) for p in parts]}],
             "text": {"format": {"type": "json_schema", "name": "answer", "schema": _strict(schema), "strict": True}},
-            "max_output_tokens": 4000,
+            # Reasoning tokens count as output: 4,000 ran out on the first live run (status incomplete, no answer).
+            "max_output_tokens": 16000,
         }
+        if effort:
+            body["reasoning"] = {"effort": effort}
         data = self._post("/responses", json=body).json()
-        text = _output_text(data)
         u = data.get("usage") or {}
         usage = {
             "input": u.get("input_tokens", 0),
@@ -211,6 +227,10 @@ class Meta:
             "cached": (u.get("input_tokens_details") or {}).get("cached_tokens", 0),
             "reasoning": (u.get("output_tokens_details") or {}).get("reasoning_tokens", 0),
         }
+        try:
+            text = _output_text(data)
+        except RuntimeError as e:
+            raise Billed(str(e), usage, token_cost(model, usage)) from None
         return json.loads(text), usage, token_cost(model, usage)
 
     def _transcribe_live(self, audio: Path) -> list[dict]:
