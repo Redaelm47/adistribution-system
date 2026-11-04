@@ -73,7 +73,7 @@ def find_moment(ctx: Context) -> None:
     prompt = (
         "You place one mid-roll ad inside this video. Pick the single best moment to freeze the picture and start a short bridge to the ad.\n"
         "A good moment: a break the video already makes (a finished sentence, a pause, a cut, the end of an action), with a readable, expressive frame "
-        "(the subject visible and sharp, eyes open, no motion blur). Never in the middle of a sentence.\n"
+        "(the subject visible and sharp, eyes open, no motion blur; best of all, the subject looking straight at the camera). Never in the middle of a sentence.\n"
         "If nothing is good enough, set found to false.\n\n"
         f"Video length: {ctx.data['video']['duration']:.1f}s. What is said, with times:\n{said}\n\n"
         "Frames, each labelled with its time:"
@@ -110,7 +110,8 @@ def _pick(ctx: Context, n: int) -> int:
 
 def _sim_moment(ctx: Context) -> dict:
     d = ctx.data["video"]["duration"]
-    return {"freeze_at": round(d * 0.55, 2), "why": "the subject looks straight at the camera, right after the action ends.", "subject": "subject", "found": True}
+    at = float(os.environ.get("SIM_FREEZE") or d * 0.55)  # simulation only: SIM_FREEZE sets the moment for previews
+    return {"freeze_at": round(min(at, d - 0.1), 2), "why": "the subject looks straight at the camera, right after the action ends.", "subject": "subject", "found": True}
 
 
 # ---------------------------------------------------------------- 4. read the ad (Muse Spark)
@@ -237,7 +238,7 @@ def animate(ctx: Context) -> None:
             os.link(src, dest)  # no copy: the disk is tight
         except OSError:
             shutil.copyfile(src, dest)
-    spec = {"move": ctx.data["bridge"]["move"], "video": "video.mp4", "still": "still.jpg", "ad": "ad.mp4", "adFirst": "ad_first.jpg", "freezeAt": ctx.data["moment"]["freeze_at"], "lines": ctx.data["bridge"]["lines"], "adSeconds": min(5.0, ctx.data["ad"]["duration"])}
+    spec = {"move": ctx.data["bridge"]["move"], "video": "video.mp4", "still": "still.jpg", "ad": "ad.mp4", "adFirst": "ad_first.jpg", "freezeAt": ctx.data["moment"]["freeze_at"], "lines": ctx.data["bridge"]["lines"], "adSeconds": ctx.data["ad"]["duration"]}  # the whole ad plays after the bridge (Reda: "mets toute l'ads")
     spec.update({k: v for k, v in framed.items() if k != "still"})
     ctx.data["spec"] = spec
     render_bridge(ctx)
