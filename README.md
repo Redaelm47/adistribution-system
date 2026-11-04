@@ -2,32 +2,51 @@
 
 Mid-roll ads are mostly watched to the end. What they cost is goodwill: they cut a video at an arbitrary second, and people resent the interruption. AdistributionSystem watches the video, finds a moment where a break already feels natural, and writes a short motion-design bridge from what is on screen to what the ad says. The ad then arrives as part of the video instead of breaking it.
 
-Choosing a better moment is not new on its own: platforms already avoid cutting people mid-sentence. The bridge is: the frozen picture itself carries the viewer into the ad, with a line written for that video and that ad.
+Choosing a better moment is not new on its own: platforms already avoid cutting people mid-sentence. The bridge is: the frozen picture itself carries the viewer into the ad, with a line written for that video and that ad. A brand with one ad gets a different way in for each of its ten thousand videos, and nobody has to check them one by one: the system watches its own work.
 
-Built solo with Meta's models during the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) (Indie Developer track, Oct 27 to Nov 4, 2026). Everything in this repository was written during the hackathon.
+Built solo with Meta's models during the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) (Indie Developer track, Oct 27 to Nov 4, 2026). Everything in this repository was written during the hackathon; the commit history shows it step by step.
+
+**Demo film:** link added on submission day (Nov 4).
+
+## What one run does
+
+You drop a video and an ad. Then, with every model call shown live in the interface:
+
+| Step | Model | What it does |
+|---|---|---|
+| Listen | Muse Voice Transcribe | What is said, with times, in the video and the ad, so the bridge never cuts a sentence. |
+| Find the moment | Muse Spark | Reads the transcript, twelve timed frames and, for videos up to 90 s, the whole video, and picks the second to freeze. Says so when no moment is good enough. |
+| Read the ad | Muse Spark | Brand, product, promise, and a word a line can land on. |
+| Cut out | SAM 3.1 | The subject of the frozen frame, as a mask. The moves that hold on to a subject use it. |
+| Write the way in | Muse Spark | Picks a move from the library and writes the line for this video and this ad, from examples a human judged good or bad. |
+| Write a new move | Muse Code (headless) | Only when no move fits: writes a new Remotion move, which must type-check, and adds it to the library for the next videos. |
+| Animate | none | Renders the move with Remotion on your machine. No model call. |
+| Watch the result | Muse Spark | Watches eight timed stills of the rendered bridge, lists what is wrong (text off the frame, a broken cut-out, the ad not shown), sends the fix to whoever made the faulty part (the line to Muse Spark, a generated move to Muse Code), and watches again. Two rounds at most. |
+
+Every model the product calls at runtime is a Meta model. Nothing else is called: no other AI service, no voice service.
+
+**Cost:** each run prints its bill (calls, tokens, dollars) in the interface and in `result.json`. Measured figures from the live runs are in `examples/`.
 
 ## How it decides
 
-The line is written for every video. The motion comes from a library of moves, and new code is written only when nothing fits:
+The line is written for every video. The motion comes from a library, and new code is written only when nothing fits:
 
-1. **No subject on screen** (a landscape, a screen recording): a move that works on any picture, such as the frame stepping back onto a wall ("This might not be an ad.").
-2. **A subject** (a person, a cat): a move that holds on to it, such as the subject stepping out of its own picture ("Psst. Behind you.").
-3. **Nothing fits**: a coding agent writes a new move, it is rendered and reviewed, and it joins the library for the next videos.
+1. **No subject on screen** (a landscape, a screen recording): a move that works on any picture.
+2. **A subject** (a person, a cat): a move that holds on to it, using SAM 3.1's cut-out.
+3. **Nothing fits**: Muse Code writes a new move; it is rendered, reviewed, and kept.
 4. **No good moment**: no bridge at all, rather than a bad one.
 
-## Meta models, step by step
+The library today (`render/src/product/moves/`):
 
-| Step | Model | Status |
+| Move | Level | What happens |
 |---|---|---|
-| Transcribe the video and the ad | Muse Voice Transcribe | built, tested offline |
-| Pick the moment (transcript, frames, and the whole video when short), read the ad | Muse Spark | built, tested offline |
-| Cut out the subject | SAM 3.1 | built, tested offline |
-| Write the line and pick the move | Muse Spark | built, tested offline |
-| Animate the move | none: a library move rendered with Remotion | `wall` ported, others next |
-| Write a new move when none fits | Muse Code, headless | planned |
-| Watch the render, find what is wrong, fix it | Muse Spark | planned |
-
-Every model the product calls at runtime is a Meta model.
+| `wall` | 1 | The frame falls back onto a white gallery wall and swings on its nail; the ad is the next picture along the wall. |
+| `camera` | 1 | A digicam viewfinder hunts and locks on the subject, the shutter fires, and the camera roll's next photo is the ad. |
+| `throw` | 1 | A mouse grabs the frozen picture and throws it away; the ad's card slides in. |
+| `iris` | 2 | A colour iris closes on the subject's face while the line lands, shuts, and opens on the ad. |
+| `behind` | 2 | The cut-out subject steps out of its own picture while tiles flip into the ad behind it. |
+| `thought` | 2 | A thought bubble rises from the subject's head, fills word by word, and swallows the screen into the ad. |
+| `gen-*` | 3 | Moves Muse Code wrote for earlier videos (`moves/gen/`, listed in `pipeline/bridge/moves_gen.json`). |
 
 ## Run it
 
@@ -40,19 +59,32 @@ cp .env.example .env            # then put your Meta Model API key in it
 .venv/bin/python app/server.py  # open http://localhost:8000
 ```
 
-Drop a video and an ad, press the arrow. The right column lists every Meta model call as it happens: what was sent, what came back, how long it took and what it cost. Each run is saved in `runs/<id>/trace.jsonl` and can be reopened from the home page. Without a key, the same steps run in simulation and every call is labelled `simulated`.
+Drop a video, then an ad, and press the arrow. The left column is the conversation: each step, the Meta model it calls, and what came back. The calls drawer lists every call with what was sent, the answer, the time and the cost. The run ends on the rendered bridge, ready to export, and on its bill.
 
-From the command line: `cd pipeline && ../.venv/bin/python -m bridge.run video.mp4 ad.mp4`. Tests: `cd pipeline && ../.venv/bin/python -m pytest -q`.
+- **Level 3 (optional):** install Muse Code (`curl -fsSL https://dev.meta.ai/install.sh | sh`). It uses the same `META_API_KEY`. Without it, the run falls back to a library move and says so.
+- **Spending caps:** the code refuses any call past `META_RUN_CAP` (USD per run, default 1.00) or `META_SPEND_CAP` (USD over every run on the machine, default 15.00). Both are in `.env.example`.
+- **Without a key** the same steps run in simulation, on your files, and every call is labelled `simulated`.
+- **Command line:** `cd pipeline && ../.venv/bin/python -m bridge.run video.mp4 ad.mp4 --prompt "make a new transition"`.
+- **Tests** (offline, they can never reach Meta): `cd pipeline && ../.venv/bin/python -m pytest -q`.
+
+## Every run is on record
+
+Each run is saved in `runs/<id>/`: `trace.jsonl` (every event and every model call, with request, response, tokens, cost and time), `result.json`, and the bridge's `spec.json`. The runs shown in the demo film are copied, without their media, to `examples/<id>/`, so each call the film shows can be checked. The film shows the interface replaying those runs with long waits shortened, and says so on screen.
 
 ## Repository layout
 
 ```
-app/        the web interface: drop a video and an ad, follow every model call live
-pipeline/   the steps that call Meta's models (Python)
-render/     motion-design rendering (Remotion)
-docs/       notes
+app/                  the web interface (FastAPI and plain JS): drop a video and an ad, follow every call live
+pipeline/bridge/      one run: the steps, the Meta client (prices, caps, trace), level 3 and the review loop
+pipeline/tools/       probe.py (first API check), make_ad.py (the demo film's ad, made with Muse Image)
+render/src/product/   the bridge renderer: kit.tsx, one file per move in moves/, Muse Code's moves in moves/gen/
+render/tools/         record_ui.mjs (films the interface for the demo), the film's media manifest
+examples/             the records of the runs shown in the demo film
+docs/                 notes from the hackathon: tests on real videos, verdicts on each draft, references
 ```
 
-## Status
+`pipeline/motion_ads/` and `render/src/templates/` are the first week's experiments (planar ad placement, hand-made bridge templates). The product above replaced them; they stay in the history.
 
-Work in progress: see the commit history.
+## Third-party media
+
+The only sound the product adds to a bridge is a click from Kenney's UI Audio pack (CC0). The repository also holds frames of the Pexels test clips used by the first week's templates (Pexels License, listed in `clips/SOURCES.md`) and voices we generated for those templates. The demo film uses cat videos from Wikimedia Commons (CC0 and CC BY), sounds from Freesound (CC0 and CC BY) and an AI narration voice; each one is listed with its author, licence and source in [docs/film-credits.md](docs/film-credits.md). The ad in the film is a fictional brand whose pictures were made with Muse Image.
