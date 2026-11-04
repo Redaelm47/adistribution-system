@@ -64,3 +64,38 @@ def clip(video: Path, start: float, end: float, out: Path, width: int = 640, fps
     """A short, small, silent excerpt (for a model that watches the moment itself)."""
     run("ffmpeg", "-v", "error", "-y", "-ss", f"{start:.3f}", "-to", f"{end:.3f}", "-i", video, "-an", "-vf", f"scale={width}:-2,fps={fps}", "-c:v", "libx264", "-crf", "30", "-pix_fmt", "yuv420p", out)
     return out
+
+
+def cover(still: Path, out: Path, mask: Path | None = None, name: str = "still.jpg", w: int = 1920, h: int = 1080) -> dict:
+    """The frozen frame as the bridge shows it (object-fit: cover, 1920x1080), and, when SAM gave a mask, the subject alone
+    as a PNG with alpha at the same place, with its box, centre and a point on its head, all in that frame."""
+    import cv2
+    import numpy as np
+
+    def fit(img, interp):
+        ih, iw = img.shape[:2]
+        k = max(w / iw, h / ih)
+        nw, nh = max(w, round(iw * k)), max(h, round(ih * k))
+        r = cv2.resize(img, (nw, nh), interpolation=interp)
+        x0, y0 = (nw - w) // 2, (nh - h) // 2
+        return r[y0 : y0 + h, x0 : x0 + w]
+
+    img = fit(cv2.imread(str(still)), cv2.INTER_CUBIC)
+    cv2.imwrite(str(out / name), img, [cv2.IMWRITE_JPEG_QUALITY, 94])
+    res: dict = {"still": name}
+    if mask is None or not Path(mask).exists():
+        return res
+    m = cv2.imread(str(mask), cv2.IMREAD_GRAYSCALE)
+    if m.shape[:2] != cv2.imread(str(still)).shape[:2]:
+        m = cv2.resize(m, (cv2.imread(str(still)).shape[1], cv2.imread(str(still)).shape[0]), interpolation=cv2.INTER_LINEAR)
+    m = fit(m, cv2.INTER_LINEAR)
+    m = cv2.GaussianBlur(m, (5, 5), 0)  # soft edge, no stair steps
+    ys, xs = np.nonzero(m > 127)
+    if len(xs) < 200:
+        return res
+    rgba = np.dstack([img, m])
+    cv2.imwrite(str(out / "cutout.png"), rgba)
+    x0, y0, x1, y1 = int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())
+    head = ys < y0 + (y1 - y0) * 0.18
+    res.update(cutout="cutout.png", box=[x0, y0, x1, y1], center=[int(xs.mean()), int(ys.mean())], face=[int(xs[head].mean()), int(ys[head].mean())])
+    return res

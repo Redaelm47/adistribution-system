@@ -209,8 +209,10 @@ def animate(ctx: Context) -> None:
     full_still = ctx.folder / "moment_full.jpg"
     if not full_still.exists():
         media.frame(ctx.video, ctx.data["moment"]["freeze_at"], full_still, width=1920)
-    media.frame(ctx.ad, 0.05, ctx.folder / "ad_first.jpg", width=1920)
-    for src, name in ((ctx.video, "video.mp4"), (ctx.ad, "ad.mp4"), (full_still, "still.jpg"), (ctx.folder / "ad_first.jpg", "ad_first.jpg"), (RENDER / "public/sfx/kenney-click_002.ogg", "click.ogg")):
+    cut = ctx.data.get("cut")
+    framed = media.cover(full_still, pub, mask=cut["mask"] if cut else None)  # still.jpg (+ cutout.png) in the bridge's own frame
+    media.cover(media.frame(ctx.ad, 0.05, ctx.folder / "ad_first_raw.jpg", width=1920), ctx.folder, name="ad_first.jpg")
+    for src, name in ((ctx.video, "video.mp4"), (ctx.ad, "ad.mp4"), (ctx.folder / "ad_first.jpg", "ad_first.jpg"), (RENDER / "public/sfx/kenney-click_002.ogg", "click.ogg")):
         dest = pub / name
         dest.unlink(missing_ok=True)
         try:
@@ -218,6 +220,7 @@ def animate(ctx: Context) -> None:
         except OSError:
             shutil.copyfile(src, dest)
     spec = {"move": ctx.data["bridge"]["move"], "video": "video.mp4", "still": "still.jpg", "ad": "ad.mp4", "adFirst": "ad_first.jpg", "freezeAt": ctx.data["moment"]["freeze_at"], "lines": ctx.data["bridge"]["lines"], "adSeconds": min(5.0, ctx.data["ad"]["duration"])}
+    spec.update({k: v for k, v in framed.items() if k != "still"})
     (ctx.folder / "spec.json").write_text(json.dumps(spec, indent=2))
     out = ctx.folder / "bridge.mp4"
     cmd = ["npx", "remotion", "render", "src/product/index.ts", "Bridge", str(out), f"--props={ctx.folder / 'spec.json'}", f"--public-dir={pub}", "--log=error"]

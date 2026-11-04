@@ -1,6 +1,8 @@
 # AdistributionSystem
 
-The mid-roll ad cuts a video at a random second, and that is when people leave. AdistributionSystem watches the video, finds a moment where a break already feels natural, and writes a short motion-design bridge from what is on screen to what the ad says. The ad then arrives as part of the video instead of breaking it.
+Mid-roll ads are mostly watched to the end. What they cost is goodwill: they cut a video at an arbitrary second, and people resent the interruption. AdistributionSystem watches the video, finds a moment where a break already feels natural, and writes a short motion-design bridge from what is on screen to what the ad says. The ad then arrives as part of the video instead of breaking it.
+
+Choosing a better moment is not new on its own: platforms already avoid cutting people mid-sentence. The bridge is: the frozen picture itself carries the viewer into the ad, with a line written for that video and that ad.
 
 Built solo with Meta's models during the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) (Indie Developer track, Oct 27 to Nov 4, 2026). Everything in this repository was written during the hackathon.
 
@@ -29,10 +31,11 @@ Every model the product calls at runtime is a Meta model.
 
 ## Run it
 
-Needs Python 3.11+, and ffmpeg on your PATH.
+Needs Python 3.11+, Node 18+ and ffmpeg on your PATH. The bridge is rendered with Remotion, which uses Google Chrome when it is installed and otherwise downloads its own headless browser on the first render.
 
 ```sh
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+(cd render && npm install)      # the renderer
 cp .env.example .env            # then put your Meta Model API key in it
 .venv/bin/python app/server.py  # open http://localhost:8000
 ```
