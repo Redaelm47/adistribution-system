@@ -46,7 +46,8 @@ manifest = {
     "run": rec("ui_run"),
     "code": rec("ui_code"),
     "main": clip("bridge_main"),
-    "car": [clip(f"car{i}") for i in range(4) if (P / f"car{i}.mp4").exists()],
+    # the carousel shows each bridge and the start of the ad (3 s), not the whole ad four times
+    "car": [{**c, "show": round(c["len"] - c["adSeconds"] + 3.0, 3) if c.get("adSeconds") else c["len"]} for c in (clip(f"car{i}") for i in range(4) if (P / f"car{i}.mp4").exists())],
     "ad": clip("ad"),
 }
 (ROOT / "src/film8/v14.json").write_text(json.dumps(manifest, indent=1) + "\n")

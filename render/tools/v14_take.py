@@ -39,7 +39,8 @@ if a.slot.startswith(("main", "car")):
     still = V14 / f"{a.slot}_still.jpg"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(run / "moment.jpg"), "-vf", "scale=480:-2", str(still)], check=True)
     b = result.get("bridge") or {}
-    side = {"run": a.run, "move": b.get("move"), "lines": b.get("lines"), "title": a.title or json.loads((run / "inputs.json").read_text())["names"]["video"], "still": f"v14/{still.name}", "mode": result.get("mode"), "total": result.get("total")}
+    spec = json.loads((run / "spec.json").read_text()) if (run / "spec.json").exists() else {}
+    side = {"run": a.run, "adSeconds": spec.get("adSeconds"), "move": b.get("move"), "lines": b.get("lines"), "title": a.title or json.loads((run / "inputs.json").read_text())["names"]["video"], "still": f"v14/{still.name}", "mode": result.get("mode"), "total": result.get("total")}
     (V14 / f"{name}.json").write_text(json.dumps(side, indent=1))
     print(json.dumps(side))
 subprocess.run(["python3", str(ROOT / "render/tools/v14_manifest.py")], check=True)
