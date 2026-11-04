@@ -73,12 +73,16 @@ def _muse_exec(ctx, prompt: str, label: str) -> dict:
     done = subprocess.run(cmd, cwd=RENDER, capture_output=True, text=True, timeout=1500, env={**os.environ})
     log.write_text(done.stdout)
     usage = {"input": 0, "output": 0, "cached": 0}
+    run_usage = None  # the run's own total (a "run_usage" event listing each model), preferred when present
     last_text = ""
     for line in done.stdout.splitlines():
         try:
             ev = json.loads(line)
         except ValueError:
             continue
+        for models in _find(ev, "models"):
+            if isinstance(models, list) and models and all(isinstance(m, dict) and "input_tokens" in m for m in models):
+                run_usage = {k: sum(int(m.get(f"{k}_tokens") or 0) for m in models) for k in ("input", "output", "cached")}
         for u in _find(ev, "usage"):
             if isinstance(u, dict):
                 usage["input"] += int(u.get("input_tokens") or u.get("prompt_tokens") or 0)
@@ -87,6 +91,8 @@ def _muse_exec(ctx, prompt: str, label: str) -> dict:
         for txt in _find(ev, "text"):
             if isinstance(txt, str) and txt.strip():
                 last_text = txt
+    if run_usage:
+        usage = run_usage
     cost = token_cost(SPARK, usage) if usage["input"] or usage["output"] else None
     ctx.meta.spent += cost or 0
     status = "done" if done.returncode == 0 else "error"
