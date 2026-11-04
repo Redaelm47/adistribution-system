@@ -219,7 +219,8 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 
 def animate(ctx: Context) -> None:
-    busy = subprocess.run(["pgrep", "-f", "remotion render"], capture_output=True, text=True).stdout.strip()
+    # RENDER_ALONGSIDE=1 renders even while another Remotion render runs (a bridge is short; the guard protects small machines).
+    busy = "" if os.environ.get("RENDER_ALONGSIDE") else subprocess.run(["pgrep", "-f", "remotion render"], capture_output=True, text=True).stdout.strip()
     if busy:
         ctx.step_skip("Another render is running on this machine: the bridge spec is saved, render it later")
         return
