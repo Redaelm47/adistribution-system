@@ -57,6 +57,7 @@ def pick(move: str) -> str | None:
         return _find(want, voices)
     # Premium or nothing (Reda, Nov 4: the basic system voices "font peur"): without a Premium or Enhanced English voice, text only.
     best = [v for v, loc in voices if PREMIUM.search(v) and loc.startswith("en")]
+    best.sort(key=lambda v: 0 if "premium" in v.lower() else 1)  # Premium before Enhanced
     return best[0] if best else None
 
 
