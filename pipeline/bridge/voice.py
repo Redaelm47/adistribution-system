@@ -1,9 +1,9 @@
 """The bridge's voice: the line said by a system voice of the computer (macOS `say`), never an AI service.
 
 Every model the product calls is a Meta model, and Meta's API has no speech synthesis, so the voice is the operating system's
-own text-to-speech, run locally (the organizers allow a system voice that is not an AI call). Each move has its own character,
-as in the demo film; a Premium or Enhanced voice is used when the computer has one (System Settings > Accessibility >
-Spoken Content > System voice > Manage Voices). Without `say` (Linux, Windows), the bridge stays text only and says so.
+own text-to-speech, run locally (the organizers allow a system voice that is not an AI call). Only a Premium or Enhanced
+English voice is used (System Settings > Accessibility > Spoken Content > System voice > Manage Voices > English, e.g.
+"Ava (Premium)"): the basic voices sound robotic, so without a Premium one the bridge stays text only and says so.
 
     BRIDGE_VOICE=off        text only
     BRIDGE_VOICE=Ava        one voice for every move (any installed voice name)
@@ -55,10 +55,9 @@ def pick(move: str) -> str | None:
         return None
     if want:
         return _find(want, voices)
+    # Premium or nothing (Reda, Nov 4: the basic system voices "font peur"): without a Premium or Enhanced English voice, text only.
     best = [v for v, loc in voices if PREMIUM.search(v) and loc.startswith("en")]
-    if best and move not in KEEP:
-        return best[0]
-    return _find(CAST.get(move, "Samantha"), voices) or _find("Samantha", voices)
+    return best[0] if best else None
 
 
 def speak(text: str, voice: str, out: Path, fit: float | None = None) -> float:

@@ -20,7 +20,7 @@ You drop a video and an ad. Then, with every model call shown live in the interf
 | Cut out | SAM 3.1 | The subject of the frozen frame, as a mask. The moves that hold on to a subject use it. |
 | Write the way in | Muse Spark | Picks a move from the library and writes the line for this video and this ad, from examples a human judged good or bad. |
 | Write a new move | Muse Code (headless) | Only when no move fits: writes a new Remotion move, which must type-check, and adds it to the library for the next videos. |
-| Animate | none | Renders the move with Remotion on your machine, and the line is said by the computer's own system voice (macOS `say`, one character per move, a Premium voice when installed). No model call: Meta's API has no speech synthesis, and no other AI service is used. |
+| Animate | none | Renders the move with Remotion on your machine, and, when the Mac has a Premium system voice, the line is said with it (macOS `say`). No model call: Meta's API has no speech synthesis, and no other AI service is used. |
 | Watch the result | Muse Spark | Watches eight timed stills of the rendered bridge, lists what is wrong (text off the frame, a broken cut-out, the ad not shown), sends the fix to whoever made the faulty part (the line to Muse Spark, a generated move to Muse Code), and watches again. Two rounds at most. |
 
 Every model the product calls at runtime is a Meta model. Nothing else is called: no other AI service, no voice service.
@@ -62,7 +62,7 @@ cp .env.example .env            # then put your Meta Model API key in it
 Drop a video, then an ad, and press the arrow. The left column is the conversation: each step, the Meta model it calls, and what came back. The calls drawer lists every call with what was sent, the answer, the time and the cost. The run ends on the rendered bridge, ready to export, and on its bill.
 
 - **Level 3 (optional):** install Muse Code (`curl -fsSL https://dev.meta.ai/install.sh | sh`). It uses the same `META_API_KEY`. Without it, the run falls back to a library move and says so.
-- **Voice:** on a Mac, each move speaks its line with a system voice (best: install an English Premium voice in System Settings > Accessibility > Spoken Content > System voice > Manage Voices). `BRIDGE_VOICE=off` for text only, `BRIDGE_VOICE=Ava` for one voice everywhere. Without `say` (Linux, Windows) the bridge is text only.
+- **Voice (optional, one minute):** the bridge speaks its line only with a Premium system voice of your Mac, never an AI service. Install one in System Settings > Accessibility > Spoken Content > System voice > Manage Voices > English, for example "Ava (Premium)" or "Zoe (Premium)", and the next run uses it. Without one, or off a Mac, the bridge is text only. `BRIDGE_VOICE=off` forces text only.
 - **Spending caps:** the code refuses any call past `META_RUN_CAP` (USD per run, default 1.00) or `META_SPEND_CAP` (USD over every run on the machine, default 15.00). Both are in `.env.example`.
 - **Without a key** the same steps run in simulation, on your files, and every call is labelled `simulated`.
 - **Command line:** `cd pipeline && ../.venv/bin/python -m bridge.run video.mp4 ad.mp4 --prompt "make a new transition"`.
