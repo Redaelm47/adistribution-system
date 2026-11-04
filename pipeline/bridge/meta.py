@@ -63,20 +63,58 @@ def _preview(parts: list[dict]) -> list[Any]:
     return out
 
 
+# ---------------------------------------------------------------- spending caps: the code refuses to spend past them
+
+RUNS = Path(__file__).resolve().parents[2] / "runs"
+RUN_CAP = float(os.environ.get("META_RUN_CAP", "1.00"))  # USD per run
+TOTAL_CAP = float(os.environ.get("META_SPEND_CAP", "15.00"))  # USD over every run on this machine
+
+
+def spent_so_far() -> float:
+    """Real money spent, summed from every run's trace (simulated calls cost nothing)."""
+    total = 0.0
+    for trace in RUNS.glob("*/trace.jsonl"):
+        for line in trace.read_text().splitlines():
+            try:
+                ev = json.loads(line)
+            except ValueError:
+                continue
+            if ev.get("type") == "call" and ev.get("status") == "done" and not ev.get("simulated"):
+                total += float(ev.get("cost") or 0)
+    return total
+
+
+class OverBudget(RuntimeError):
+    pass
+
+
+def check_budget(run_spent: float) -> None:
+    if run_spent >= RUN_CAP:
+        raise OverBudget(f"this run has spent ${run_spent:.2f}, its cap is ${RUN_CAP:.2f} (META_RUN_CAP in .env)")
+    total = spent_so_far()
+    if total >= TOTAL_CAP:
+        raise OverBudget(f"${total:.2f} spent in all, the cap is ${TOTAL_CAP:.2f} (META_SPEND_CAP in .env)")
+
+
 class Meta:
     def __init__(self, on_call: Callable[..., Any] = lambda **_: None, key: str | None = None):
         self.key = key or os.environ.get("META_API_KEY") or os.environ.get("MODEL_API_KEY", "")
         self.mode = "live" if self.key else "simulation"
+        self.spent = 0.0  # real USD spent by this run
         self.on_call = on_call
 
     # -------------------------------------------------------------- bookkeeping shared by all calls
 
     def _call(self, model: str, label: str, request: Any, run: Callable[[], tuple[Any, dict, float]], simulated: Callable[[], tuple[Any, dict, float]]):
         cid = uuid.uuid4().hex[:8]
+        if self.mode == "live":
+            check_budget(self.spent)  # before anything is sent
         self.on_call(id=cid, model=model, label=label, status="run", request=request, simulated=self.mode != "live")
         t = time.time()
         try:
             result, usage, cost = run() if self.mode == "live" else simulated()
+            if self.mode == "live":
+                self.spent += cost
         except Exception as e:
             self.on_call(id=cid, model=model, label=label, status="error", error=str(e)[:500], ms=int((time.time() - t) * 1000), simulated=self.mode != "live")
             raise

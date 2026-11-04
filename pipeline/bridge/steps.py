@@ -152,17 +152,18 @@ def cutout(ctx: Context) -> None:
 WRITE = {
     "type": "object",
     "properties": {
-        "move": {"type": "string"},
+        "move": {"type": "string", "description": "a move id from the list, or \"new\" when none of them fits"},
         "lines": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 2},
         "why": {"type": "string", "description": "why this line and move fit this video and this ad, one sentence"},
+        "idea": {"type": "string", "description": "only when move is \"new\": the new motion in one or two sentences, what moves from what to what; otherwise empty"},
     },
-    "required": ["move", "lines", "why"],
+    "required": ["move", "lines", "why", "idea"],
 }
 
 
-def write(ctx: Context) -> None:
+def write(ctx: Context, feedback: str | None = None, avoid: str | None = None) -> None:
     has_subject = bool(ctx.data.get("cut"))
-    moves = library.moves_for(has_subject)
+    moves = [mv for mv in library.moves_for(has_subject) if mv["id"] != avoid] or library.moves_for(has_subject)
     m, a = ctx.data["moment"], ctx.data["adread"]
     before = " ".join(l["text"] for l in ctx.data["said"]["video"] if l["end"] <= m["freeze_at"] + 0.3)[-400:]
     prompt = "\n".join([
@@ -174,6 +175,7 @@ def write(ctx: Context) -> None:
         "",
         "Pick one move (its id) and write the line(s) for it:",
         *[f"- {mv['id']}: {mv['what']} Line shape: {mv['line_shape']} Example: {' / '.join(mv['example'])}" for mv in moves],
+        "If none of these moves suits this picture and this ad (rare: prefer the library), answer move \"new\", write the line anyway, and describe the new motion in idea; a coding agent will write it.",
         "",
         "Rules:",
         *[f"- {r}" for r in library.RULES],
@@ -182,13 +184,19 @@ def write(ctx: Context) -> None:
         "Lines a human found bad:",
         *[f"- \"{t}\" ({why})" for t, why in library.BAD],
     ])
+    if ctx.prompt:
+        prompt += f"\nThe advertiser asked: {ctx.prompt}"
+    if feedback:
+        prompt += f"\n\n{feedback}"
     parts = [{"text": prompt}, {"text": "The frozen frame:"}, {"image": ctx.data["still"]}]
-    w = ctx.meta.respond(SPARK, parts, WRITE, label="write the way in", simulate=lambda: {"move": moves[0]["id"], "lines": moves[0]["example"], "why": "simulated: the library example for this move."})
-    if w["move"] not in {mv["id"] for mv in moves}:
+    w = ctx.meta.respond(SPARK, parts, WRITE, label="write the way in" if not feedback else "rewrite after the review", simulate=lambda: {"move": moves[0]["id"], "lines": moves[0]["example"], "why": "simulated: the library example for this move.", "idea": ""})
+    if w["move"] != "new" and w["move"] not in {mv["id"] for mv in moves}:
+        w["move"] = moves[0]["id"]
+    if feedback and w["move"] == "new":  # no second invention inside the loop
         w["move"] = moves[0]["id"]
     w["lines"] = [l.strip() for l in w["lines"] if l.strip()][:2]
     ctx.data["bridge"] = w
-    ctx.emit("bridge", move=w["move"], lines=w["lines"], why=w["why"], level=library.get(w["move"])["level"])
+    ctx.emit("bridge", move=w["move"], lines=w["lines"], why=w["why"], level=3 if w["move"] == "new" else library.get(w["move"])["level"], idea=w.get("idea") or "")
     ctx.say("The way in: " + " ".join(f"“{l}”" for l in w["lines"]))
     ctx.step_done(f"{w['move']}: " + " / ".join(w["lines"]))
 
@@ -221,6 +229,16 @@ def animate(ctx: Context) -> None:
             shutil.copyfile(src, dest)
     spec = {"move": ctx.data["bridge"]["move"], "video": "video.mp4", "still": "still.jpg", "ad": "ad.mp4", "adFirst": "ad_first.jpg", "freezeAt": ctx.data["moment"]["freeze_at"], "lines": ctx.data["bridge"]["lines"], "adSeconds": min(5.0, ctx.data["ad"]["duration"])}
     spec.update({k: v for k, v in framed.items() if k != "still"})
+    ctx.data["spec"] = spec
+    render_bridge(ctx)
+    ctx.step_done(f"Move “{spec['move']}”" + (", written by Muse Code," if spec["move"].startswith("gen-") else " from the library,") + " rendered on this machine (no model call)")
+
+
+def render_bridge(ctx: Context) -> Path:
+    """Render (or render again, after a fix) the bridge from the run's spec. The spec follows the latest move and lines."""
+    spec = ctx.data["spec"]
+    spec.update(move=ctx.data["bridge"]["move"], lines=ctx.data["bridge"]["lines"])
+    pub = ctx.folder / "public"
     (ctx.folder / "spec.json").write_text(json.dumps(spec, indent=2))
     out = ctx.folder / "bridge.mp4"
     cmd = ["npx", "remotion", "render", "src/product/index.ts", "Bridge", str(out), f"--props={ctx.folder / 'spec.json'}", f"--public-dir={pub}", "--log=error"]
@@ -229,5 +247,5 @@ def animate(ctx: Context) -> None:
     done = subprocess.run(cmd, cwd=RENDER, capture_output=True, text=True, timeout=900)
     if done.returncode != 0 or not out.exists():
         raise RuntimeError(f"render failed: {(done.stderr or done.stdout).strip()[-300:]}")
-    ctx.emit("result", url=ctx.url(out), spec=spec)
-    ctx.step_done(f"Library move “{spec['move']}”, rendered on this machine (no model call)")
+    ctx.emit("result", url=ctx.url(out) + f"?v={int(out.stat().st_mtime)}", spec=spec)
+    return out

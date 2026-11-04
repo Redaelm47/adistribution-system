@@ -4,6 +4,10 @@
 import React from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
 import {MoveId, MoveProps, Spec} from './kit';
+import {Behind, behindSeconds} from './moves/Behind';
+import {GEN} from './moves/gen';
+import {Iris, irisSeconds} from './moves/Iris';
+import {Throw, throwSeconds} from './moves/Throw';
 import {Wall, wallSeconds} from './moves/Wall';
 
 export {FPS, H, W} from './kit';
@@ -13,6 +17,10 @@ type Move = {Component: React.FC<MoveProps>; seconds: (s: Spec) => number};
 
 export const MOVES: Partial<Record<MoveId, Move>> = {
 	wall: {Component: Wall, seconds: wallSeconds},
+	iris: {Component: Iris, seconds: irisSeconds},
+	behind: {Component: Behind, seconds: behindSeconds},
+	throw: {Component: Throw, seconds: throwSeconds},
+	...GEN, // moves Muse Code wrote for earlier videos
 };
 
 const pick = (s: Spec): Move => MOVES[s.move] ?? (MOVES.wall as Move);

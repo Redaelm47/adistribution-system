@@ -7,6 +7,11 @@ they are the examples the writer learns the tone from, never text to copy.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+GENERATED = Path(__file__).with_name("moves_gen.json")  # moves Muse Code wrote (level 3), kept for the next videos
+
 MOVES = [
     {
         "id": "wall",
@@ -29,6 +34,7 @@ MOVES = [
         "id": "throw",
         "level": 1,
         "needs_subject": False,
+        "rendered": True,
         "what": "A mouse grabs the frozen picture and throws it off screen; the next card slides in: the ad, with its product circled.",
         "line_shape": "One unfinished sentence that the ad completes.",
         "example": ["He's looking for..."],
@@ -37,6 +43,7 @@ MOVES = [
         "id": "iris",
         "level": 2,
         "needs_subject": True,
+        "rendered": True,
         "what": "A coloured iris closes on the subject's face while the line lands, shuts, and opens on the ad in a burst.",
         "line_shape": "An apology, then a question that names the ad's product.",
         "example": ["Sorry...", "did someone say treats?"],
@@ -45,6 +52,7 @@ MOVES = [
         "id": "behind",
         "level": 2,
         "needs_subject": True,
+        "rendered": True,
         "what": "The cut-out subject steps out of its own picture; behind it, tiles flip into the ad; the camera goes past the subject into the ad.",
         "line_shape": "A whisper to the viewer, behind the subject's back.",
         "example": ["Psst.", "Behind you."],
@@ -89,10 +97,23 @@ RULES = [
 ]
 
 
+def generated() -> list[dict]:
+    return json.loads(GENERATED.read_text()) if GENERATED.exists() else []
+
+
+def add_generated(move: dict) -> None:
+    moves = [m for m in generated() if m["id"] != move["id"]] + [move]
+    GENERATED.write_text(json.dumps(moves, indent=2) + "\n")
+
+
+def all_moves() -> list[dict]:
+    return MOVES + generated()
+
+
 def moves_for(has_subject: bool) -> list[dict]:
-    """Moves the video allows, among those the renderer already knows (the others are written but not ported yet)."""
-    return [m for m in MOVES if m.get("rendered") and (has_subject or not m["needs_subject"])]
+    """Moves the video allows, among those the renderer knows: the library's, then the ones Muse Code wrote for earlier videos."""
+    return [m for m in all_moves() if m.get("rendered") and (has_subject or not m["needs_subject"])]
 
 
 def get(move_id: str) -> dict:
-    return next(m for m in MOVES if m["id"] == move_id)
+    return next((m for m in all_moves() if m["id"] == move_id), {"id": move_id, "level": 3})

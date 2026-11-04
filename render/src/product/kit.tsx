@@ -14,7 +14,7 @@ export const FPS = 30;
 export const INK = '#101114';
 export const ACCENTS = ['#ff3ea5', '#7c3aed', '#0866ff', '#06b6d4'];
 
-export type MoveId = 'wall' | 'camera' | 'throw' | 'iris' | 'behind' | 'thought';
+export type MoveId = 'wall' | 'camera' | 'throw' | 'iris' | 'behind' | 'thought' | `gen-${string}`; // gen-*: written by Muse Code (level 3)
 
 export type Spec = {
 	move: MoveId;

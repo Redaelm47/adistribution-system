@@ -96,3 +96,12 @@ def test_errors_are_not_retried_except_rate_limits(monkeypatch):
     with pytest.raises(RuntimeError, match="401"):
         meta.Meta(key="k")._post("/responses", json={})
     assert len(seen) == 1
+
+
+def test_spending_cap_stops_a_call_before_it_is_sent(monkeypatch, frame):
+    monkeypatch.setattr(meta, "RUN_CAP", 0.5)
+    monkeypatch.setattr(meta.httpx, "post", lambda *a, **k: pytest.fail("a call went out past the cap"))
+    m = meta.Meta(key="k")
+    m.spent = 0.5
+    with pytest.raises(meta.OverBudget):
+        m.respond("muse-spark-1.3", [{"text": "x"}], MOMENT, label="find", simulate=dict)

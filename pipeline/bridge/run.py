@@ -15,7 +15,7 @@ import traceback
 import uuid
 from pathlib import Path
 
-from . import steps
+from . import invent, steps
 from .context import Context, StopRun
 from .meta import Meta
 
@@ -29,7 +29,9 @@ PLAN = [
     ("ad", "Read the ad", "Muse Spark", steps.read_ad),
     ("cutout", "Cut out", "SAM 3.1", steps.cutout),
     ("write", "Write the way in", "Muse Spark", steps.write),
+    ("invent", "Write a new move", "Muse Code", invent.invent),
     ("animate", "Animate", None, steps.animate),
+    ("review", "Watch the result", "Muse Spark", invent.review),
 ]
 
 
@@ -67,7 +69,7 @@ def execute(ctx: Context) -> Context:
         "output_tokens": sum((c.get("usage") or {}).get("output", 0) for c in calls),
         "seconds": round(time.time() - ctx.t0, 1),
     }
-    result = {k: ctx.data.get(k) for k in ("moment", "adread", "bridge")}
+    result = {k: ctx.data.get(k) for k in ("moment", "adread", "bridge", "spec")}
     (ctx.folder / "result.json").write_text(json.dumps({"status": status, "mode": ctx.meta.mode, "total": total, **result}, indent=2, default=str))
     ctx.emit("end", status=status, total=total)
     return ctx
