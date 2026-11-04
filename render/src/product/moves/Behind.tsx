@@ -5,7 +5,7 @@
 import {loadFont as loadSans} from '@remotion/google-fonts/Geist';
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, staticFile} from 'remotion';
-import {Click, Clip, H, MoveProps, Pic, READ, Rings, SANS, SERIF, Spec, W, clamp, fr, inOut, lerp, measure, out3, seg, sp} from '../kit';
+import {Click, Clip, H, MoveProps, Pic, READ, Rings, SANS, SERIF, Spec, W, clamp, fr, inOut, lerp, measure, out3, seg, sp, voiced} from '../kit';
 
 loadSans('normal', {weights: ['600'], subsets: ['latin']}); // the film's second line is Geist 600
 const PAL = {blue: '#0866ff', yellow: '#ffd000', violet: '#7c3aed', cyan: '#00c2e0'}; // the film's colours
@@ -19,7 +19,7 @@ const PH = H * 0.6;
 const M = 80; // side margin for the lines
 
 /** How long a line takes to say (the film's voice: "Psst." 0.34 s, "Behind you." 0.59 s). */
-const say = (text: string) => 0.1 + text.split(' ').filter(Boolean).length * READ;
+const say = (text: string) => Math.max(0.1 + text.split(' ').filter(Boolean).length * READ, voiced(text) + 0.05);
 
 export const behindTimes = (s: Spec) => {
 	const [l0, l1] = s.lines;

@@ -6,7 +6,7 @@ We showed the idea to 10 people: 9 found an ad that arrives this way more pleasa
 
 Choosing a better moment is not new on its own: platforms already avoid cutting people mid-sentence. The bridge is: the frozen picture itself carries the viewer into the ad, with a line written for that video and that ad. A brand with one ad gets a different way in for each of its ten thousand videos, and nobody has to check them one by one: the system watches its own work.
 
-Built solo with Meta's models during the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) (Indie Developer track, Oct 27 to Nov 4, 2026). Everything in this repository was written during the hackathon; the commit history shows it step by step. We hold the rights to everything in this repository and in the demo film (see [Rights and third-party media](#rights-and-third-party-media)).
+Built solo with Meta's models during the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) (Indie Developer track, Oct 27 to Nov 4, 2026). Everything in this repository was written during the hackathon; the commit history shows it step by step.
 
 **Demo film:** link added on submission day (Nov 4).
 
@@ -19,17 +19,19 @@ You drop a video and an ad. Then, with every model call shown live in the interf
 | Listen | Muse Voice Transcribe | What is said, with times, in the video and the ad, so the bridge never cuts a sentence. |
 | Find the moment | Muse Spark | Reads the transcript, twelve timed frames and, for videos up to 90 s, the whole video, and picks the second to freeze. Says so when no moment is good enough. |
 | Read the ad | Muse Spark | Brand, product, promise, and a word a line can land on. |
-| Cut out | SAM 3.1 | The subject of the frozen frame, as a mask. The moves that hold on to a subject use it. |
+| Cut out | SAM 3.1 | The subject of the frozen frame, as a mask, then its face, with a second prompt. The moves that hold on to a subject use the mask, and the ones that aim (the camera's focus, the iris, the thought bubble) aim at the face. |
 | Write the way in | Muse Spark | Picks a move from the library and writes the line for this video and this ad, from examples a human judged good or bad. |
 | Write a new move | Muse Code (headless) | Only when no move fits: writes a new Remotion move, which must type-check, and adds it to the library for the next videos. |
-| Animate | none | Renders the move with Remotion on your machine, and, when the Mac has a Premium system voice, the line is said with it (macOS `say`). No model call: Meta's API has no speech synthesis, and no other AI service is used. |
+| Animate | none | Renders the move with Remotion on your machine, the line said by a Premium system voice of the Mac when there is one (macOS `say`, at its natural pace). No model call: Meta's API has no speech synthesis, and no other AI service is used. Then the chat asks who says the script (below). |
 | Watch the result | Muse Spark | Watches eight timed stills of the rendered bridge, lists what is wrong (text off the frame, a broken cut-out, the ad not shown), sends the fix to whoever made the faulty part (the line to Muse Spark, a generated move to Muse Code), and watches again. Two rounds at most. |
 
 Every model the product calls at runtime is a Meta model. Nothing else is called: no other AI service, no voice service.
 
-**Operating-system features, not model calls:** the voice that says the line is a system voice of the Mac (macOS `say`); without one, the bridge shows its line as text only. In simulation mode (no API key), Apple Vision's built-in foreground cut-out stands in for SAM 3.1 so the moves can be previewed, and every simulated call is marked as such. Everything else in the table above is a Meta model call.
+**Who says the script:** once the bridge is there, the chat shows the script and asks who says it: the Mac's system voice (macOS `say`), the advertiser's own recording of each line (one audio file per line, uploaded in the chat), or nobody (text only). The bridge is rendered again with that voice, without any model call, and the move waits for each line to be said. The product never calls a voice service.
 
-**Cost per video:** **$0.037 to $0.061, $0.044 on average**, measured on the five live runs in `examples/` (14-second videos and a 10-second ad): 6 to 8 Meta calls, about 5,000 input tokens and 6,000 to 12,000 output tokens, most of them Muse Spark's reasoning. The bridge is made once per video and serves every view of it: on a video seen 10,000 times, that is less than half a thousandth of a cent per view, against the several dollars per thousand views an advertiser already pays for the mid-roll itself. Each run prints its exact bill (calls, tokens, dollars) in the interface and in `result.json`.
+**Operating-system features, not model calls:** the system voice of the Mac (macOS `say`). In simulation mode (no API key), Apple Vision's built-in foreground cut-out stands in for SAM 3.1 so the moves can be previewed, and every simulated call is marked as such. Everything else in the table above is a Meta model call.
+
+**Cost per video:** **$0.037 to $0.061, $0.043 on average**, measured on the six live runs in `examples/` (10- to 14-second videos and a 10-second ad): 6 to 8 Meta calls, about 5,000 input tokens and 6,000 to 12,000 output tokens, most of them Muse Spark's reasoning. The bridge is made once per video and serves every view of it: on a video seen 10,000 times, that is less than half a thousandth of a cent per view, against the several dollars per thousand views an advertiser already pays for the mid-roll itself. Each run prints its exact bill (calls, tokens, dollars) in the interface and in `result.json`.
 
 **When Muse Code writes a new move (level 3):** $0.216 on our live run, $0.177 of it Muse Code (30 steps at most, medium reasoning effort). It happens only when no move in the library fits, and the new move then serves every later video at the usual cost.
 
@@ -70,7 +72,7 @@ cp .env.example .env            # then put your Meta Model API key in it
 Drop a video, then an ad, and press the arrow. The left column is the conversation: each step, the Meta model it calls, and what came back. The calls drawer lists every call with what was sent, the answer, the time and the cost. The run ends on the rendered bridge, ready to export, and on its bill.
 
 - **Level 3 (optional):** install Muse Code (`curl -fsSL https://dev.meta.ai/install.sh | sh`). It uses the same `META_API_KEY`. Without it, the run falls back to a library move and says so.
-- **Voice (optional, one minute):** the bridge speaks its line only with a Premium system voice of your Mac, never an AI service. Install one in System Settings > Accessibility > Spoken Content > System voice > Manage Voices > English, for example "Ava (Premium)" or "Zoe (Premium)", and the next run uses it. Without one, or off a Mac, the bridge is text only. `BRIDGE_VOICE=off` forces text only.
+- **Voice (optional, one minute):** the first render speaks the line with a Premium system voice of your Mac. Install one in System Settings > Accessibility > Spoken Content > System voice > Manage Voices > English, for example "Ava (Premium)" or "Zoe (Premium)". Without one, or off a Mac, it is text only (`BRIDGE_VOICE=off` forces it). Either way, the chat then lets you give your own recording of each line instead.
 - **Spending caps:** the code refuses any call past `META_RUN_CAP` (USD per run, default 1.00) or `META_SPEND_CAP` (USD over every run on the machine, default 15.00). Both are in `.env.example`.
 - **Without a key** the same steps run in simulation, on your files, and every call is labelled `simulated`.
 - **Command line:** `cd pipeline && ../.venv/bin/python -m bridge.run video.mp4 ad.mp4 --prompt "make a new transition"`.
@@ -96,6 +98,6 @@ docs/                 notes from the hackathon: tests on real videos, verdicts o
 
 ## Rights and third-party media
 
-We hold the rights to everything in this repository and in the demo film: our own code and media, media we generated with AI models, and third-party media whose licence allows this use, each listed here with its source.
+This repository holds our own code and media, media we generated with AI models, and third-party media whose licence allows this use, each listed here with its source.
 
-The only sound the product adds to a bridge is a click from Kenney's UI Audio pack (CC0). The repository also holds frames of the Pexels test clips used by the first week's templates (Pexels License, listed in `clips/SOURCES.md`). The demo film uses cat photos from Wikimedia Commons (public domain, CC0 and CC BY), cat videos from Pexels (Pexels License), sounds from Freesound (CC0 and CC BY) and an AI narration voice; each one is listed with its author, licence and source in [docs/film-credits.md](docs/film-credits.md). The ad in the film, for Shakerz, a fictional brand, was generated by us with AI image and video models, outside the product, and is labelled as AI-generated on screen; its spoken line is the Mac's system voice.
+The only sound the product adds to a bridge is a click from Kenney's UI Audio pack (CC0). The repository also holds frames of the Pexels test clips used by the first week's templates (Pexels License, listed in `clips/SOURCES.md`). The demo film uses cat photos from Wikimedia Commons (public domain, CC0 and CC BY), cat videos from Pexels (Pexels License), sounds from Freesound (CC0 and CC BY) and an AI narration voice; their authors, licences and sources are in [docs/film-credits.md](docs/film-credits.md). The ad in the film, for Shakerz, a fictional brand, was made by us with AI and is labelled as AI-generated on screen.

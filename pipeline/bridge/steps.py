@@ -153,7 +153,20 @@ def cutout(ctx: Context) -> None:
         ctx.step_skip(f"SAM found no clean outline for {subject}: a move that works on any picture")
         return
     ctx.emit("cutout", url=ctx.url(cut["mask"]), box=cut["box"])
-    ctx.step_done(f"{subject} cut out")
+    face = find_face(ctx, full, subject)
+    ctx.step_done(f"{subject} cut out" + (", its face found" if face else ""))
+
+
+def find_face(ctx: Context, full: Path, subject: str) -> list[int] | None:
+    """A second SAM 3.1 prompt, for the face: moves that aim at it (the camera's focus, the iris, the thought bubble) and
+    lines that must not cover it need the real head, not a guess from the outline. Live only: the simulated cut-out has no prompt."""
+    if ctx.meta.mode != "live":
+        return None
+    head = ctx.meta.segment(full, f"{subject} face", ctx.folder / "face_mask.png", label=f"find the face of the {subject}")
+    if not head:
+        return None
+    ctx.data["face_mask"] = head["mask"]
+    return media.face_point(full, head["mask"])
 
 
 # ---------------------------------------------------------------- 6. write the way in (Muse Spark)
@@ -254,7 +267,7 @@ def animate(ctx: Context) -> None:
     if not full_still.exists():
         media.frame(ctx.video, ctx.data["moment"]["freeze_at"], full_still, width=1920)
     cut = ctx.data.get("cut")
-    framed = media.cover(full_still, pub, mask=cut["mask"] if cut else None)  # still.jpg (+ cutout.png) in the bridge's own frame
+    framed = media.cover(full_still, pub, mask=cut["mask"] if cut else None, face_mask=ctx.data.get("face_mask"))  # still.jpg (+ cutout.png) in the bridge's own frame
     media.cover(media.frame(ctx.ad, 0.05, ctx.folder / "ad_first_raw.jpg", width=1920), ctx.folder, name="ad_first.jpg")
     for src, name in ((ctx.video, "video.mp4"), (ctx.ad, "ad.mp4"), (ctx.folder / "ad_first.jpg", "ad_first.jpg"), (RENDER / "public/sfx/kenney-click_002.ogg", "click.ogg")):
         dest = pub / name
@@ -268,6 +281,7 @@ def animate(ctx: Context) -> None:
     ctx.data["spec"] = spec
     render_bridge(ctx)
     said = f", said by the system voice {spec['voices'][0]['voice'].split(' (')[0]}" if spec.get("voices") else ", text only (no system voice on this machine)"
+    said += ". Pick another voice below" if spec.get("voices") is not None else ""
     ctx.step_done(f"Move “{spec['move']}”" + (", written by Muse Code," if spec["move"].startswith("gen-") else " from the library,") + f" rendered on this machine{said} (no model call)")
 
 
@@ -276,7 +290,8 @@ def render_bridge(ctx: Context) -> Path:
     spec = ctx.data["spec"]
     spec.update(move=ctx.data["bridge"]["move"], lines=ctx.data["bridge"]["lines"])
     pub = ctx.folder / "public"
-    spec["voices"] = voice.voice_lines(spec["move"], spec["lines"], pub)  # the system voice says the line (no AI call); [] = text only
+    v = ctx.data.get("voice") or {}
+    spec["voices"] = voice.voice_lines(spec["move"], spec["lines"], pub, v.get("choice", "system"), v.get("files"))  # no AI call; [] = text only
     (ctx.folder / "spec.json").write_text(json.dumps(spec, indent=2))
     out = ctx.folder / "bridge.mp4"
     cmd = ["npx", "remotion", "render", "src/product/index.ts", "Bridge", str(out), f"--props={ctx.folder / 'spec.json'}", f"--public-dir={pub}", "--log=error"]

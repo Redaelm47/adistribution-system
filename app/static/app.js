@@ -49,6 +49,8 @@ const STEP_TEXT = {
 	invent: 'Writing a new move',
 	animate: 'Animating the way in',
 	review: 'Watching the result',
+	face: 'Finding the face',
+	voice: 'Taking your voice',
 };
 
 // ============================================================ mode and recents
@@ -305,8 +307,12 @@ const ON = {
 		}
 		S.msg = h('p', {class: 'msg'});
 		$('#thread').append(S.msg);
-		typeInto(S.msg, 'Watching your video and your ad…', animate);
-		S.msg.classList.add('pending');
+		S.voiceOf = ev.voice_of;
+		if (ev.voice_of) typeInto(S.msg, 'Same script, new voice: the bridge is rendered again.', animate);
+		else {
+			typeInto(S.msg, 'Watching your video and your ad…', animate);
+			S.msg.classList.add('pending');
+		}
 		const list = h('ol', {class: 'steps'});
 		for (const p of ev.plan) {
 			const row = h('button', {type: 'button', class: 'st-row', 'aria-expanded': 'false'},
@@ -443,10 +449,56 @@ const ON = {
 			h('span', {}, h('b', {text: money(t.cost)}), S.mode === 'simulation' ? ' estimated' : ''),
 			h('button', {type: 'button', text: 'See every call', onclick: () => openCalls(true)}),
 		));
+		if (ev.status === 'done') voiceCard();
 		if (animate) scrollThread();
 		loadRecents();
 	},
 };
+
+// ------------------------------------------------------------ who says the script: asked once the bridge is there
+
+function voiceCard() {
+	const spec = S.result?.spec;
+	if (!spec || !spec.lines?.length) return;
+	const texts = spec.move === 'thought' ? [spec.lines.join(' ')] : spec.lines;
+	const v = spec.voices?.[0];
+	const now = !v ? 'nobody: text only' : v.voice === 'your recording' ? 'your own recording' : `the Mac's voice (${String(v.voice).split(' (')[0]})`;
+	const status = h('p', {class: 'why vstat'});
+	const send = async (choice, files = []) => {
+		const body = new FormData();
+		body.append('choice', choice);
+		files.forEach((f) => body.append('files', f));
+		status.textContent = 'Starting…';
+		try {
+			const res = await fetch(`/api/runs/${S.id}/voice`, {method: 'POST', body});
+			if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
+			location.hash = `#/run/${(await res.json()).id}`;
+		} catch (err) {
+			status.textContent = `Could not start: ${err.message}`;
+		}
+	};
+	const own = h('form', {class: 'vown', hidden: true},
+		...texts.map((t) => h('label', {}, h('span', {text: texts.length > 1 ? `“${t}”` : 'Your recording of the whole script'}), h('input', {type: 'file', accept: 'audio/*'}))),
+		h('button', {type: 'submit', class: 'vgo', text: 'Use my recording' + (texts.length > 1 ? 's' : '')}),
+	);
+	own.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const files = $$('input', own).map((i) => i.files[0]);
+		if (files.some((f) => !f)) return (status.textContent = 'One recording per line, please.');
+		send('own', files);
+	});
+	$('#thread').append(h('div', {class: 'way voice'},
+		h('small', {text: 'Who says it?'}),
+		h('div', {class: 'lines'}, ...texts.map((t) => h('div', {text: t}))),
+		h('p', {class: 'why', text: `Here is the script. In this bridge it is said by ${now}. Pick the voice, the move waits for it:`}),
+		h('div', {class: 'vchoices'},
+			h('button', {type: 'button', text: "The Mac's voice", onclick: () => send('system')}),
+			h('button', {type: 'button', text: 'My own recording', onclick: () => (own.hidden = !own.hidden)}),
+			h('button', {type: 'button', text: 'No voice', onclick: () => send('none')}),
+		),
+		own, status,
+	));
+}
 
 function stepMeta(step) {
 	const li = S.steps.get(step);

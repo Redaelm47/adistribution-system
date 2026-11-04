@@ -66,7 +66,27 @@ def clip(video: Path, start: float, end: float, out: Path, width: int = 640, fps
     return out
 
 
-def cover(still: Path, out: Path, mask: Path | None = None, name: str = "still.jpg", w: int = 1920, h: int = 1080) -> dict:
+def face_point(still: Path, face_mask: Path, w: int = 1920, h: int = 1080) -> list[int] | None:
+    """The centre of the face SAM 3.1 found, in the bridge's 1920x1080 frame (the still cropped like `cover`). Reads only."""
+    import cv2
+    import numpy as np
+
+    if not Path(face_mask).exists():
+        return None
+    sh, sw = cv2.imread(str(still)).shape[:2]
+    m = cv2.resize(cv2.imread(str(face_mask), cv2.IMREAD_GRAYSCALE), (sw, sh), interpolation=cv2.INTER_LINEAR)
+    k = max(w / sw, h / sh)
+    nw, nh = max(w, round(sw * k)), max(h, round(sh * k))
+    m = cv2.resize(m, (nw, nh), interpolation=cv2.INTER_LINEAR)
+    x0, y0 = (nw - w) // 2, (nh - h) // 2
+    m = m[y0 : y0 + h, x0 : x0 + w]
+    ys, xs = np.nonzero(m > 127)
+    if len(xs) < 50:
+        return None
+    return [int(xs.mean()), int(ys.mean())]
+
+
+def cover(still: Path, out: Path, mask: Path | None = None, name: str = "still.jpg", w: int = 1920, h: int = 1080, face_mask: Path | None = None) -> dict:
     """The frozen frame as the bridge shows it (object-fit: cover, 1920x1080), and, when SAM gave a mask, the subject alone
     as a PNG with alpha at the same place, with its box, centre and a point on its head, all in that frame."""
     import cv2
@@ -97,5 +117,7 @@ def cover(still: Path, out: Path, mask: Path | None = None, name: str = "still.j
     cv2.imwrite(str(out / "cutout.png"), rgba)
     x0, y0, x1, y1 = int(xs.min()), int(ys.min()), int(xs.max()), int(ys.max())
     head = ys < y0 + (y1 - y0) * 0.18
-    res.update(cutout="cutout.png", box=[x0, y0, x1, y1], center=[int(xs.mean()), int(ys.mean())], face=[int(xs[head].mean()), int(ys[head].mean())])
+    # the face: where SAM 3.1 found it; without that, the middle of the subject's top fifth (a guess that misses a cat lying down)
+    face = face_point(still, face_mask, w, h) if face_mask else None
+    res.update(cutout="cutout.png", box=[x0, y0, x1, y1], center=[int(xs.mean()), int(ys.mean())], face=face or [int(xs[head].mean()), int(ys[head].mean())])
     return res

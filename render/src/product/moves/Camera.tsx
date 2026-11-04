@@ -6,7 +6,7 @@ import {loadFont as loadSans} from '@remotion/google-fonts/Geist';
 import {loadFont as loadVT} from '@remotion/google-fonts/VT323';
 import React from 'react';
 import {AbsoluteFill, Freeze, Img, OffthreadVideo, random, staticFile} from 'remotion';
-import {Click, Clip, FPS, H, INK, MoveProps, READ, SANS, SERIF, Spec, W, Words, clamp, fr, inOut, lerp, lineLen, lineWords, measure, out3, seg, sp} from '../kit';
+import {Click, Clip, FPS, H, INK, MoveProps, READ, SANS, SERIF, Spec, W, Words, clamp, fr, inOut, lerp, lineLen, lineWords, measure, out3, seg, sp, voiced} from '../kit';
 
 const VT = loadVT('normal', {weights: ['400'], subsets: ['latin']}).fontFamily;
 loadSans('normal', {weights: ['600'], subsets: ['latin']}); // the camera's buttons, as in the film
@@ -40,8 +40,9 @@ export const cameraTimes = (s: Spec) => {
 	const press = pull + TO_PRESS;
 	const land = press + ROLL;
 	const n1 = count(l1);
-	const bt = Math.max(pull + 0.3, land - (n1 - 1) * READ + 0.03); // the second line ends as the roll lands on the ad
-	const dive = n1 ? Math.max(land + WORDS, bt + (n1 - 1) * READ + 0.5) : land + WORDS;
+	const say1 = Math.max((n1 - 1) * READ, voiced(l1) - 0.2); // a recorded second line sets its own length
+	const bt = Math.max(pull + 0.3, land - say1 + 0.03); // the second line ends as the roll lands on the ad
+	const dive = n1 ? Math.max(land + WORDS, bt + say1 + 0.5) : land + WORDS;
 	const ad = dive + DIVE;
 	return {l0, l1, click, hearts, pull, press, land, bt, dive, ad, end: ad + (s.adSeconds ?? 4)};
 };

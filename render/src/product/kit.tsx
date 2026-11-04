@@ -32,7 +32,7 @@ export type Spec = {
 	box?: [number, number, number, number]; // x0, y0, x1, y1 of the subject
 	center?: [number, number]; // centre of mass of the mask
 	face?: [number, number]; // a point near the top of the subject (head), for moves that aim at the face
-	voices?: {file: string; voice?: string}[]; // the lines said by a system voice (macOS `say`, no AI call), one file per line; absent: text only
+	voices?: {file: string; voice?: string; text?: string; seconds?: number}[]; // who says the lines (the Mac's voice or the advertiser's own recording), one file per spoken line; absent: text only
 };
 
 export type MoveProps = {t: number; s: Spec};
@@ -74,7 +74,17 @@ export const lineWords = (text: string, at: number, accent: string): Wd[] => {
 	const parts = text.split(' ').filter(Boolean);
 	return parts.map((w, i) => ({w, at: at + i * READ, serif: i === parts.length - 1, color: i === parts.length - 1 ? accent : undefined}));
 };
-export const lineLen = (text: string) => Math.max(1.1, text.split(' ').filter(Boolean).length * READ + 0.5);
+// The voice sets the pace: when the recording of a line lasts longer than its reading time, the move waits for it.
+// Filled from the spec before any timing is computed (bridgeSeconds and Bridge call noteVoices).
+const SAID = new Map<string, number>();
+const key = (text: string) => text.replace(/…/g, '...').replace(/[’']/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+export const noteVoices = (s: Spec) => {
+	SAID.clear();
+	for (const v of s.voices ?? []) if (v.text && v.seconds) SAID.set(key(v.text), v.seconds);
+};
+/** How long the voice takes to say this line, 0 when nobody says it. */
+export const voiced = (text: string) => SAID.get(key(text ?? '')) ?? 0;
+export const lineLen = (text: string) => Math.max(1.1, text.split(' ').filter(Boolean).length * READ + 0.5, voiced(text) + 0.35);
 
 export const Words: React.FC<{t: number; words: Wd[]; size: number; x: number; y: number}> = ({t, words, size, x, y}) => {
 	const spc = size * -0.02;

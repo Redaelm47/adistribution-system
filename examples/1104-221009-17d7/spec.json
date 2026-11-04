@@ -1,0 +1,42 @@
+{
+  "move": "iris",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 4.7,
+  "lines": [
+    "Sorry about the staring contest.",
+    "Did someone say crunchy treats?"
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    265,
+    186,
+    1149,
+    1076
+  ],
+  "center": [
+    754,
+    622
+  ],
+  "face": [
+    858,
+    420
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "Sorry about the staring contest.",
+      "seconds": 1.79
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "Did someone say crunchy treats?",
+      "seconds": 1.63
+    }
+  ]
+}

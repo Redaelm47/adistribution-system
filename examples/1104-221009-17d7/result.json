@@ -1,0 +1,74 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 7,
+    "cost": 0.038484,
+    "input_tokens": 5358,
+    "output_tokens": 6185,
+    "seconds": 131.3
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 4.7,
+    "subject": "kitten",
+    "why": "Kitten sits alone looking straight at the camera in a clear pause."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "wants it",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "Sorry about the staring contest.",
+      "Did someone say crunchy treats?"
+    ],
+    "move": "iris",
+    "why": "The iris holds on the kitten's direct stare for a funny apology, then the treats question leads straight into the crunchy-treat ad."
+  },
+  "spec": {
+    "move": "iris",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 4.7,
+    "lines": [
+      "Sorry about the staring contest.",
+      "Did someone say crunchy treats?"
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      265,
+      186,
+      1149,
+      1076
+    ],
+    "center": [
+      754,
+      622
+    ],
+    "face": [
+      858,
+      420
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "Sorry about the staring contest.",
+        "seconds": 1.79
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "Did someone say crunchy treats?",
+        "seconds": 1.63
+      }
+    ]
+  }
+}

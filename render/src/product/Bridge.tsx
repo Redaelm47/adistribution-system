@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {MoveId, MoveProps, Spec, fr, lineLen} from './kit';
+import {MoveId, MoveProps, Spec, fr, lineLen, noteVoices} from './kit';
 import {Behind, behindLineAt, behindSeconds} from './moves/Behind';
 import {Camera, cameraLineAt, cameraSeconds} from './moves/Camera';
 import {GEN} from './moves/gen';
@@ -29,12 +29,16 @@ export const MOVES: Partial<Record<MoveId, Move>> = {
 
 const pick = (s: Spec): Move => MOVES[s.move] ?? (MOVES.wall as Move);
 
-export const bridgeSeconds = (s: Spec) => pick(s).seconds(s);
+export const bridgeSeconds = (s: Spec) => {
+	noteVoices(s);
+	return pick(s).seconds(s);
+};
 
 /** Moves without their own timing (Muse Code's): line one shortly after the freeze, line two after it. */
 const defaultLineAt = (s: Spec) => [1.3, 1.3 + lineLen(s.lines[0] ?? '') + 0.2];
 
 export const Bridge: React.FC<Spec> = (s) => {
+	noteVoices(s);
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const move = pick(s);

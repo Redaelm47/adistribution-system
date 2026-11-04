@@ -5,7 +5,7 @@
 import {loadFont as loadSans} from '@remotion/google-fonts/Geist';
 import React from 'react';
 import {AbsoluteFill, interpolate} from 'remotion';
-import {Click, Clip, H, fr, MoveProps, Pic, READ, Rings, SANS, Spec, W, clamp, inOut, lerp, measure, out3, seg, sp} from '../kit';
+import {Click, Clip, H, fr, MoveProps, Pic, READ, Rings, SANS, Spec, W, clamp, inOut, lerp, measure, out3, seg, sp, voiced} from '../kit';
 
 loadSans('normal', {weights: ['600'], subsets: ['latin']}); // the film's line is Geist 600
 
@@ -20,7 +20,7 @@ const FA = FP + 0.08;
 const EACH = 0.03; // seconds between letters
 const WIND = 0.604; // grab to throw, as in the film
 /** How long a line holds before the throw: the film's voice took 0.884 s for "He's looking for...", longer lines get reading time. */
-const say = (text: string) => Math.max(0.884, text.length * EACH + 0.3, text.split(' ').filter(Boolean).length * READ + 0.16);
+const say = (text: string) => Math.max(0.884, text.length * EACH + 0.3, text.split(' ').filter(Boolean).length * READ + 0.16, voiced(text) + 0.1);
 const clean = (text: string) => (text ?? '').replace(/…/g, '...').replace(/'/g, '’').trim();
 
 export const throwTimes = (s: Spec) => {

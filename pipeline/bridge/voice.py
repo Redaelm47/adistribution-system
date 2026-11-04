@@ -1,4 +1,7 @@
-"""The bridge's voice: the line said by a system voice of the computer (macOS `say`), never an AI service.
+"""The bridge's voice. Three choices, given in the chat once the script is written:
+    system  the Mac's own voice (macOS `say`), at its natural pace, never an AI service
+    own     the advertiser's own recording of each line, uploaded in the chat (the product only cleans its level)
+    none    text only
 
 Every model the product calls is a Meta model, and Meta's API has no speech synthesis, so the voice is the operating system's
 own text-to-speech, run locally (the organizers allow a system voice that is not an AI call). Only a Premium or Enhanced
@@ -61,33 +64,51 @@ def pick(move: str) -> str | None:
     return best[0] if best else None
 
 
-def speak(text: str, voice: str, out: Path, fit: float | None = None) -> float:
-    """Says `text` into `out` (WAV, 48 kHz). With `fit` (seconds), the rate is raised until the line fits the time the move shows it."""
+def speak(text: str, voice: str, out: Path) -> float:
+    """Says `text` into `out` (WAV, 48 kHz) at the voice's natural pace: the move waits for the line, the line is never sped up."""
     tmp = out.with_suffix(".aiff")
-    rate = 185
-    for _ in range(3):
-        subprocess.run(["say", "-v", voice, "-r", str(rate), "-o", str(tmp), text], check=True, capture_output=True)
-        dur = float(run("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", tmp).strip() or 0)
-        if not fit or dur <= fit * 1.15 or rate >= 260:
-            break
-        rate = min(260, int(rate * dur / (fit * 1.05)))
-    run("ffmpeg", "-v", "error", "-y", "-i", tmp, "-ar", "48000", "-ac", "1", "-af", "loudnorm=I=-16:TP=-2", out)
+    subprocess.run(["say", "-v", voice, "-o", str(tmp), text], check=True, capture_output=True)
+    level(tmp, out)
     tmp.unlink(missing_ok=True)
-    return dur
+    return seconds(out)
 
 
-READ = 0.24  # seconds per word on screen, as in the renderer
+def seconds(f: Path) -> float:
+    return float(run("ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f).strip() or 0)
 
 
-def voice_lines(move: str, lines: list[str], folder: Path) -> list[dict]:
-    """One WAV per line the move shows (the thought move shows all its lines as one), ready for the spec."""
+def level(src: Path, out: Path) -> None:
+    """Any audio file to a WAV the renderer plays: 48 kHz mono, silence trimmed at both ends, loudness at -16 LUFS."""
+    trim = "silenceremove=start_periods=1:start_threshold=-45dB,areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse"
+    run("ffmpeg", "-v", "error", "-y", "-i", src, "-ar", "48000", "-ac", "1", "-af", f"{trim},loudnorm=I=-16:TP=-2", out)
+
+
+
+
+def said(move: str, lines: list[str]) -> list[str]:
+    """What is spoken, one entry per audio file: the thought move says all its lines as one."""
+    return [" ".join(lines)] if move == "thought" else list(lines)
+
+
+def voice_lines(move: str, lines: list[str], folder: Path, choice: str = "system", files: list[Path] | None = None) -> list[dict]:
+    """One WAV per spoken entry, ready for the spec; [] = text only."""
+    texts = said(move, lines)
+    if choice == "none":
+        return []
+    if choice == "own":
+        if not files or len(files) != len(texts):
+            raise ValueError(f"{len(texts)} recording(s) needed, one per line, {len(files or [])} given")
+        out = []
+        for i, (text, src) in enumerate(zip(texts, files)):
+            f = folder / f"line{i}.wav"
+            level(src, f)
+            out.append({"file": f.name, "voice": "your recording", "text": text, "seconds": round(seconds(f), 2)})
+        return out
     voice = pick(move)
     if not voice:
         return []
-    said = [" ".join(lines)] if move == "thought" else lines
     out = []
-    for i, text in enumerate(said):
+    for i, text in enumerate(texts):
         f = folder / f"line{i}.wav"
-        dur = speak(text, voice, f, fit=len(text.split()) * READ + 0.6)
-        out.append({"file": f.name, "voice": voice, "seconds": round(dur, 2)})
+        out.append({"file": f.name, "voice": voice, "text": text, "seconds": round(speak(text, voice, f), 2)})
     return out

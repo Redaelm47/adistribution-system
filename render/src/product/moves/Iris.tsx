@@ -5,7 +5,7 @@
 
 import React from 'react';
 import {AbsoluteFill, random} from 'remotion';
-import {Click, Clip, H, MoveProps, Pic, SANS, SERIF, Spec, W, clamp, lerp, measure, out3, seg, sp} from '../kit';
+import {Click, Clip, H, MoveProps, Pic, SANS, SERIF, Spec, W, clamp, lerp, measure, out3, seg, sp, voiced} from '../kit';
 
 // The film's palette (film7/kit.tsx PAL)
 const PAL = {blue: '#0866ff', red: '#ff2a3c', yellow: '#ffd000', pink: '#ff3ea5', violet: '#7c3aed', cyan: '#00c2e0'};
@@ -25,7 +25,7 @@ const MAXW = 1760; // the widest a line may be
 const words = (text: string) => text.split(' ').filter(Boolean).length;
 /** Letters land `each` apart (the film's 0.034 / 0.045, faster on long lines), then the line holds long enough to read. */
 const eachFor = (text: string, film: number, most: number) => Math.min(film, most / Math.max(1, text.length));
-const durFor = (text: string, each: number) => Math.max(text.length * each + 0.35, words(text) * READ + 0.35);
+const durFor = (text: string, each: number) => Math.max(text.length * each + 0.35, words(text) * READ + 0.35, voiced(text) + 0.25);
 
 const linesOf = (s: Spec) => [(s.lines[0] ?? '').trim(), (s.lines[1] ?? '').trim() || undefined] as const;
 

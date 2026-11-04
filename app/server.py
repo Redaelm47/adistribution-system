@@ -20,7 +20,8 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from bridge.context import Context  # noqa: E402
 from bridge.meta import Meta  # noqa: E402
-from bridge.run import RUNS, execute  # noqa: E402
+from bridge.run import RUNS, execute, revoice, revoice_run  # noqa: E402
+from bridge.voice import said  # noqa: E402
 
 app = FastAPI(title="AdistributionSystem")
 LIVE: dict[str, Context] = {}  # runs started by this server, with their events in memory
@@ -77,6 +78,33 @@ async def create(
     LIVE[rid] = ctx
     threading.Thread(target=execute, args=(ctx,), daemon=True).start()
     return {"id": rid}
+
+
+@app.post("/api/runs/{rid}/voice")
+async def voice(rid: str, choice: str = Form(...), files: list[UploadFile] = File(default=[])):
+    """The chat's voice question, answered: the same script said by the Mac's voice, by the advertiser's own recordings
+    (one file per spoken line), or by nobody (text only). A new run that only renders again: no model call."""
+    src = (RUNS / rid).resolve()
+    if RUNS.resolve() not in src.parents or not (src / "spec.json").exists():
+        raise HTTPException(404, "this run has no bridge to voice")
+    if choice not in ("system", "own", "none"):
+        raise HTTPException(400, "choice is system, own or none")
+    spec = json.loads((src / "spec.json").read_text())
+    need = len(said(spec["move"], spec["lines"]))
+    if choice == "own" and len(files) != need:
+        raise HTTPException(400, f"{need} recording(s) needed, one per line")
+    ctx = revoice_run(rid, choice)
+    paths = []
+    for i, up in enumerate(files if choice == "own" else []):
+        dest = ctx.folder / f"voice_in_{i}{(Path(up.filename or 'x.wav').suffix.lower() or '.wav')}"
+        with open(dest, "wb") as f:
+            while chunk := await up.read(1 << 20):
+                f.write(chunk)
+        paths.append(dest)
+    ctx.data["voice"]["files"] = paths
+    LIVE[ctx.id] = ctx
+    threading.Thread(target=revoice, args=(ctx,), daemon=True).start()
+    return {"id": ctx.id}
 
 
 @app.get("/api/runs")
