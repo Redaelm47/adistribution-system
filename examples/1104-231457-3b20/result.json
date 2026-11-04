@@ -1,0 +1,66 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 7,
+    "cost": 0.039925,
+    "input_tokens": 5417,
+    "output_tokens": 7000,
+    "seconds": 126.5
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 4.7,
+    "subject": "kitten",
+    "why": "The kitten is fully visible looking straight at the camera with wide eyes."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "wants it",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "That stare means he..."
+    ],
+    "move": "throw",
+    "why": "The kitten's wide-eyed direct stare looks like begging, so the unfinished he hands straight to the ad's wants it while the throw clears that stare for the product."
+  },
+  "spec": {
+    "move": "throw",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 4.7,
+    "lines": [
+      "That stare means he..."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      265,
+      186,
+      1149,
+      1076
+    ],
+    "center": [
+      754,
+      622
+    ],
+    "face": [
+      858,
+      420
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "That stare means he...",
+        "seconds": 1.05
+      }
+    ]
+  }
+}

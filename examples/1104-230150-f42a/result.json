@@ -1,0 +1,74 @@
+{
+  "status": "done",
+  "mode": "live",
+  "total": {
+    "calls": 7,
+    "cost": 0.042714,
+    "input_tokens": 5416,
+    "output_tokens": 7655,
+    "seconds": 152.1
+  },
+  "moment": {
+    "found": true,
+    "freeze_at": 4.7,
+    "subject": "kitten",
+    "why": "The kitten looks straight at the camera with wide clear eyes during a pause in petting."
+  },
+  "adread": {
+    "brand": "Shakerz",
+    "hook": "Shakerz",
+    "product": "Crunchy cat treats",
+    "promise": "Every cat wants it."
+  },
+  "bridge": {
+    "idea": "",
+    "lines": [
+      "That stare just paused the petting.",
+      "Here's a crunchy Shakerz bribe."
+    ],
+    "move": "camera",
+    "why": "The viewfinder fits the kitten staring straight into the lens, and the pause-to-bribe wording links the frozen stare to crunchy treats."
+  },
+  "spec": {
+    "move": "camera",
+    "video": "video.mp4",
+    "still": "still.jpg",
+    "ad": "ad.mp4",
+    "adFirst": "ad_first.jpg",
+    "freezeAt": 4.7,
+    "lines": [
+      "That stare just paused the petting.",
+      "Here's a crunchy Shakerz bribe."
+    ],
+    "adSeconds": 10.005,
+    "cutout": "cutout.png",
+    "box": [
+      265,
+      186,
+      1149,
+      1076
+    ],
+    "center": [
+      754,
+      622
+    ],
+    "face": [
+      858,
+      420
+    ],
+    "voices": [
+      {
+        "file": "line0.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "That stare just paused the petting.",
+        "seconds": 1.62
+      },
+      {
+        "file": "line1.wav",
+        "voice": "Evan (Enhanced)",
+        "text": "Here's a crunchy Shakerz bribe.",
+        "seconds": 1.63
+      }
+    ]
+  }
+}

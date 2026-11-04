@@ -1,0 +1,42 @@
+{
+  "move": "gen-m11042017b1f",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 4.7,
+  "lines": [
+    "You stopped petting, he's staring.",
+    "He wants something crunchy."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    265,
+    186,
+    1149,
+    1076
+  ],
+  "center": [
+    754,
+    622
+  ],
+  "face": [
+    858,
+    420
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "You stopped petting, he's staring.",
+      "seconds": 1.86
+    },
+    {
+      "file": "line1.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "He wants something crunchy.",
+      "seconds": 1.21
+    }
+  ]
+}

@@ -112,6 +112,10 @@ def revoice(ctx: Context) -> Context:
     face = spec.get("cutout") and not (src / "face_mask.png").exists() and ctx.meta.mode == "live" and (ctx.folder / "moment_full.jpg").exists()
     plan = ([("face", "Find the face", "SAM 3.1")] if face else []) + VOICE_PLAN
     ctx.emit("start", mode="local" if not face else ctx.meta.mode, prompt="", tone=ctx.tone, plan=[{"step": s, "title": t, "model": m} for s, t, m in plan], voice_of=src.name)
+    for line in (src / "trace.jsonl").read_text().splitlines():  # the video's frames and its moment, as the first run found them
+        ev = json.loads(line)
+        if ev["type"] in ("media", "moment"):
+            ctx.emit(ev["type"], **{k: v for k, v in ev.items() if k not in ("n", "type", "t")})
     b = ctx.data["bridge"]
     ctx.emit("bridge", move=b["move"], lines=b["lines"], why=b.get("why", ""), level=3 if b["move"].startswith("gen-") else library.get(b["move"])["level"], idea="")
     status = "done"

@@ -1,0 +1,36 @@
+{
+  "move": "thought",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 4.7,
+  "lines": [
+    "I'm staring at you for a reason.",
+    "Where are my crunchy treats?"
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    265,
+    186,
+    1149,
+    1076
+  ],
+  "center": [
+    754,
+    622
+  ],
+  "face": [
+    858,
+    420
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "I'm staring at you for a reason. Where are my crunchy treats?",
+      "seconds": 3.13
+    }
+  ]
+}

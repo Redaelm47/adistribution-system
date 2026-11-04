@@ -1,0 +1,35 @@
+{
+  "move": "throw",
+  "video": "video.mp4",
+  "still": "still.jpg",
+  "ad": "ad.mp4",
+  "adFirst": "ad_first.jpg",
+  "freezeAt": 4.7,
+  "lines": [
+    "That stare means he..."
+  ],
+  "adSeconds": 10.005,
+  "cutout": "cutout.png",
+  "box": [
+    265,
+    186,
+    1149,
+    1076
+  ],
+  "center": [
+    754,
+    622
+  ],
+  "face": [
+    858,
+    420
+  ],
+  "voices": [
+    {
+      "file": "line0.wav",
+      "voice": "Evan (Enhanced)",
+      "text": "That stare means he...",
+      "seconds": 1.05
+    }
+  ]
+}

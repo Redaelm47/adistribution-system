@@ -121,6 +121,38 @@ if (opt.calls) {
 	await new Promise((r) => setTimeout(r, 1200));
 	await page.click('#calls-btn').catch(() => {});
 }
+// --voice=a.wav,b.wav: then answer the chat's voice question as an advertiser would, "My voice", one file per line,
+// and keep filming the new render (a real follow-up run, no model call) until it is done
+if (opt.voice) {
+	const files = String(opt.voice).split(',').map((f) => resolve(f));
+	const mark = (k) => (marks[k] = Math.round(((Date.now() - t0) / 1000) * 100) / 100);
+	await page.evaluate(() => document.querySelector('#thread').scrollTo({top: 1e6, behavior: 'smooth'}));
+	await new Promise((r) => setTimeout(r, 1800));
+	mark('voice:ask');
+	await page.click('.way.voice [data-choice="own"]');
+	await page.evaluate(() => document.querySelector('#thread').scrollTo({top: 1e6, behavior: 'smooth'}));
+	await new Promise((r) => setTimeout(r, 1200));
+	const inputs = await page.$$('.way.voice .vown input');
+	for (let i = 0; i < inputs.length; i++) {
+		await inputs[i].uploadFile(files[Math.min(i, files.length - 1)]);
+		await page.evaluate((i) => document.querySelectorAll('.way.voice .vown input')[i].dispatchEvent(new Event('change')), i);
+		mark(`voice:file${i + 1}`);
+		await new Promise((r) => setTimeout(r, 1000));
+	}
+	mark('voice:dropped');
+	await new Promise((r) => setTimeout(r, 600));
+	await page.click('.way.voice .vgo');
+	mark('voice:send');
+	await page.waitForFunction((old) => location.hash.startsWith('#/run/') && !location.hash.includes(old), {timeout: 30000}, id);
+	await page.waitForFunction(() => !!document.querySelector('.done-line'), {timeout: 300000, polling: 300});
+	mark('voice:done');
+	console.log('voice run', await page.evaluate(() => location.hash));
+	// play the bridge it just rendered again, so the new voice is seen working
+	await new Promise((r) => setTimeout(r, 1200));
+	await page.click('#big-play').catch(() => {});
+	mark('voice:play');
+	await new Promise((r) => setTimeout(r, 9000));
+}
 await new Promise((r) => setTimeout(r, hold * 1000));
 clearInterval(watch);
 const k = 1920 / 1440;

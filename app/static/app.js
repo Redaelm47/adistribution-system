@@ -468,7 +468,7 @@ function voiceCard() {
 		const body = new FormData();
 		body.append('choice', choice);
 		files.forEach((f) => body.append('files', f));
-		status.textContent = 'Starting…';
+		status.textContent = 'Rendering the bridge again with this voice…';
 		try {
 			const res = await fetch(`/api/runs/${S.id}/voice`, {method: 'POST', body});
 			if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
@@ -477,28 +477,42 @@ function voiceCard() {
 			status.textContent = `Could not start: ${err.message}`;
 		}
 	};
-	const own = h('form', {class: 'vown', hidden: true},
-		...texts.map((t) => h('label', {}, h('span', {text: texts.length > 1 ? `“${t}”` : 'Your recording of the whole script'}), h('input', {type: 'file', accept: 'audio/*'}))),
-		h('button', {type: 'submit', class: 'vgo', text: 'Use my recording' + (texts.length > 1 ? 's' : '')}),
-	);
+	const go = h('button', {type: 'submit', class: 'vgo', disabled: true, text: texts.length > 1 ? 'Put my recordings in' : 'Put my recording in'});
+	const zones = texts.map((t) => {
+		const name = h('span', {class: 'vname', text: texts.length > 1 ? `Drop your recording of “${t}”` : 'Drop your recording of the whole line'});
+		const input = h('input', {type: 'file', accept: 'audio/*'});
+		const label = h('label', {}, h('span', {class: 'ico', text: '♪'}), name, input);
+		input.addEventListener('change', () => {
+			const f = input.files[0];
+			label.classList.toggle('ok', !!f);
+			$('.ico', label).textContent = f ? '✓' : '♪';
+			name.textContent = f ? `${f.name}  ·  “${t}”` : `Drop your recording of “${t}”`;
+			go.disabled = zones.some((z) => !$('input', z).files[0]);
+		});
+		return label;
+	});
+	const own = h('form', {class: 'vown', hidden: true}, ...zones, go);
 	own.addEventListener('submit', (e) => {
 		e.preventDefault();
-		const files = $$('input', own).map((i) => i.files[0]);
+		const files = zones.map((z) => $('input', z).files[0]);
 		if (files.some((f) => !f)) return (status.textContent = 'One recording per line, please.');
 		send('own', files);
 	});
-	$('#thread').append(h('div', {class: 'way voice'},
+	const pick = (btn) => $$('.vchoices button', card).forEach((b) => b.classList.toggle('on', b === btn));
+	const card = h('div', {class: 'way voice'},
 		h('small', {text: 'Who says it?'}),
 		h('div', {class: 'lines'}, ...texts.map((t) => h('div', {text: t}))),
-		h('p', {class: 'why', text: `Here is the script. In this bridge it is said by ${now}. Pick the voice, the move waits for it:`}),
+		h('p', {class: 'why', text: `This is what the bridge says. Right now: ${now}.`}),
 		h('div', {class: 'vchoices'},
-			h('button', {type: 'button', text: "The Mac's voice", onclick: () => send('system')}),
-			h('button', {type: 'button', text: 'My own recording', onclick: () => (own.hidden = !own.hidden)}),
-			h('button', {type: 'button', text: 'No voice', onclick: () => send('none')}),
+			h('button', {type: 'button', 'data-choice': 'system', text: "Mac's voice", onclick: (e) => (pick(e.currentTarget), send('system'))}),
+			h('button', {type: 'button', 'data-choice': 'own', text: 'My voice', onclick: (e) => (pick(e.currentTarget), (own.hidden = false), scrollThread())}),
+			h('button', {type: 'button', 'data-choice': 'none', text: 'No voice', onclick: (e) => (pick(e.currentTarget), send('none'))}),
 		),
 		own, status,
-	));
+	);
+	$('#thread').append(card);
 }
+
 
 function stepMeta(step) {
 	const li = S.steps.get(step);
