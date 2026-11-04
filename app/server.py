@@ -81,7 +81,7 @@ async def create(
 
 
 @app.post("/api/runs/{rid}/voice")
-async def voice(rid: str, choice: str = Form(...), files: list[UploadFile] = File(default=[])):
+async def voice(rid: str, choice: str = Form(...), files: list[UploadFile] = File(default=[]), lines: str = Form("")):
     """The chat's voice question, answered: the same script said by the Mac's voice, by the advertiser's own recordings
     (one file per spoken line), or by nobody (text only). A new run that only renders again: no model call."""
     src = (RUNS / rid).resolve()
@@ -90,10 +90,13 @@ async def voice(rid: str, choice: str = Form(...), files: list[UploadFile] = Fil
     if choice not in ("system", "own", "none"):
         raise HTTPException(400, "choice is system, own or none")
     spec = json.loads((src / "spec.json").read_text())
-    need = len(said(spec["move"], spec["lines"]))
+    edited = [l.strip() for l in json.loads(lines)] if lines else None  # the advertiser edited the script in the chat
+    if edited is not None and (len(edited) != len(spec["lines"]) or not all(edited)):
+        raise HTTPException(400, "one edited line per line of the script")
+    need = len(said(spec["move"], edited or spec["lines"]))
     if choice == "own" and len(files) != need:
         raise HTTPException(400, f"{need} recording(s) needed, one per line")
-    ctx = revoice_run(rid, choice)
+    ctx = revoice_run(rid, choice, edited)
     paths = []
     for i, up in enumerate(files if choice == "own" else []):
         dest = ctx.folder / f"voice_in_{i}{(Path(up.filename or 'x.wav').suffix.lower() or '.wav')}"

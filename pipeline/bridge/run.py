@@ -80,7 +80,7 @@ VOICE_PLAN = [("voice", "Your voice", None), ("animate", "Animate", None)]
 VOICE_TEXT = {"system": "the Mac's system voice", "own": "your own recording", "none": "no voice, text only"}
 
 
-def revoice_run(src: str, choice: str) -> Context:
+def revoice_run(src: str, choice: str, edited: list[str] | None = None) -> Context:
     """A follow-up run that only changes who says the lines: the earlier run's script, moment and cut-out, rendered again.
     No model call (the script was written by Muse Spark in `src`), so it costs nothing."""
     old = RUNS / src
@@ -101,6 +101,10 @@ def revoice_run(src: str, choice: str) -> Context:
     res = json.loads((old / "result.json").read_text())
     ctx.data.update(spec=spec, bridge=res.get("bridge") or {"move": spec["move"], "lines": spec["lines"]}, moment=res.get("moment"), adread=res.get("adread"))
     ctx.data["voice"] = {"choice": choice, "files": []}
+    if edited and edited != ctx.data["bridge"]["lines"]:
+        ctx.data["edited"] = {"from": list(ctx.data["bridge"]["lines"]), "to": edited}
+        ctx.data["bridge"] = {**ctx.data["bridge"], "lines": edited}
+        spec["lines"] = edited
     return ctx
 
 
@@ -131,7 +135,9 @@ def revoice(ctx: Context) -> Context:
                 ctx.step_skip("No face found: the move keeps its first aim")
         v = ctx.data["voice"]
         ctx.step_start("voice", "Your voice", None)
-        ctx.step_done(f"The script Muse Spark wrote, said by {VOICE_TEXT[v['choice']]}" + (f" ({len(v['files'])} file{'s' if len(v['files']) > 1 else ''})" if v["choice"] == "own" else ""))
+        e = ctx.data.get("edited")
+        changed = [f"“{a}” → “{b}”" for a, b in zip(e["from"], e["to"]) if a != b] if e else []
+        ctx.step_done(f"The script Muse Spark wrote{', edited by you (' + '; '.join(changed) + ')' if changed else ''}, said by {VOICE_TEXT[v['choice']]}" + (f" ({len(v['files'])} file{'s' if len(v['files']) > 1 else ''})" if v["choice"] == "own" else ""))
         ctx.step_start("animate", "Animate", None)
         steps.render_bridge(ctx)
         ctx.step_done(f"Move “{ctx.data['spec']['move']}” rendered again on this machine with the new voice (no model call)")
@@ -141,7 +147,7 @@ def revoice(ctx: Context) -> Context:
         (ctx.folder / "error.txt").write_text(traceback.format_exc())
     calls = [e for e in ctx.events if e["type"] == "call" and e.get("status") == "done"]
     total = {"calls": len(calls), "cost": round(sum(c.get("cost") or 0 for c in calls), 6), "input_tokens": 0, "output_tokens": 0, "seconds": round(time.time() - ctx.t0, 1)}
-    result = {k: ctx.data.get(k) for k in ("moment", "adread", "bridge", "spec")}
+    result = {k: ctx.data.get(k) for k in ("moment", "adread", "bridge", "spec", "edited")}
     (ctx.folder / "result.json").write_text(json.dumps({"status": status, "mode": ctx.meta.mode if calls else "local", "total": total, **result}, indent=2, default=str))
     ctx.emit("end", status=status, total=total)
     return ctx

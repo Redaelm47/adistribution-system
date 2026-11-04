@@ -35,23 +35,26 @@ export const cameraTimes = (s: Spec) => {
 	const l0 = (s.lines[0] ?? '').trim();
 	const l1 = (s.lines[1] ?? '').trim();
 	const click = PLAY;
-	const hearts = click + SAY + Math.max(0, l0.length - 1) * EACH + pause(l0).gap + 0.34; // as the last letters settle
-	const pull = Math.max(click + SAY + lineLen(l0) + 0.35 + 0.14, hearts + 0.8);
-	const press = pull + TO_PRESS;
+	// Nothing is written on the photo (Reda, Nov 5: text never on the subject): the shutter, the hearts, then we pull back
+	// and the first line is the camera's caption, under it, like the second.
+	const hearts = click + 0.55;
+	const pull = hearts + 0.8;
+	const cap = pull + 0.3;
+	const press = Math.max(pull + TO_PRESS, cap + lineLen(l0) + 0.1);
 	const land = press + ROLL;
 	const n1 = count(l1);
 	const say1 = Math.max((n1 - 1) * READ, voiced(l1) - 0.2); // a recorded second line sets its own length
 	const bt = Math.max(pull + 0.3, land - say1 + 0.03); // the second line ends as the roll lands on the ad
 	const dive = n1 ? Math.max(land + WORDS, bt + say1 + 0.5) : land + WORDS;
 	const ad = dive + DIVE;
-	return {l0, l1, click, hearts, pull, press, land, bt, dive, ad, end: ad + (s.adSeconds ?? 4)};
+	return {l0, l1, click, hearts, pull, cap, press, land, bt, dive, ad, end: ad + (s.adSeconds ?? 4)};
 };
 
 export const cameraSeconds = (s: Spec) => cameraTimes(s).end;
 /** When each line starts, for the voice. */
 export const cameraLineAt = (s: Spec) => {
 	const c = cameraTimes(s);
-	return [c.click + SAY, c.bt];
+	return [c.cap, c.bt];
 };
 
 // ---------------------------------------------------------------- what the focus aims at: the face, else the subject, else the middle
@@ -289,7 +292,7 @@ const CameraBody: React.FC<{press: number; u: number}> = ({press, u}) => (
 
 export const Camera: React.FC<MoveProps> = ({t, s}) => {
 	const u = t;
-	const {l0, l1, click, hearts, pull, press, land, bt, dive, ad, end} = cameraTimes(s);
+	const {l0, l1, click, hearts, pull, cap, press, land, bt, dive, ad, end} = cameraTimes(s);
 	const [tx, ty] = target(s);
 	const roll = rollOf(s);
 	const adFrom = s.adFrom ?? 0;
@@ -309,7 +312,8 @@ export const Camera: React.FC<MoveProps> = ({t, s}) => {
 	const vel = Math.abs(pos - rollPos(u - press - 1 / FPS)) * FPS;
 	const number = 52 + Math.min(LAST, Math.max(0, Math.round(pos)));
 	const moving = u >= press && u < land - 0.1;
-	const hand = pointer(u - pull, [{t: 0, x: 1250, y: 1230}, {t: TO_PRESS - 0.06, x: PAD.x + 118, y: PAD.y + 6, d: TO_PRESS - 0.16, arc: -0.12}, {t: TO_PRESS + 1.5, x: PAD.x + 240, y: PAD.y + 480, d: 0.6}]);
+	const toPress = press - pull; // the mouse reaches the arrow as the first caption has been said
+	const hand = pointer(u - pull, [{t: 0, x: 1250, y: 1230}, {t: toPress - 0.06, x: PAD.x + 118, y: PAD.y + 6, d: TO_PRESS - 0.16, arc: -0.12}, {t: toPress + 1.5, x: PAD.x + 240, y: PAD.y + 480, d: 0.6}]);
 	const pr = pressAt(u, press);
 	const stamp = '02 11 2026';
 	const stampN = Math.ceil(seg(u, click + 0.1, 0.4) * stamp.length);
@@ -323,6 +327,7 @@ export const Camera: React.FC<MoveProps> = ({t, s}) => {
 	const edge = right ? (s.box?.[2] ?? tx + 220) + 50 : (s.box?.[0] ?? tx - 220) - 50; // where the subject begins, seen from the line's side
 	const x0 = whole > 1740 ? 960 : right ? Math.min(W - 90 - half, Math.max(1360, edge + half)) : Math.max(90 + half, Math.min(560, edge - half));
 	const words = l1 ? lineWords(l1, bt, PAL.pink) : [];
+	const words0 = l0 ? lineWords(l0, cap, PAL.pink) : [];
 	const adSkip = (fr(adFrom) + fr(ad) - fr(dive)) / FPS; // the ad goes on where the screen left it
 	const ticks: number[] = [];
 	for (let f = 0, last = 0; f < ROLL * FPS; f++) {
@@ -387,12 +392,16 @@ export const Camera: React.FC<MoveProps> = ({t, s}) => {
 			{!frozen && <Viewfinder u={u} tx={tx} ty={ty} />}
 			{frozen && u < pull + 0.24 && (
 				<AbsoluteFill style={{opacity: 1 - seg(u, pull - 0.02, 0.2)}}>
-					<Letters t={t} text={l0} at={click + SAY - 0.02} x={x0} y={500} size={size0} colorAt={(i) => (i >= hot ? PAL.pink : '#ffffff')} each={EACH} gapAt={gapAt} gap={gap} />
 					<Hearts t={u} at={hearts} x={tx} y={Math.max(400, ty - 100)} />
 				</AbsoluteFill>
 			)}
 			<Aperture k={iris} />
 			{flash > 0.02 && <AbsoluteFill style={{background: '#fff', opacity: flash}} />}
+			{words0.length > 0 && u >= cap - 0.06 && u < (words.length ? bt - 0.02 : dive + 0.08) && (
+				<AbsoluteFill style={{opacity: words.length ? 1 - seg(u, bt - 0.14, 0.12) : 1 - seg(u, dive, 0.08)}}>
+					<Words t={t} x={960} y={990} size={72} words={words0} />
+				</AbsoluteFill>
+			)}
 			{words.length > 0 && u >= bt - 0.06 && u < dive + 0.08 && (
 				<AbsoluteFill style={{opacity: 1 - seg(u, dive, 0.08)}}>
 					<Words t={t} x={960} y={990} size={72} words={words} />
@@ -407,7 +416,7 @@ export const Camera: React.FC<MoveProps> = ({t, s}) => {
 			<Click at={PLAY - 0.3} v={0.4} />
 			<Click at={click} v={0.9} />
 			<Click at={click + 0.07} v={0.5} />
-			{l0 && <Click at={click + SAY} v={0.25} />}
+			{l0 && <Click at={cap} v={0.25} />}
 			<Click at={hearts} v={0.3} />
 			<Click at={pull} v={0.35} />
 			<Click at={press} v={0.7} />
