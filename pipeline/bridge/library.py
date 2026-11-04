@@ -26,6 +26,7 @@ MOVES = [
         "id": "camera",
         "level": 1,
         "needs_subject": False,
+        "rendered": True,
         "what": "A camera viewfinder frames the shot, the shutter fires, and the camera roll's next photo is the ad.",
         "line_shape": "A reaction to what is on screen, then an offer tied to the ad.",
         "example": ["Oh, he's so cute.", "Here's what you could give him."],

@@ -5,6 +5,7 @@ import React from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
 import {MoveId, MoveProps, Spec} from './kit';
 import {Behind, behindSeconds} from './moves/Behind';
+import {Camera, cameraSeconds} from './moves/Camera';
 import {GEN} from './moves/gen';
 import {Iris, irisSeconds} from './moves/Iris';
 import {Throw, throwSeconds} from './moves/Throw';
@@ -17,6 +18,7 @@ type Move = {Component: React.FC<MoveProps>; seconds: (s: Spec) => number};
 
 export const MOVES: Partial<Record<MoveId, Move>> = {
 	wall: {Component: Wall, seconds: wallSeconds},
+	camera: {Component: Camera, seconds: cameraSeconds},
 	iris: {Component: Iris, seconds: irisSeconds},
 	behind: {Component: Behind, seconds: behindSeconds},
 	throw: {Component: Throw, seconds: throwSeconds},
