@@ -8,7 +8,7 @@ Choosing a better moment is not new on its own: platforms already avoid cutting 
 
 Built solo with Meta's models during the [Meta Global AI Developer Hackathon](https://cerebralvalley.ai/e/meta-ai-developer-hackathon) (Indie Developer track, Oct 27 to Nov 4, 2026). Everything in this repository was written during the hackathon; the commit history shows it step by step.
 
-**Demo film:** link added on submission day (Nov 4).
+**Demo film:** https://youtu.be/whcX_X3hNrY · on X: https://x.com/Redaelm47/status/2118132825346191700
 
 ## What one run does
 
